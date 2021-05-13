@@ -1,0 +1,9 @@
+# Visual Studio
+.vs
+.vscode
+.cd 
+
+# Temporary files
+tmp/
+old/
+build/

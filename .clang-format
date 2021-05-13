@@ -1,0 +1,10 @@
+﻿---
+BasedOnStyle: Google
+AlignOperands: 'true'
+AlignTrailingComments: 'true'
+AllowShortBlocksOnASingleLine: 'true'
+ColumnLimit: '120'
+IndentWidth: '4'
+TabWidth: '4'
+UseTab: Never
+IncludeBlocks: Preserve
