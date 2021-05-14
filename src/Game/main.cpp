@@ -26,7 +26,7 @@ class ImGUIFPSWindowLayer : public Blazar::Layer {
         ImGuiIO& io = ImGui::GetIO();
         if (!(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)) {
             float width = 128;
-            float padding = 8;
+            float padding = 16;
             float screenWidth = Application::Get().GetWindow().GetWidth();
 
             float x = screenWidth - width - padding;
@@ -50,15 +50,39 @@ class ImGUIFPSWindowLayer : public Blazar::Layer {
     }
 };
 
-class Game : public Blazar::Application {
+class ImGUIDemoWindowLayer : public Blazar::Layer {
    public:
-    Game() {
-        LOG_GAME_TRACE("Initialising (Constructor)");
-        PushLayer(new DebugEventLayer());
-        PushLayer(new ImGUIFPSWindowLayer());
-    }
+    ImGUIDemoWindowLayer() : Layer("ImGUI Demo Window") {}
 
-    ~Game() { LOG_GAME_INFO("Exiting (Destructor)"); }
+    void OnImGUIRender() override { ImGui::ShowDemoWindow(); }
 };
 
-Blazar::Application* Blazar::CreateApplication() { return new Game(); }
+class ImGUIEditorMainLayer : public Blazar::Layer {
+   public:
+    ImGUIEditorMainLayer() : Layer("ImGUI Editor Main") {}
+
+    void OnImGUIRender() override {
+        if (ImGui::BeginMainMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                ImGui::MenuItem("Exit");
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+    }
+};
+
+    class Game : public Blazar::Application {
+       public:
+        Game() {
+            LOG_GAME_TRACE("Initialising (Constructor)");
+            PushLayer(new DebugEventLayer());
+            PushLayer(new ImGUIFPSWindowLayer());
+            PushLayer(new ImGUIDemoWindowLayer());
+            PushLayer(new ImGUIEditorMainLayer());
+        }
+
+        ~Game() { LOG_GAME_INFO("Exiting (Destructor)"); }
+    };
+
+    Blazar::Application* Blazar::CreateApplication() { return new Game(); }

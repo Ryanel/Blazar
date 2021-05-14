@@ -7,10 +7,8 @@
 #include <Blazar/Events/MouseEvents.h>
 
 // Ordering is important here, do not remove space
-
-#include <glad/glad.h>
-
 #include <GLFW/glfw3.h>
+#include <Platform/OpenGL/OpenGLContext.h>
 
 namespace Blazar {
 static bool s_GLFWInitialized = false;
@@ -29,16 +27,11 @@ void WindowsWindow::Shutdown() { glfwDestroyWindow(m_Window); }
 
 void WindowsWindow::OnUpdate() {
     glfwPollEvents();
-    glfwSwapBuffers(m_Window);
+    m_Context->Present();
 }
 
 void WindowsWindow::SetVSync(bool enabled) {
-    if (enabled) {
-        glfwSwapInterval(1);
-    } else {
-        glfwSwapInterval(0);
-    }
-
+    glfwSwapInterval(enabled ? 1 : 0);
     m_Data.VSync = enabled;
 }
 
@@ -57,10 +50,9 @@ void WindowsWindow::Init(const WindowProperties& props) {
     }
 
     m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-    glfwMakeContextCurrent(m_Window);
 
-    int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    BLAZAR_CORE_ASSERT(status, "Could not initialize GLAD!");
+    m_Context = new OpenGLContext(m_Window);
+    m_Context->Init();
 
     glfwSetWindowUserPointer(m_Window, &m_Data);
     SetVSync(true);

@@ -2,9 +2,9 @@
 
 #include "Blazar/Renderer/GraphicsContext.h"
 
-namespace Blazar {
-
 struct GLFWwindow;
+
+namespace Blazar {
 
 class OpenGLContext : public GraphicsContext {
    public:

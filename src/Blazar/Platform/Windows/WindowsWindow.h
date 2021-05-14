@@ -1,6 +1,7 @@
 #include "bzpch.h"
 
 #include <Blazar/Window.h>
+#include <Blazar/Renderer/GraphicsContext.h>
 
 struct GLFWwindow;
 
@@ -26,6 +27,7 @@ class WindowsWindow : public Window {
 
    private:
     GLFWwindow* m_Window;
+    GraphicsContext* m_Context;
     struct WindowData {
         std::string Title;
         unsigned int Width, Height;

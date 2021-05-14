@@ -41,7 +41,7 @@
             __debugbreak();                                          \
         }                                                            \
     }
-#define BLAZAR_CORE_VERIFYT(x, ...)                                  \
+#define BLAZAR_CORE_VERIFY(x, ...)                                  \
     {                                                                \
         if (!(x)) {                                                  \
             LOG_CORE_ERROR("Verification Failed: {0}", __VA_ARGS__); \
