@@ -2,9 +2,9 @@
 
 #include "Blazar/Events/Events.h"
 
-namespace BLAZAR_API Blazar {
+namespace Blazar {
 
-class MouseButtonPressedEvent : public Event {
+class BLAZAR_API MouseButtonPressedEvent : public Event {
     int m_Button;
 
    public:
@@ -22,7 +22,7 @@ class MouseButtonPressedEvent : public Event {
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouseButton | EventCategoryMouse);
 };
 
-class MouseButtonReleasedEvent : public Event {
+class BLAZAR_API MouseButtonReleasedEvent : public Event {
     int m_Button;
 
    public:
@@ -40,7 +40,7 @@ class MouseButtonReleasedEvent : public Event {
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouseButton | EventCategoryMouse);
 };
 
-class MouseScrolledEvent : public Event {
+class BLAZAR_API MouseScrolledEvent : public Event {
     double m_XOffset, m_YOffset;
 
    public:
@@ -59,7 +59,7 @@ class MouseScrolledEvent : public Event {
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse);
 };
 
-class MouseMovedEvent : public Event {
+class BLAZAR_API MouseMovedEvent : public Event {
     double m_xPos, m_yPos;
 
    public:

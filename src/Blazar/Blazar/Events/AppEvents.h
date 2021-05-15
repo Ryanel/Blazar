@@ -3,9 +3,9 @@
 #include <sstream>
 #include "Blazar/Events/Events.h"
 
-namespace BLAZAR_API Blazar {
+namespace Blazar {
 
-class WindowCloseEvent : public Event {
+class BLAZAR_API WindowCloseEvent : public Event {
    public:
     WindowCloseEvent() {}
 
@@ -13,7 +13,7 @@ class WindowCloseEvent : public Event {
     EVENT_CLASS_CATEGORY(EventCategoryApplication);
 };
 
-class WindowFocusEvent : public Event {
+class BLAZAR_API WindowFocusEvent : public Event {
    public:
     WindowFocusEvent() {}
 
@@ -21,7 +21,7 @@ class WindowFocusEvent : public Event {
     EVENT_CLASS_CATEGORY(EventCategoryApplication);
 };
 
-class WindowLostFocusEvent : public Event {
+class BLAZAR_API WindowLostFocusEvent : public Event {
    public:
     WindowLostFocusEvent() {}
 
@@ -29,7 +29,7 @@ class WindowLostFocusEvent : public Event {
     EVENT_CLASS_CATEGORY(EventCategoryApplication);
 };
 
-class WindowResizeEvent : public Event {
+class BLAZAR_API WindowResizeEvent : public Event {
    private:
     int m_Width;
     int m_Height;
@@ -49,7 +49,7 @@ class WindowResizeEvent : public Event {
     EVENT_CLASS_CATEGORY(EventCategoryApplication);
 };
 
-class WindowMovedEvent : public Event {
+class BLAZAR_API WindowMovedEvent : public Event {
    private:
     int m_X;
     int m_Y;

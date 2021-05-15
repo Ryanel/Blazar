@@ -2,9 +2,9 @@
 
 #include "Blazar/Events/Events.h"
 
-namespace BLAZAR_API Blazar {
+namespace Blazar {
 
-class KeyDownEvent : public Event {
+class BLAZAR_API KeyDownEvent : public Event {
     int m_Keycode;
     bool m_Repeated;
 
@@ -30,7 +30,7 @@ class KeyDownEvent : public Event {
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryKeyboard);
 };
 
-class KeyUpEvent : public Event {
+class BLAZAR_API KeyUpEvent : public Event {
     int m_Keycode;
 
    public:
