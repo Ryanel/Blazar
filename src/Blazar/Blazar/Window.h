@@ -15,7 +15,7 @@ struct WindowProperties {
 
 class BLAZAR_API Window {
    public:
-    using EventCallbackFn = std::function<void(Event&)>;
+    using EventCallbackFn = std::function<void(Events::Event&)>;
 
     virtual ~Window() = 0;
     virtual void OnUpdate() = 0;

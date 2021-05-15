@@ -3,7 +3,7 @@
 #include "Blazar/Events/Events.h"
 
 namespace Blazar {
-
+namespace Events {
 class BLAZAR_API KeyDownEvent : public Event {
     int m_Keycode;
     bool m_Repeated;
@@ -47,5 +47,5 @@ class BLAZAR_API KeyUpEvent : public Event {
     EVENT_CLASS_TYPE(KeyDown);
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryKeyboard);
 };
-
-};  // namespace Blazar
+}  // namespace Events
+}  // namespace Blazar

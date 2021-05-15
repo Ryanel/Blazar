@@ -3,7 +3,7 @@
 #include "Blazar/Events/Events.h"
 
 namespace Blazar {
-
+namespace Events {
 class BLAZAR_API MouseButtonPressedEvent : public Event {
     int m_Button;
 
@@ -77,4 +77,6 @@ class BLAZAR_API MouseMovedEvent : public Event {
     EVENT_CLASS_TYPE(MouseMoved);
     EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouse);
 };
-};  // namespace Blazar
+
+}  // namespace Events
+}  // namespace Blazar

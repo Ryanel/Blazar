@@ -71,10 +71,9 @@ void Application::Run() {
         layout(location = 0) out vec4 color;
 
         in vec3 v_Position;
-
         void main()
         {
-           color = vec4(v_Position * 0.5 + 0.5, 0.5) * 2;
+           color = vec4(v_Position * 0.5 + 0.5, (1 / 1.5)) * 1.5;
         }
     )";
 
@@ -118,9 +117,9 @@ void Application::Run() {
     delete indexBuffer;
 }
 
-void Application::OnEvent(Event& e) {
-    EventDispatcher dispatch(e);
-    dispatch.Dispatch<WindowCloseEvent>(BLAZAR_BIND_EVENT_FN(Application::OnWindowClosed));
+void Application::OnEvent(Events::Event& e) {
+    Events::EventDispatcher dispatch(e);
+    dispatch.Dispatch<Events::WindowCloseEvent>(BLAZAR_BIND_EVENT_FN(Application::OnWindowClosed));
 
     for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();) {
         (*--it)->OnEvent(e);
@@ -130,7 +129,7 @@ void Application::OnEvent(Event& e) {
 void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
 void Application::PushOverlay(Layer* layer) { m_LayerStack.PushOverlay(layer); }
 
-bool Application::OnWindowClosed(WindowCloseEvent& ev) {
+bool Application::OnWindowClosed(Events::WindowCloseEvent& ev) {
     m_Running = false;
     return true;
 }

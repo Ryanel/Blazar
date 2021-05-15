@@ -12,7 +12,7 @@ class BLAZAR_API Layer {
     virtual void OnAttach() {}
     virtual void OnDetached() {}
     virtual void OnUpdate() {}
-    virtual void OnEvent(Event& ev) {}
+    virtual void OnEvent(Events::Event& ev) {}
     virtual void OnImGUIRender() {}
     inline const std::string& GetName() const { return m_DebugName; }
 

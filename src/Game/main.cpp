@@ -15,7 +15,7 @@ class DebugEventLayer : public Blazar::Layer {
         // if (Input::MouseButtonPressed(0)) { LOG_GAME_TRACE("MOUSE PRESSED"); }
         // if (Input::GetMouseX() > 1280.0f) { LOG_GAME_TRACE("MOUSE X > 1280"); }
     }
-    void OnEvent(Blazar::Event& event) override {}
+    void OnEvent(Blazar::Events::Event& event) override {}
 };
 
 class ImGUIFPSWindowLayer : public Blazar::Layer {

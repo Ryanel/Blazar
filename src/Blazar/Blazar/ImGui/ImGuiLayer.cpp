@@ -41,7 +41,7 @@ void ImGuiLayer::OnAttach() {
 
 void ImGuiLayer::OnDetached() {}
 void ImGuiLayer::OnUpdate() {}
-void ImGuiLayer::OnEvent(Event& ev) { EventDispatcher dispatcher(ev); }
+void ImGuiLayer::OnEvent(Events::Event& ev) {}
 
 void ImGuiLayer::Begin() {
     ImGuiIO& io = ImGui::GetIO();

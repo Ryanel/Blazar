@@ -4,7 +4,7 @@
 #include "Blazar/Events/Events.h"
 
 namespace Blazar {
-
+namespace Events {
 class BLAZAR_API WindowCloseEvent : public Event {
    public:
     WindowCloseEvent() {}
@@ -68,5 +68,5 @@ class BLAZAR_API WindowMovedEvent : public Event {
     EVENT_CLASS_TYPE(WindowMoved);
     EVENT_CLASS_CATEGORY(EventCategoryApplication);
 };
-
-};  // namespace Blazar
+}  // namespace Events
+}  // namespace Blazar

@@ -16,7 +16,7 @@ class BLAZAR_API ImGuiLayer : public Layer {
     void OnAttach() override;
     void OnDetached() override;
     void OnUpdate() override;
-    void OnEvent(Event& ev) override;
+    void OnEvent(Events::Event& ev) override;
 
     void Begin();
     void End();

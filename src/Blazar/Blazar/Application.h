@@ -16,7 +16,7 @@ class BLAZAR_API Application {
     virtual ~Application();
 
     void Run();
-    void OnEvent(Event& e);
+    void OnEvent(Events::Event& e);
 
     void PushLayer(Layer* layer);
     void PushOverlay(Layer* layer);
@@ -32,7 +32,7 @@ class BLAZAR_API Application {
     Timer m_FrameTimer;
 
    private:
-    bool OnWindowClosed(WindowCloseEvent&);
+    bool OnWindowClosed(Events::WindowCloseEvent&);
     static Application* s_Instance;
 };
 

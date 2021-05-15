@@ -6,6 +6,8 @@
 
 namespace Blazar {
 
+namespace Events {
+
 enum class EventType {
     None = 0,
     WindowClose,
@@ -79,4 +81,5 @@ class EventDispatcher {
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Event& e) { return os << e.ToString(); }
-};  // namespace Blazar
+}  // namespace Events
+}  // namespace Blazar
