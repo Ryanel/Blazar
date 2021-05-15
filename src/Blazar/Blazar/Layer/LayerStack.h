@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Blazar/Core.h>
-#include <Blazar/Layer/Layer.h>
+#include "Blazar/Core.h"
+#include "Blazar/Layer/Layer.h"
 
 #include <vector>
 

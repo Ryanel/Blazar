@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Blazar/Core.h>
-#include <Blazar/Events/AppEvents.h>
-#include <Blazar/Events/Events.h>
-#include <Blazar/Events/KeyEvents.h>
-#include <Blazar/Events/MouseEvents.h>
-#include <Blazar/Layer/Layer.h>
+#include "Blazar/Core.h"
+#include "Blazar/Events/AppEvents.h"
+#include "Blazar/Events/Events.h"
+#include "Blazar/Events/KeyEvents.h"
+#include "Blazar/Events/MouseEvents.h"
+#include "Blazar/Layer/Layer.h"
 
 namespace Blazar {
 class BLAZAR_API ImGuiLayer : public Layer {

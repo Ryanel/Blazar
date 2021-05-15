@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Blazar/Core.h>
-#include <Blazar/Events/AppEvents.h>
-#include <Blazar/Events/Events.h>
-#include <Blazar/Layer/LayerStack.h>
-#include <Blazar/Window.h>
-#include <Blazar/Time/Timestep.h>
-#include <Blazar/Time/Timer.h>
+#include "Blazar/Core.h"
+#include "Blazar/Events/AppEvents.h"
+#include "Blazar/Events/Events.h"
+#include "Blazar/Layer/LayerStack.h"
+#include "Blazar/Window.h"
+#include "Blazar/Time/Timestep.h"
+#include "Blazar/Time/Timer.h"
 
 namespace Blazar {
 

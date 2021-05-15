@@ -1,7 +1,7 @@
-#include <bzpch.h>
+#include "bzpch.h"
 
-#include <Blazar/Layer/Layer.h>
-#include <Blazar/Layer/LayerStack.h>
+#include "Blazar/Layer/Layer.h"
+#include "Blazar/Layer/LayerStack.h"
 
 namespace Blazar {
 

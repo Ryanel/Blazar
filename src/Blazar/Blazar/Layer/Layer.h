@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Blazar/Core.h>
-#include <Blazar/Events/Events.h>
+#include "Blazar/Core.h"
+#include "Blazar/Events/Events.h"
 
 namespace Blazar {
 class BLAZAR_API Layer {

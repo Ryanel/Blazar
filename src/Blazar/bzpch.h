@@ -1,6 +1,7 @@
 #pragma once
 
 // Standard library
+#include <cstdint>
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -10,6 +11,8 @@
 #include <utility>
 #include <vector>
 #include <sstream>
+#include <fstream>
+#include <tuple>
 
 // Blazar specific
 #include <Blazar/Core.h>

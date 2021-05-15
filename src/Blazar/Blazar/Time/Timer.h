@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-#include <Blazar/Core.h>
+#include "Blazar/Core.h"
 
 namespace Blazar {
 

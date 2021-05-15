@@ -1,6 +1,6 @@
 #include "bzpch.h"
 
-#include <Blazar/Input/Input.h>
+#include "Blazar/Input/Input.h"
 
 namespace Blazar {
 

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "bzpch.h"
-
-#include <Blazar/Events/Events.h>
+#include "Blazar/Events/Events.h"
 
 namespace Blazar {
 

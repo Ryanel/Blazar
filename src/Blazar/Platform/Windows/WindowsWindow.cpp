@@ -1,14 +1,14 @@
 #include "bzpch.h"
 
-#include <Platform/Windows/WindowsWindow.h>
+#include "Platform/Windows/WindowsWindow.h"
 
-#include <Blazar/Events/AppEvents.h>
-#include <Blazar/Events/KeyEvents.h>
-#include <Blazar/Events/MouseEvents.h>
+#include "Blazar/Events/AppEvents.h"
+#include "Blazar/Events/KeyEvents.h"
+#include "Blazar/Events/MouseEvents.h"
 
 // Ordering is important here, do not remove space
 #include <GLFW/glfw3.h>
-#include <Platform/OpenGL/OpenGLContext.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Blazar {
 static bool s_GLFWInitialized = false;
@@ -48,6 +48,9 @@ void WindowsWindow::Init(const WindowProperties& props) {
         glfwSetErrorCallback(GLFWErrorCallback);
         s_GLFWInitialized = true;
     }
+
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_SAMPLES, 16);
 
     m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 

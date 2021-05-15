@@ -2,8 +2,13 @@
 
 #include <glad/glad.h>
 
-#include <Blazar/Application.h>
-#include <Blazar/ImGui/ImGuiLayer.h>
+#include "Blazar/Application.h"
+#include "Blazar/ImGui/ImGuiLayer.h"
+
+// Sample
+#include "Blazar/Renderer/Buffer.h"
+#include "Blazar/Renderer/Renderer.h"
+#include "Blazar/Renderer/Shader.h"
 
 namespace Blazar {
 Application* Application::s_Instance;
@@ -26,6 +31,57 @@ void Application::Run() {
 
     PushOverlay(imgui);
 
+    // Sample rendering code
+    float vertices[3 * 3] = {
+        -0.5f, -0.5f, 0.0f,  // v0
+        0.5f,  -0.5f, 0.0f,  // v1
+        0.0f,  0.5f,  0.0f,  // v2
+    };
+
+    uint32_t indicies[3] = {0, 1, 2};
+
+    unsigned int vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    VertexBuffer* buffer = VertexBuffer::Create(vertices, sizeof(vertices));
+    buffer->Bind();
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+    IndexBuffer* indexBuffer = IndexBuffer::Create(indicies, sizeof(indicies));
+    indexBuffer->Bind();
+
+    std::string vertSrc = R"(
+        #version 330 core
+        layout(location = 0) in vec3 a_Position;
+
+        out vec3 v_Position;
+
+        void main()
+        {
+            v_Position = a_Position;
+            gl_Position = vec4(a_Position, 1.0);
+        }
+    )";
+
+    std::string fragSrc = R"(
+        #version 330 core
+        layout(location = 0) out vec4 color;
+
+        in vec3 v_Position;
+
+        void main()
+        {
+           color = vec4(v_Position * 0.5 + 0.5, 0.5) * 2;
+        }
+    )";
+
+    Shader s = Shader::FromText(vertSrc, fragSrc);
+
+    s.Bind();
+
     while (m_Running) {
         // Start timing
         Timer frameTimer;
@@ -34,9 +90,12 @@ void Application::Run() {
         {
             // Clear the screen
             // TODO: Create the renderer
-            glClearColor(0.34f, 0.25f, 0.47f, 1.0f);
             glViewport(0, 0, GetWindow().GetWidth(), GetWindow().GetHeight());
+            glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
+
+            glBindVertexArray(vao);
+            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
             // Update all layers
             for (Layer* layer : m_LayerStack) { layer->OnUpdate(); }
@@ -54,6 +113,9 @@ void Application::Run() {
 
         m_deltaTime = frameTimer.Elapsed();
     }
+
+    delete buffer;
+    delete indexBuffer;
 }
 
 void Application::OnEvent(Event& e) {

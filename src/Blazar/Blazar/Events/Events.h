@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Blazar/Core.h>
-
 #include <functional>
 #include <string>
+#include "Blazar/Core.h"
 
 namespace Blazar {
 

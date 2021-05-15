@@ -1,13 +1,13 @@
 #include <bzpch.h>
 
-#include <Blazar/Application.h>
-#include <Blazar/ImGui/ImGuiLayer.h>
-#include <Blazar/Layer/Layer.h>
-
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <imgui.h>
+
+#include "Blazar/Application.h"
+#include "Blazar/ImGui/ImGuiLayer.h"
+#include "Blazar/Layer/Layer.h"
 
 namespace Blazar {
 ImGuiLayer::ImGuiLayer() : Layer("ImGUI") { this->m_DebugName = "ImGUI"; }
@@ -17,15 +17,16 @@ ImGuiLayer::~ImGuiLayer() {}
 void ImGuiLayer::OnAttach() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui::StyleColorsLight();
+    ImGui::StyleColorsDark();
 
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_IsTouchScreen;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
     ImGuiStyle& style = ImGui::GetStyle();
+    style.WindowBorderSize = 0.0f;
     style.WindowRounding = 4;
     style.FrameRounding = 4;
     style.FramePadding.x = 6;

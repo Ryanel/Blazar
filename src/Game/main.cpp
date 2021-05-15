@@ -12,8 +12,8 @@ class DebugEventLayer : public Blazar::Layer {
     DebugEventLayer() : Layer("Debug Event Layer") {}
     void OnUpdate() override {
         if (Input::KeyPressed(BLAZAR_KEY_SEMICOLON)) { LOG_GAME_TRACE("KEY PRESSED"); }
-        if (Input::MouseButtonPressed(0)) { LOG_GAME_TRACE("MOUSE PRESSED"); }
-        if (Input::GetMouseX() > 1280.0f) { LOG_GAME_TRACE("MOUSE X > 1280"); }
+        // if (Input::MouseButtonPressed(0)) { LOG_GAME_TRACE("MOUSE PRESSED"); }
+        // if (Input::GetMouseX() > 1280.0f) { LOG_GAME_TRACE("MOUSE X > 1280"); }
     }
     void OnEvent(Blazar::Event& event) override {}
 };
@@ -26,11 +26,12 @@ class ImGUIFPSWindowLayer : public Blazar::Layer {
         ImGuiIO& io = ImGui::GetIO();
         if (!(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)) {
             float width = 128;
-            float padding = 16;
-            float screenWidth = Application::Get().GetWindow().GetWidth();
+            float padding_x = 8;
+            float padding_y = 24;
+            float screenWidth = (float)Application::Get().GetWindow().GetWidth();
 
-            float x = screenWidth - width - padding;
-            float y = padding;
+            float x = screenWidth - width - padding_x;
+            float y = padding_y;
 
             ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
             ImGui::SetNextWindowSize(ImVec2(width, 48), ImGuiCond_Always);
@@ -41,9 +42,9 @@ class ImGUIFPSWindowLayer : public Blazar::Layer {
         bool frameRateOpen = true;
         if (ImGui::Begin("Framerate", &frameRateOpen,
                          ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-                             ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove)) {
+                             ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings)) {
             ImGui::Text("FPS: %0.2f", 1.0f / delta);
-            ImGui::Text("Delta: %0.2f ms", (delta * 1000.0f));
+            ImGui::Text("Delta: %0.2f ms", (float)(delta * 1000.0f));
         }
 
         ImGui::End();
@@ -64,7 +65,7 @@ class ImGUIEditorMainLayer : public Blazar::Layer {
     void OnImGUIRender() override {
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu("File")) {
-                ImGui::MenuItem("Exit");
+                if (ImGui::MenuItem("Exit")) { Application::Get().m_Running = false; }
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
@@ -72,17 +73,16 @@ class ImGUIEditorMainLayer : public Blazar::Layer {
     }
 };
 
-    class Game : public Blazar::Application {
-       public:
-        Game() {
-            LOG_GAME_TRACE("Initialising (Constructor)");
-            PushLayer(new DebugEventLayer());
-            PushLayer(new ImGUIFPSWindowLayer());
-            PushLayer(new ImGUIDemoWindowLayer());
-            PushLayer(new ImGUIEditorMainLayer());
-        }
+class Game : public Blazar::Application {
+   public:
+    Game() {
+        PushLayer(new DebugEventLayer());
+        PushLayer(new ImGUIFPSWindowLayer());
+        PushLayer(new ImGUIDemoWindowLayer());
+        PushLayer(new ImGUIEditorMainLayer());
+    }
 
-        ~Game() { LOG_GAME_INFO("Exiting (Destructor)"); }
-    };
+    ~Game() {}
+};
 
-    Blazar::Application* Blazar::CreateApplication() { return new Game(); }
+Blazar::Application* Blazar::CreateApplication() { return new Game(); }

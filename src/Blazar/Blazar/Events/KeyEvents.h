@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Blazar/Events/Events.h>
+#include "Blazar/Events/Events.h"
 
 namespace BLAZAR_API Blazar {
 

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Blazar/Core.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
-
 #include <memory>
+#include "Blazar/Core.h"
 
 namespace Blazar {
 class BLAZAR_API Log {
