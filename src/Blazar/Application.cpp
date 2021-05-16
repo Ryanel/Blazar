@@ -13,6 +13,28 @@
 namespace Blazar {
 Application* Application::s_Instance;
 
+static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
+    switch (type) {
+        case ShaderDataType::Float:
+        case ShaderDataType::Float2:
+        case ShaderDataType::Float3:
+        case ShaderDataType::Float4:
+        case ShaderDataType::Mat3:
+        case ShaderDataType::Mat4:
+            return GL_FLOAT;
+        case ShaderDataType::Int:
+        case ShaderDataType::Int2:
+        case ShaderDataType::Int3:
+        case ShaderDataType::Int4:
+            return GL_INT;
+        case ShaderDataType::Bool:
+            return GL_BOOL;
+        default:
+            BLAZAR_CORE_ASSERT(false, "Unknown ShaderDataType!");
+            return 0;
+    }
+}
+
 Application::Application() {
     LOG_CORE_TRACE("Creating Application");
     s_Instance = this;
@@ -32,13 +54,19 @@ void Application::Run() {
     PushOverlay(imgui);
 
     // Sample rendering code
-    float vertices[3 * 3] = {
-        -0.5f, -0.5f, 0.0f,  // v0
-        0.5f,  -0.5f, 0.0f,  // v1
-        0.0f,  0.5f,  0.0f,  // v2
+    float vertices[10 * 3] = {
+        -0.5f, -0.5f, 0.0f, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0,  // v0
+        0.5f,  -0.5f, 0.0f, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0,  // v1
+        0.0f,  0.5f,  0.0f, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0,  // v2
     };
 
     uint32_t indicies[3] = {0, 1, 2};
+
+    BufferLayout layout = {
+        {ShaderDataType::Float3, "a_Position"},  // 00: Position
+        {ShaderDataType::Float4, "a_Color"},     // 12: Color
+        {ShaderDataType::Float3, "a_Normal"}     // 28: Normal
+    };
 
     unsigned int vao;
     glGenVertexArrays(1, &vao);
@@ -47,8 +75,15 @@ void Application::Run() {
     VertexBuffer* buffer = VertexBuffer::Create(vertices, sizeof(vertices));
     buffer->Bind();
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    uint32_t index = 0;
+
+    for (const auto& element : layout.GetElements()) {
+        glEnableVertexAttribArray(index);
+        glVertexAttribPointer(index, element.GetElementCount(), ShaderDataTypeToOpenGLBaseType(element.Type),
+                              element.Normalized ? GL_TRUE : GL_FALSE,
+                              layout.GetStride(), (const void*)element.Offset);
+        index++;
+    }
 
     IndexBuffer* indexBuffer = IndexBuffer::Create(indicies, sizeof(indicies));
     indexBuffer->Bind();
@@ -56,12 +91,13 @@ void Application::Run() {
     std::string vertSrc = R"(
         #version 330 core
         layout(location = 0) in vec3 a_Position;
+        layout(location = 1) in vec4 a_Color;
 
-        out vec3 v_Position;
-
+        out vec4 v_Color;
+        
         void main()
         {
-            v_Position = a_Position;
+            v_Color = a_Color;
             gl_Position = vec4(a_Position, 1.0);
         }
     )";
@@ -70,10 +106,10 @@ void Application::Run() {
         #version 330 core
         layout(location = 0) out vec4 color;
 
-        in vec3 v_Position;
+        in vec4 v_Color;
         void main()
         {
-           color = vec4(v_Position * 0.5 + 0.5, (1 / 1.5)) * 1.5;
+           color = v_Color;
         }
     )";
 

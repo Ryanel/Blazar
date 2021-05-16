@@ -21,6 +21,9 @@ OpenGLVertexBuffer::~OpenGLVertexBuffer() { glDeleteBuffers(1, &m_Id); }
 void OpenGLVertexBuffer::Bind() const { glBindBuffer(GL_ARRAY_BUFFER, m_Id); }
 void OpenGLVertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
+void OpenGLVertexBuffer::SetLayout(const BufferLayout& layout) { m_Layout = layout; }
+const BufferLayout& OpenGLVertexBuffer::GetLayout() const { return m_Layout; }
+
 // ----------------------------------------------------
 // Index Buffer
 // ----------------------------------------------------
