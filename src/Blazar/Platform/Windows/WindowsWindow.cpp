@@ -50,7 +50,7 @@ void WindowsWindow::Init(const WindowProperties& props) {
     }
 
     glfwDefaultWindowHints();
-    glfwWindowHint(GLFW_SAMPLES, 16);
+    glfwWindowHint(GLFW_SAMPLES, props.MSAA);
 
     m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 

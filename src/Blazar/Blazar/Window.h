@@ -9,8 +9,10 @@ struct WindowProperties {
     unsigned int Width;
     unsigned int Height;
 
-    WindowProperties(const std::string& title = "Blazar Engine", unsigned int width = 1280, unsigned int height = 720)
-        : Title(title), Width(width), Height(height) {}
+    unsigned int MSAA = 0;
+
+    WindowProperties(const std::string& title = "Blazar Engine", unsigned int width = 1600, unsigned int height = 900)
+        : Title(title), Width(width), Height(height), MSAA(4) {}
 };
 
 class BLAZAR_API Window {
