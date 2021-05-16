@@ -4,17 +4,18 @@
 
 namespace Blazar {
 
+/// A collection of Window Properties
 struct WindowProperties {
-    std::string Title;
-    unsigned int Width;
-    unsigned int Height;
-
-    unsigned int MSAA = 0;
+    std::string Title;    ///< The Window Title of the Game
+    unsigned int Width;   ///< The Height of the Window
+    unsigned int Height;  ///< The Width of the Window
+    unsigned int MSAA;    ///< The Current MSAA Level. 0 means MSAA is disabled
 
     WindowProperties(const std::string& title = "Blazar Engine", unsigned int width = 1600, unsigned int height = 900)
         : Title(title), Width(width), Height(height), MSAA(4) {}
 };
 
+/// A Desktop Window. Produces Events, and must be updated each frame
 class BLAZAR_API Window {
    public:
     using EventCallbackFn = std::function<void(Events::Event&)>;
