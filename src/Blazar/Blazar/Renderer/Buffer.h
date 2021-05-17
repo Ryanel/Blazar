@@ -12,7 +12,7 @@ struct BufferElement {
     ShaderDataType Type;
     bool Normalized;
 
-    BufferElement() {}
+    BufferElement() : Name(""), Size(0), Offset(0), Type(ShaderDataType::None), Normalized(false) {}
 
     BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
         : Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized) {}
@@ -95,7 +95,7 @@ class IndexBuffer {
     virtual ~IndexBuffer() {}
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
-
+    virtual uint32_t GetCount() const = 0;
     // Factory method
     static IndexBuffer* Create(uint32_t* verticies, size_t size);
 };

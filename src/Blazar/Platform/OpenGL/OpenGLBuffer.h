@@ -29,11 +29,12 @@ class OpenGLIndexBuffer : public IndexBuffer {
     OpenGLIndexBuffer(uint32_t* verticies, size_t size);
     virtual ~OpenGLIndexBuffer();
 
-    virtual void Bind() const;
-    virtual void Unbind() const;
-
+    virtual void Bind() const override;
+    virtual void Unbind() const override;
+    virtual uint32_t GetCount() const override { return m_Count; }
    private:
     uint32_t m_Id;
+    uint32_t m_Count;
 };
 
 };  // namespace Blazar

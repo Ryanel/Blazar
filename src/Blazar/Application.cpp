@@ -9,31 +9,10 @@
 #include "Blazar/Renderer/Buffer.h"
 #include "Blazar/Renderer/Renderer.h"
 #include "Blazar/Renderer/Shader.h"
+#include "Blazar/Renderer/VertexArray.h"
 
 namespace Blazar {
 Application* Application::s_Instance;
-
-static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
-    switch (type) {
-        case ShaderDataType::Float:
-        case ShaderDataType::Float2:
-        case ShaderDataType::Float3:
-        case ShaderDataType::Float4:
-        case ShaderDataType::Mat3:
-        case ShaderDataType::Mat4:
-            return GL_FLOAT;
-        case ShaderDataType::Int:
-        case ShaderDataType::Int2:
-        case ShaderDataType::Int3:
-        case ShaderDataType::Int4:
-            return GL_INT;
-        case ShaderDataType::Bool:
-            return GL_BOOL;
-        default:
-            BLAZAR_CORE_ASSERT(false, "Unknown ShaderDataType!");
-            return 0;
-    }
-}
 
 Application::Application() {
     LOG_CORE_TRACE("Creating Application");
@@ -49,44 +28,67 @@ Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
 void Application::Run() {
     m_deltaTime = 0.016f;
 
+    // Setup Global Layers
     ImGuiLayer* imgui = new ImGuiLayer();
-
     PushOverlay(imgui);
 
     // Sample rendering code
-    float vertices[10 * 3] = {
-        -0.5f, -0.5f, 0.0f, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0,  // v0
-        0.5f,  -0.5f, 0.0f, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0,  // v1
-        0.0f,  0.5f,  0.0f, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0,  // v2
+    float tri_verts[7 * 3] = {
+        -0.5f, -0.5f, 0.0f, 1.0, 0.0, 0.0, 1.0,  // v0
+        0.5f,  -0.5f, 0.0f, 0.0, 1.0, 0.0, 1.0,  // v1
+        0.0f,  0.5f,  0.0f, 0.0, 0.0, 1.0, 1.0,  // v2,
     };
 
-    uint32_t indicies[3] = {0, 1, 2};
+    uint32_t tri_indicies[3] = {0, 1, 2};
 
-    BufferLayout layout = {
+    BufferLayout tri_layout = {
         {ShaderDataType::Float3, "a_Position"},  // 00: Position
         {ShaderDataType::Float4, "a_Color"},     // 12: Color
-        {ShaderDataType::Float3, "a_Normal"}     // 28: Normal
     };
 
-    unsigned int vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    std::shared_ptr<VertexArray> tri_vao;
+    std::shared_ptr<VertexBuffer> tri_vbo;
+    std::shared_ptr<IndexBuffer> tri_ibo;
 
-    VertexBuffer* buffer = VertexBuffer::Create(vertices, sizeof(vertices));
-    buffer->Bind();
+    tri_vao.reset(VertexArray::Create());
+    tri_vbo.reset(VertexBuffer::Create(tri_verts, sizeof(tri_verts)));
+    tri_ibo.reset(IndexBuffer::Create(tri_indicies, sizeof(tri_indicies)));
 
-    uint32_t index = 0;
+    tri_vbo->SetLayout(tri_layout);
 
-    for (const auto& element : layout.GetElements()) {
-        glEnableVertexAttribArray(index);
-        glVertexAttribPointer(index, element.GetElementCount(), ShaderDataTypeToOpenGLBaseType(element.Type),
-                              element.Normalized ? GL_TRUE : GL_FALSE,
-                              layout.GetStride(), (const void*)element.Offset);
-        index++;
-    }
+    tri_vao->Bind();
+    tri_vao->AddVertexBuffer(tri_vbo);
+    tri_vao->SetIndexBuffer(tri_ibo);
 
-    IndexBuffer* indexBuffer = IndexBuffer::Create(indicies, sizeof(indicies));
-    indexBuffer->Bind();
+    tri_vao->Unbind();
+
+    float sqr_verts[7 * 4] = {
+        -0.5f, -0.5f, 0.0f, 1.0, 0.0, 0.0, 1.0,  // v0
+        0.5f,  -0.5f, 0.0f, 0.0, 1.0, 0.0, 1.0,  // v1
+        0.5f,  0.5f,  0.0f, 0.0, 0.0, 1.0, 1.0,  // v2,
+        -0.5f, 0.5f,  0.0f, 1.0, 0.0, 1.0, 1.0,  // v3,
+    };
+
+    uint32_t sqr_indicies[6] = {0, 1, 2, 2, 3, 0};
+
+    BufferLayout sqr_layout = {
+        {ShaderDataType::Float3, "a_Position"},  // 00: Position
+        {ShaderDataType::Float4, "a_Color"},     // 12: Color
+    };
+
+    std::shared_ptr<VertexArray> sqr_vao;
+    std::shared_ptr<VertexBuffer> sqr_vbo;
+    std::shared_ptr<IndexBuffer> sqr_ibo;
+
+    sqr_vao.reset(VertexArray::Create());
+    sqr_vbo.reset(VertexBuffer::Create(sqr_verts, sizeof(sqr_verts)));
+    sqr_ibo.reset(IndexBuffer::Create(sqr_indicies, sizeof(sqr_indicies)));
+
+    sqr_vbo->SetLayout(sqr_layout);
+
+    sqr_vao->Bind();
+    sqr_vao->AddVertexBuffer(sqr_vbo);
+    sqr_vao->SetIndexBuffer(sqr_ibo);
 
     std::string vertSrc = R"(
         #version 330 core
@@ -109,7 +111,7 @@ void Application::Run() {
         in vec4 v_Color;
         void main()
         {
-           color = v_Color;
+           color = vec4(1 - v_Color.rgb, 1);
         }
     )";
 
@@ -129,8 +131,13 @@ void Application::Run() {
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            glBindVertexArray(vao);
-            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+            s.Bind();
+            sqr_vao->Bind();
+            glDrawElements(GL_TRIANGLES, sqr_ibo->GetCount(), GL_UNSIGNED_INT, nullptr);
+            
+            s.Bind();
+            tri_vao->Bind();
+            glDrawElements(GL_TRIANGLES, tri_ibo->GetCount(), GL_UNSIGNED_INT, nullptr);
 
             // Update all layers
             for (Layer* layer : m_LayerStack) { layer->OnUpdate(); }
@@ -148,9 +155,6 @@ void Application::Run() {
 
         m_deltaTime = frameTimer.Elapsed();
     }
-
-    delete buffer;
-    delete indexBuffer;
 }
 
 void Application::OnEvent(Events::Event& e) {
