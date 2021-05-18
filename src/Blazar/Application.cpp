@@ -8,6 +8,7 @@
 // Sample
 #include "Blazar/Renderer/Buffer.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Shader.h"
 #include "Blazar/Renderer/VertexArray.h"
 
@@ -27,6 +28,8 @@ Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
 
 void Application::Run() {
     m_deltaTime = 0.016f;
+
+    Renderer::Init(RendererAPI::API::OpenGL);
 
     // Setup Global Layers
     ImGuiLayer* imgui = new ImGuiLayer();
@@ -128,17 +131,20 @@ void Application::Run() {
             // Clear the screen
             // TODO: Create the renderer
             glViewport(0, 0, GetWindow().GetWidth(), GetWindow().GetHeight());
-            glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+            RenderCmd::Clear();
+
+            Renderer::BeginPass();
 
             s.Bind();
-            sqr_vao->Bind();
-            glDrawElements(GL_TRIANGLES, sqr_ibo->GetCount(), GL_UNSIGNED_INT, nullptr);
+            Renderer::Submit(sqr_vao);
+
+            s.Bind();
+            Renderer::Submit(tri_vao);
+
+            Renderer::EndPass();
+
+            //Renderer::Flush();
             
-            s.Bind();
-            tri_vao->Bind();
-            glDrawElements(GL_TRIANGLES, tri_ibo->GetCount(), GL_UNSIGNED_INT, nullptr);
-
             // Update all layers
             for (Layer* layer : m_LayerStack) { layer->OnUpdate(); }
 
@@ -166,6 +172,7 @@ void Application::OnEvent(Events::Event& e) {
         if (e.Handled()) { break; }
     }
 }
+
 void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
 void Application::PushOverlay(Layer* layer) { m_LayerStack.PushOverlay(layer); }
 
@@ -173,4 +180,5 @@ bool Application::OnWindowClosed(Events::WindowCloseEvent& ev) {
     m_Running = false;
     return true;
 }
+
 }  // namespace Blazar

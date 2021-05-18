@@ -7,10 +7,10 @@
 namespace Blazar {
 
 VertexBuffer* VertexBuffer::Create(float* verticies, size_t size) {
-    switch (Renderer::CurrentAPI()) {
-        case RendererAPI::OpenGL:
+    switch (Renderer::GetAPI()) {
+        case RendererAPI::API::OpenGL:
             return new OpenGLVertexBuffer(verticies, size);
-        case RendererAPI::None:
+        case RendererAPI::API::None:
             BLAZAR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
             return nullptr;
         default:
@@ -20,10 +20,10 @@ VertexBuffer* VertexBuffer::Create(float* verticies, size_t size) {
 }
 
 IndexBuffer* IndexBuffer::Create(uint32_t* verticies, size_t size) {
-    switch (Renderer::CurrentAPI()) {
-        case RendererAPI::OpenGL:
+    switch (Renderer::GetAPI()) {
+        case RendererAPI::API::OpenGL:
             return new OpenGLIndexBuffer(verticies, size);
-        case RendererAPI::None:
+        case RendererAPI::API::None:
             BLAZAR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
             return nullptr;
         default:

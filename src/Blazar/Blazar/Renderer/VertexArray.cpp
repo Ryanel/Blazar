@@ -11,10 +11,10 @@
 namespace Blazar {
 
 VertexArray* VertexArray::Create() {
-    switch (Renderer::CurrentAPI()) {
-        case RendererAPI::OpenGL:
+    switch (Renderer::GetAPI()) {
+        case RendererAPI::API::OpenGL:
             return new OpenGLVertexArray();
-        case RendererAPI::None:
+        case RendererAPI::API::None:
             BLAZAR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
             return nullptr;
         default:

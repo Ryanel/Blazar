@@ -1,14 +1,19 @@
 #pragma once
 
+#include "VertexArray.h"
+#include "RendererAPI.h"
+
 namespace Blazar {
-enum class RendererAPI { None = 0, OpenGL = 1 };
 
 class Renderer {
    public:
-    static inline RendererAPI CurrentAPI() { return s_RendererAPI; }
+    static void BeginPass();
+    static void EndPass();
 
-   private:
-    static RendererAPI s_RendererAPI;
+    static void Init(RendererAPI::API toCreate);
+    static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+
+    static RendererAPI::API GetAPI() { return s_RendererAPI->GetAPI(); }
 };
 
 };  // namespace Blazar
