@@ -7,8 +7,8 @@ namespace Blazar {
 class Shader {
    public:
     // Factory methods
-    static Shader FromFile(std::string path);
-    static Shader FromText(std::string vertex, std::string fragment);
+    static Shader * FromFile(std::string path);
+    static Shader * FromText(std::string vertex, std::string fragment);
     ~Shader();
 
     void Bind() const;

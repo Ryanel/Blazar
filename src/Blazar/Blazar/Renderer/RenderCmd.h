@@ -10,6 +10,10 @@ class RenderCmd {
     inline static void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) {
         s_RendererAPI->DrawIndexed(vertexArray);
     }
+
+    inline static void SetViewport(int x, int y, int width, int height) {
+        s_RendererAPI->SetViewport(x, y, width, height);
+    }
 };
 
 };  // namespace Blazar

@@ -5,6 +5,7 @@ namespace Blazar {
 extern Application* CreateApplication();
 }
 
+#ifdef BLAZAR_CREATE_APPLICATION
 int main(int argc, char** argv) {
     using namespace Blazar;
     Log::Init();
@@ -15,5 +16,6 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+#endif
 
 #endif

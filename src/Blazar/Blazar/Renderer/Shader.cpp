@@ -49,7 +49,7 @@ Shader::Shader(const std::string& vert_src, const std::string& frag_src) {
 }
 
 
-Shader Shader::FromFile(std::string path) {
+Shader* Shader::FromFile(std::string path) {
     std::string vertexCode, fragmentCode;
     std::ifstream vShaderFile, fShaderFile;
     // ensure ifstream objects can throw exceptions:
@@ -72,10 +72,10 @@ Shader Shader::FromFile(std::string path) {
         fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure e) { std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl; }
 
-    return Shader(vertexCode, fragmentCode);
+    return new Shader(vertexCode, fragmentCode);
 }
 
-Shader Shader::FromText(std::string vertex, std::string fragment) { return Shader(vertex, fragment); }
+Shader* Shader::FromText(std::string vertex, std::string fragment) { return new Shader(vertex, fragment); }
 
 Shader::~Shader() { glDeleteProgram(m_Id); }
 

@@ -19,4 +19,8 @@ void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexAr
     glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
+void OpenGLRendererAPI::SetViewport(int x, int y, int width, int height) {
+    glViewport(x, y, width, height);
+}
+
 }  // namespace Blazar

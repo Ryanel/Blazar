@@ -101,7 +101,7 @@ project "Game"
  
      includedirs
      {
-         "src/%{prj.name}/Includes/",
+         "src/%{prj.name}/",
          "src/Blazar/",
          "%{IncludeDir.GLAD}",
          "%{IncludeDir.IMGUI}",
