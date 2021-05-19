@@ -3,8 +3,8 @@
 #include <glad/glad.h>
 #include "Blazar/Renderer/Buffer.h"
 #include "Blazar/Renderer/ShaderDataType.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"
-#include "Platform/OpenGL/OpenGLVertexArray.h"
+#include "Blazar/Platform/OpenGL/OpenGLBuffer.h"
+#include "Blazar/Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Blazar {
 

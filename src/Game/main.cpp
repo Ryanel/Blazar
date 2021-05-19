@@ -148,7 +148,7 @@ class DebugRenderingLayer : public Blazar::Layer {
 class Game : public Blazar::Application {
    public:
     Game() {
-        PushLayer(new LogEventsLayer());
+        //PushLayer(new LogEventsLayer());
         PushLayer(new ImGUIFPSWindowLayer());
         PushLayer(new ImGUIDemoWindowLayer());
         PushLayer(new ImGUIEditorMainLayer());

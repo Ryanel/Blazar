@@ -3,8 +3,8 @@
 #include "Buffer.h"
 #include "Renderer.h"
 
-#include "Platform/OpenGL/OpenGLBuffer.h"
-#include "Platform/OpenGL/OpenGLVertexArray.h"
+#include "Blazar/Platform/OpenGL/OpenGLBuffer.h"
+#include "Blazar/Platform/OpenGL/OpenGLVertexArray.h"
 #include "VertexArray.h"
 
 

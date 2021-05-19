@@ -2,9 +2,8 @@
 
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/ImGuiLayer.h"
-
-#include "Blazar/Renderer/Renderer.h"
 #include "Blazar/Renderer/RenderCmd.h"
+#include "Blazar/Renderer/Renderer.h"
 
 namespace Blazar {
 Application* Application::s_Instance;
@@ -17,12 +16,15 @@ Application::Application() {
     m_Window = std::unique_ptr<Window>(Window::Create());
     m_Window->SetEventCallback(BLAZAR_BIND_EVENT_FN(Application::OnEvent));
     Renderer::Init(RendererAPI::API::OpenGL);
+    m_Window->SetVSync(true);
 
     m_ImGui = new ImGuiLayer();
     PushOverlay(m_ImGui);
 }
 
 Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
+void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
+void Application::PushOverlay(Layer* layer) { m_LayerStack.PushOverlay(layer); }
 
 void Application::Run() {
     m_deltaTime = 0.016f;
@@ -62,14 +64,6 @@ void Application::OnEvent(Events::Event& e) {
         (*--it)->OnEvent(e);
         if (e.Handled()) { break; }
     }
-}
-
-void Application::PushLayer(Layer* layer) { 
-    m_LayerStack.PushLayer(layer); 
-
-}
-void Application::PushOverlay(Layer* layer) {
-    m_LayerStack.PushOverlay(layer);
 }
 
 bool Application::OnWindowClosed(Events::WindowCloseEvent& ev) {

@@ -1,8 +1,8 @@
 #include "bzpch.h"
 
+#include "Blazar/Platform/OpenGL/OpenGLBuffer.h"
 #include "Blazar/Renderer/Buffer.h"
 #include "Blazar/Renderer/Renderer.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Blazar {
 

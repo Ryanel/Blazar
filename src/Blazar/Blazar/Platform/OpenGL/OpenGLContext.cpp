@@ -1,6 +1,6 @@
 #include "bzpch.h"
 
-#include "Platform/OpenGL/OpenGLContext.h"
+#include "Blazar/Platform/OpenGL/OpenGLContext.h"
 
 #include <glad/glad.h>
 

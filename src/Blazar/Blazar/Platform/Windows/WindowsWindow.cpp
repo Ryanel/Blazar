@@ -1,6 +1,6 @@
 #include "bzpch.h"
 
-#include "Platform/Windows/WindowsWindow.h"
+#include "Blazar/Platform/Windows/WindowsWindow.h"
 
 #include "Blazar/Events/AppEvents.h"
 #include "Blazar/Events/KeyEvents.h"
@@ -8,7 +8,7 @@
 
 // Ordering is important here, do not remove space
 #include <GLFW/glfw3.h>
-#include "Platform/OpenGL/OpenGLContext.h"
+#include "Blazar/Platform/OpenGL/OpenGLContext.h"
 
 namespace Blazar {
 static bool s_GLFWInitialized = false;

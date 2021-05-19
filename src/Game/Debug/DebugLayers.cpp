@@ -26,7 +26,7 @@ void ImGUIFPSWindowLayer::OnImGUIRender() {
                      ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize)) {
         ImGui::Text("FPS: %0.2f", 1.0f / delta);
         ImGui::Text("Delta: %0.2f ms", (float)(delta * 1000.0f));
-        ImGui::Text("Passes: %d", renderer_stats.passesThisFrame);
+        ImGui::Text("Render Passes: %d", renderer_stats.passesThisFrame);
         ImGui::Text("Draw Calls: %d", renderer_stats.drawCalls);
     }
 

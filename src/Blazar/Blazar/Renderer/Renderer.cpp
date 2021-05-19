@@ -1,14 +1,14 @@
 #include "bzpch.h"
 
+#include "Blazar/Platform/OpenGL/OpenGLRendererAPI.h"
+#include "Blazar/Renderer/RenderCmd.h"
 #include "Renderer.h"
 
-#include "Platform/OpenGL/OpenGLRendererAPI.h"
-
-#include "Blazar/Renderer/RenderCmd.h"
-
 namespace Blazar {
+
 RendererStats renderer_stats;
 RendererAPI* s_RendererAPI;
+
 void Renderer::Init(RendererAPI::API toCreate) {
     BLAZAR_CORE_ASSERT(s_RendererAPI == nullptr, "Attempting to add another RendererAPI, not allowed!");
 
