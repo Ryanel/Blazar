@@ -7,6 +7,7 @@
 #include "Blazar/Renderer/RenderCmd.h"
 
 namespace Blazar {
+RendererStats renderer_stats;
 RendererAPI* s_RendererAPI;
 void Renderer::Init(RendererAPI::API toCreate) {
     BLAZAR_CORE_ASSERT(s_RendererAPI == nullptr, "Attempting to add another RendererAPI, not allowed!");
@@ -21,11 +22,18 @@ void Renderer::Init(RendererAPI::API toCreate) {
             break;
     }
 }
-void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray) { 
+void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray) {
     vertexArray->Bind();
-    RenderCmd::DrawIndexed(vertexArray); 
+    RenderCmd::DrawIndexed(vertexArray);
+    renderer_stats.drawCalls++;
 }
-void Renderer::BeginPass() {}
+
+void Renderer::NewFrame() {
+    renderer_stats.passesThisFrame = 0;
+    renderer_stats.drawCalls = 0;
+}
+
+void Renderer::BeginPass() { renderer_stats.passesThisFrame++; }
 void Renderer::EndPass() {}
 
 }  // namespace Blazar

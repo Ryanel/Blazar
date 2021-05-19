@@ -1,15 +1,14 @@
 #define BLAZAR_CREATE_APPLICATION
 
-#include <Blazar/Blazar.h>
-#include <Blazar/Events/AppEvents.h>
-
-#include <Blazar/Input/Keymap.h>
 #include <glad/glad.h>
 #include <imgui.h>
 #include <spdlog/spdlog.h>
 
 #include "Debug/DebugLayers.h"
 
+#include "Blazar/Blazar.h"
+#include "Blazar/Events/AppEvents.h"
+#include "Blazar/Input/Keymap.h"
 #include "Blazar/Renderer/Buffer.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
@@ -132,9 +131,7 @@ class DebugRenderingLayer : public Blazar::Layer {
 
     void OnImGUIRender() override {}
 
-    void OnEvent(Events::Event& ev) {
-        
-    }
+    void OnEvent(Events::Event& ev) {}
 
    public:
     std::shared_ptr<VertexArray> tri_vao;

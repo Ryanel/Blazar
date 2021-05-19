@@ -30,6 +30,7 @@ void Application::Run() {
     while (m_Running) {
         // Start timing
         Timer frameTimer;
+        Renderer::NewFrame();
 
         // Begin render
         {
@@ -44,7 +45,6 @@ void Application::Run() {
             m_ImGui->Begin();
             for (Layer* layer : m_LayerStack) { layer->OnImGUIRender(); }
             m_ImGui->End();
-
         }
 
         // Flip Windows

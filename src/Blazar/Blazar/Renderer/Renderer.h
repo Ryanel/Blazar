@@ -1,12 +1,18 @@
 #pragma once
 
-#include "VertexArray.h"
 #include "RendererAPI.h"
+#include "VertexArray.h"
 
 namespace Blazar {
 
+struct RendererStats {
+    int passesThisFrame;
+    int drawCalls;
+};
+
 class Renderer {
    public:
+    static void NewFrame();
     static void BeginPass();
     static void EndPass();
 
@@ -15,5 +21,6 @@ class Renderer {
 
     static RendererAPI::API GetAPI() { return s_RendererAPI->GetAPI(); }
 };
+extern RendererStats renderer_stats;
 
 };  // namespace Blazar
