@@ -1,55 +1,14 @@
 #include "bzpch.h"
 
 #include <glad/glad.h>
-
-#include "Blazar/Renderer/Shader.h"
-
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Blazar/Renderer/Shader.h"
+#include "Blazar/Renderer/Renderer.h"
+
+#include "Blazar/Platform/OpenGL/OpenGLShader.h"
+
 namespace Blazar {
-
-Shader::Shader(const std::string& vert_src, const std::string& frag_src) {
-    const char* v_str = vert_src.c_str();
-    const char* f_str = frag_src.c_str();
-
-    unsigned int vertexShader, fragmentShader;
-
-    int success;
-    char infoLog[512];
-
-    // Create temporary shader handles
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-    // Compile vertex shader
-    glShaderSource(vertexShader, 1, &v_str, NULL);
-    glCompileShader(vertexShader);
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        LOG_CORE_ERROR("Vertex Shader Failed to Compile: {}", infoLog);
-    }
-
-    // Compile fragment shader
-    glShaderSource(fragmentShader, 1, &f_str, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        LOG_CORE_ERROR("Fragment Shader Failed to Compile: {}", infoLog);
-    }
-
-    m_Id = glCreateProgram();
-    glAttachShader(m_Id, vertexShader);
-    glAttachShader(m_Id, fragmentShader);
-    glLinkProgram(m_Id);
-
-    // Cleanup
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-}
-
 
 Shader* Shader::FromFile(std::string path) {
     std::string vertexCode, fragmentCode;
@@ -72,22 +31,23 @@ Shader* Shader::FromFile(std::string path) {
         // convert stream into string
         vertexCode = vShaderStream.str();
         fragmentCode = fShaderStream.str();
-    } catch (std::ifstream::failure e) { std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl; }
+    } catch (std::ifstream::failure e) { LOG_CORE_ERROR("Shader: Unable to read file. Reason: {}", e.what()); }
 
-    return new Shader(vertexCode, fragmentCode);
+    return Shader::FromText(vertexCode, fragmentCode);
 }
 
-Shader* Shader::FromText(std::string vertex, std::string fragment) { return new Shader(vertex, fragment); }
+Shader* Shader::FromText(std::string vertex, std::string fragment) {
+    switch(Renderer::GetAPI()) {
+        case RendererAPI::API::OpenGL:
+            return OpenGLShader::FromText(vertex, fragment);
+        case RendererAPI::API::None:
+            BLAZAR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+            return nullptr;
+        default:
+            BLAZAR_CORE_ASSERT(false, "Unknown RendererAPI");
+            return nullptr;
+    }
 
-Shader::~Shader() { glDeleteProgram(m_Id); }
-
-void Shader::Bind() const { glUseProgram(m_Id); }
-
-void Shader::Unbind() const { glUseProgram(0); }
-
-void Shader::SetMat4(const std::string& name, const glm::mat4& matrix) { 
-    GLint location = glGetUniformLocation(m_Id, name.c_str());
-    glUniformMatrix4fv(location, 1, false, glm::value_ptr(matrix));
 }
 
 }  // namespace Blazar

@@ -8,6 +8,7 @@ namespace Blazar {
 class Camera {
    public:
     virtual ~Camera() {}
+
     virtual void SetPosition(const glm::vec3& cameraPosition) = 0;
     const glm::vec3& GetPosition() const { return m_CameraPosition; }
 

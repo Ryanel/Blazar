@@ -5,6 +5,7 @@
 
 namespace Blazar {
 
+/// Describes an element of a Vertex Buffer Layout (e.g: A normalized Mat4 12 bytes offset from the stride).
 struct BufferElement {
     std::string Name;
     uint32_t Size;
@@ -19,28 +20,23 @@ struct BufferElement {
 
     uint32_t GetElementCount() const {
         switch (Type) {
+            case ShaderDataType::Int:
             case ShaderDataType::Float:
+            case ShaderDataType::Bool:
                 return 1;
+            case ShaderDataType::Int2:
             case ShaderDataType::Float2:
                 return 2;
+            case ShaderDataType::Int3:
             case ShaderDataType::Float3:
                 return 3;
+            case ShaderDataType::Int4:
             case ShaderDataType::Float4:
                 return 4;
             case ShaderDataType::Mat3:
                 return 3 * 3;
             case ShaderDataType::Mat4:
                 return 4 * 4;
-            case ShaderDataType::Int:
-                return 1;
-            case ShaderDataType::Int2:
-                return 2;
-            case ShaderDataType::Int3:
-                return 3;
-            case ShaderDataType::Int4:
-                return 4;
-            case ShaderDataType::Bool:
-                return 1;
             default:
                 BLAZAR_CORE_ASSERT(false, "Unknown ShaderDataType!");
                 return 0;
@@ -48,10 +44,13 @@ struct BufferElement {
     }
 };
 
+/// Describes the layout of a Vertex Buffer
 class BufferLayout {
    public:
     BufferLayout() {}
-    BufferLayout(std::initializer_list<BufferElement> elements) : m_Elements(elements) { CalculateOffsetsAndStride(); }
+    BufferLayout(std::initializer_list<BufferElement> elements) : m_Elements(elements) {
+        CalculateOffsetsAndStride();
+    }
 
     inline const std::vector<BufferElement>& GetElements() const { return m_Elements; }
     uint32_t GetStride() const { return m_Stride; }
@@ -73,7 +72,7 @@ class BufferLayout {
 
    private:
     std::vector<BufferElement> m_Elements;
-    uint32_t m_Stride;
+    uint32_t m_Stride = 0;
 };
 
 class VertexBuffer {

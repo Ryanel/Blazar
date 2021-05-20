@@ -11,16 +11,11 @@ class Shader {
     // Factory methods
     static Shader * FromFile(std::string path);
     static Shader * FromText(std::string vertex, std::string fragment);
-    ~Shader();
 
-    void Bind() const;
-    void Unbind() const;
+    virtual ~Shader() = default;
 
-    void SetMat4(const std::string& name, const glm::mat4& matrix);
-
-   private:
-    Shader(const std::string& vert_src, const std::string& frag_src);
-    uint32_t m_Id;
+    virtual void Bind() const = 0;
+    virtual void Unbind() const = 0;
 };
 
 };  // namespace Blazar

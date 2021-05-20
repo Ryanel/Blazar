@@ -1,6 +1,7 @@
 #include "bzpch.h"
 
 #include "Blazar/Platform/OpenGL/OpenGLRendererAPI.h"
+#include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Renderer.h"
 
@@ -27,8 +28,16 @@ void Renderer::Init(RendererAPI::API toCreate) {
 void Renderer::Submit(const std::shared_ptr<VertexArray>& vertexArray, const std::shared_ptr<Shader>& shader,
                       const glm::mat4& transform) {
     shader->Bind();
-    shader->SetMat4("u_ViewProjection", m_PassData->MatViewProjection); // TODO: Once per shader per pass
-    shader->SetMat4("u_Transform", transform);
+
+    auto oglShader = std::dynamic_pointer_cast<OpenGLShader>(shader);
+
+    if (oglShader) {
+        oglShader->SetMat4("u_ViewProjection", m_PassData->MatViewProjection);  // TODO: Once per shader per pass
+        oglShader->SetMat4("u_Transform", transform);
+    } else {
+        BLAZAR_CORE_ASSERT(false, "Shader is Null!");
+    }
+
 
     vertexArray->Bind();
     RenderCmd::DrawIndexed(vertexArray);

@@ -7,6 +7,9 @@ void LogEventsLayer::OnEvent(Blazar::Events::Event& event) { LOG_GAME_TRACE("Eve
 // FPS Window
 void ImGUIFPSWindowLayer::OnImGUIRender() {
     ImGuiIO& io = ImGui::GetIO();
+
+    ImGuiWindowFlags winFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoSavedSettings;
+
     if (!(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)) {
         float width = 150;
         float padding_x = 8;
@@ -18,12 +21,13 @@ void ImGUIFPSWindowLayer::OnImGUIRender() {
 
         ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(width, 102), ImGuiCond_Always);
+        winFlags |= ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
+    } else {
     }
 
     float delta = Application::Get().m_deltaTime;
 
-    if (ImGui::Begin("Render Statistics", nullptr,
-                     ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize)) {
+    if (ImGui::Begin("Render Stats", nullptr, winFlags)) {
         ImGui::Text("FPS: %0.2f", 1.0f / delta);
         ImGui::Text("Delta: %0.2f ms", (float)(delta * 1000.0f));
         ImGui::Text("Render Passes: %d", renderer_stats.passesThisFrame);

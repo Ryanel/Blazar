@@ -129,6 +129,13 @@ class DebugRenderingLayer : public Blazar::Layer {
     }
 
     void OnUpdate() override {
+        // Input
+        float delta = Application::Get().m_deltaTime;
+        if (Input::KeyPressed(BLAZAR_KEY_A)) { cam_pos.x -= camSpeed * delta; }
+        if (Input::KeyPressed(BLAZAR_KEY_D)) { cam_pos.x += camSpeed * delta; }
+        if (Input::KeyPressed(BLAZAR_KEY_S)) { cam_pos.y -= camSpeed * delta; }
+        if (Input::KeyPressed(BLAZAR_KEY_W)) { cam_pos.y += camSpeed * delta; }
+
         float aspect = Application::Get().GetWindow().GetAspect();
         cam.reset(new OrthographicCamera(0.0f, 0.0f, zoom, aspect));
         cam->SetPosition(cam_pos);
@@ -148,6 +155,7 @@ class DebugRenderingLayer : public Blazar::Layer {
         if (ImGui::Begin("Camera Controls")) {
             ImGui::SliderFloat("Zoom", &zoom, 0, 10);
             ImGui::DragFloat3("Position", &cam_pos.x, 0.05f);
+            ImGui::SliderFloat("Camera Speed", &camSpeed, 0, 5);
         }
         ImGui::End();
     }
@@ -169,6 +177,7 @@ class DebugRenderingLayer : public Blazar::Layer {
 
     float zoom = 3.0;
     glm::vec3 cam_pos = {0, 0, 0};
+    float camSpeed = 1.0f;
 };
 
 class Game : public Blazar::Application {
