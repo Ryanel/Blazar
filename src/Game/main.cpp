@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <imgui.h>
 #include <spdlog/spdlog.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Debug/DebugLayers.h"
 
@@ -96,13 +97,14 @@ class DebugRenderingLayer : public Blazar::Layer {
             layout(location = 1) in vec4 a_Color;
             
             uniform mat4 u_ViewProjection;
+            uniform mat4 u_Transform;
 
             out vec4 v_Color;
         
             void main()
             {
                 v_Color = a_Color;
-                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
             }
         )";
 
@@ -131,10 +133,13 @@ class DebugRenderingLayer : public Blazar::Layer {
         cam.reset(new OrthographicCamera(0.0f, 0.0f, zoom, aspect));
         cam->SetPosition(cam_pos);
 
+        glm::mat4 tri_pos = glm::translate(glm::mat4(1.0f), {0.5f, 0, 0});
+        glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {-0.5f, 0, 0});
+
         Renderer::BeginPass(*cam);
 
-        Renderer::Submit(sqr_vao, shader);
-        Renderer::Submit(tri_vao, shader);
+        Renderer::Submit(sqr_vao, shader, sqr_pos);
+        Renderer::Submit(tri_vao, shader, tri_pos);
 
         Renderer::EndPass();
     }
