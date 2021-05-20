@@ -4,6 +4,8 @@
 #include "Blazar/ImGui/ImGuiLayer.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Blazar/Renderer/Camera.h"
+#include "Blazar/Renderer/OrthographicCamera.h"
 
 namespace Blazar {
 Application* Application::s_Instance;

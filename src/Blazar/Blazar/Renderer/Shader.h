@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include <string>
 
 namespace Blazar {
@@ -13,6 +15,8 @@ class Shader {
 
     void Bind() const;
     void Unbind() const;
+
+    void SetMat4(const std::string& name, const glm::mat4& matrix);
 
    private:
     Shader(const std::string& vert_src, const std::string& frag_src);

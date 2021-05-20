@@ -10,6 +10,8 @@
 #include "Blazar/Events/AppEvents.h"
 #include "Blazar/Input/Keymap.h"
 #include "Blazar/Renderer/Buffer.h"
+#include "Blazar/Renderer/Camera.h"
+#include "Blazar/Renderer/OrthographicCamera.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
 #include "Blazar/Renderer/Shader.h"
@@ -92,13 +94,15 @@ class DebugRenderingLayer : public Blazar::Layer {
             #version 330 core
             layout(location = 0) in vec3 a_Position;
             layout(location = 1) in vec4 a_Color;
+            
+            uniform mat4 u_ViewProjection;
 
             out vec4 v_Color;
         
             void main()
             {
                 v_Color = a_Color;
-                gl_Position = vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
             }
         )";
 
@@ -115,21 +119,33 @@ class DebugRenderingLayer : public Blazar::Layer {
 
         shader.reset(Shader::FromText(vertSrc, fragSrc));
         shader->Bind();
+
+        // Camera
+        float aspect = Application::Get().GetWindow().GetAspect();
+        cam.reset(new OrthographicCamera(0.0f, 0.0f, 3.0f, aspect));
+        cam->SetPosition({0, 0, 0});
     }
 
     void OnUpdate() override {
-        Renderer::BeginPass();
+        float aspect = Application::Get().GetWindow().GetAspect();
+        cam.reset(new OrthographicCamera(0.0f, 0.0f, zoom, aspect));
+        cam->SetPosition(cam_pos);
 
-        shader->Bind();
-        Renderer::Submit(sqr_vao);
+        Renderer::BeginPass(*cam);
 
-        shader->Bind();
-        Renderer::Submit(tri_vao);
+        Renderer::Submit(sqr_vao, shader);
+        Renderer::Submit(tri_vao, shader);
 
         Renderer::EndPass();
     }
 
-    void OnImGUIRender() override {}
+    void OnImGUIRender() override {
+        if (ImGui::Begin("Camera Controls")) {
+            ImGui::SliderFloat("Zoom", &zoom, 0, 10);
+            ImGui::DragFloat3("Position", &cam_pos.x, 0.05f);
+        }
+        ImGui::End();
+    }
 
     void OnEvent(Events::Event& ev) {}
 
@@ -143,12 +159,17 @@ class DebugRenderingLayer : public Blazar::Layer {
     std::shared_ptr<IndexBuffer> sqr_ibo;
 
     std::shared_ptr<Shader> shader;
+
+    std::shared_ptr<OrthographicCamera> cam;
+
+    float zoom = 3.0;
+    glm::vec3 cam_pos = {0, 0, 0};
 };
 
 class Game : public Blazar::Application {
    public:
     Game() {
-        //PushLayer(new LogEventsLayer());
+        // PushLayer(new LogEventsLayer());
         PushLayer(new ImGUIFPSWindowLayer());
         PushLayer(new ImGUIDemoWindowLayer());
         PushLayer(new ImGUIEditorMainLayer());
