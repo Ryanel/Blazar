@@ -27,8 +27,8 @@ void ImGuiLayer::OnAttach() {
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowBorderSize = 0.0f;
-    style.WindowRounding = 4;
-    style.FrameRounding = 4;
+    style.WindowRounding = 0;
+    style.FrameRounding = 0;
     style.FramePadding.x = 6;
     style.FramePadding.y = 4;
 
@@ -47,10 +47,7 @@ void ImGuiLayer::Begin() {
     ImGuiIO& io = ImGui::GetIO();
     Application& app = Application::Get();
     io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
-
-    float time = (float)glfwGetTime();
-    io.DeltaTime = m_Time > 0.0 ? (time - m_Time) : (1.0f / 60.0f);
-    m_Time = time;
+    io.DeltaTime = app.m_deltaTime;
 
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
