@@ -17,6 +17,7 @@
 #include "Blazar/Renderer/Renderer.h"
 #include "Blazar/Renderer/Shader.h"
 #include "Blazar/Renderer/VertexArray.h"
+#include "Blazar/Renderer/Viewport.h"
 
 using namespace Blazar;
 
@@ -124,21 +125,23 @@ class DebugRenderingLayer : public Blazar::Layer {
 
         // Camera
         float aspect = Application::Get().GetWindow().GetAspect();
-        cam.reset(new OrthographicCamera(0.0f, 0.0f, 3.0f, aspect));
+        cam.reset(new OrthographicCamera(m_Zoom, aspect));
         cam->SetPosition({0, 0, 0});
     }
 
     void OnUpdate() override {
         // Input
         float delta = Application::Get().m_deltaTime;
-        if (Input::KeyPressed(BLAZAR_KEY_A)) { cam_pos.x -= camSpeed * delta; }
-        if (Input::KeyPressed(BLAZAR_KEY_D)) { cam_pos.x += camSpeed * delta; }
-        if (Input::KeyPressed(BLAZAR_KEY_S)) { cam_pos.y -= camSpeed * delta; }
-        if (Input::KeyPressed(BLAZAR_KEY_W)) { cam_pos.y += camSpeed * delta; }
+        auto windowViewport = Application::Get().GetWindow().GetViewport();
 
-        float aspect = Application::Get().GetWindow().GetAspect();
-        cam.reset(new OrthographicCamera(0.0f, 0.0f, zoom, aspect));
-        cam->SetPosition(cam_pos);
+        if (Input::KeyPressed(BLAZAR_KEY_W)) { m_CameraPosition.y += camSpeed * delta; }
+        if (Input::KeyPressed(BLAZAR_KEY_A)) { m_CameraPosition.x -= camSpeed * delta; }
+        if (Input::KeyPressed(BLAZAR_KEY_D)) { m_CameraPosition.x += camSpeed * delta; }
+        if (Input::KeyPressed(BLAZAR_KEY_S)) { m_CameraPosition.y -= camSpeed * delta; }
+
+        cam->SetViewport(windowViewport);
+        cam->SetZoom(m_Zoom);
+        cam->SetPosition(m_CameraPosition);
 
         glm::mat4 tri_pos = glm::translate(glm::mat4(1.0f), {0.5f, 0, 0});
         glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {-0.5f, 0, 0});
@@ -153,9 +156,15 @@ class DebugRenderingLayer : public Blazar::Layer {
 
     void OnImGUIRender() override {
         if (ImGui::Begin("Camera Controls")) {
-            ImGui::SliderFloat("Zoom", &zoom, 0, 10);
-            ImGui::DragFloat3("Position", &cam_pos.x, 0.05f);
-            ImGui::SliderFloat("Camera Speed", &camSpeed, 0, 5);
+            float realWidth = m_Zoom * 2;
+            float realHeight = m_Zoom * 2;
+
+            ImGui::SliderFloat("Camera Speed", &camSpeed, 0.01f, 4);
+            ImGui::SliderFloat("Zoom", &m_Zoom, 1, 10);
+            ImGui::DragFloat3("Position", &m_CameraPosition.x, 0.025f);
+
+            ImGui::Text("Real Width: %f", realWidth);
+            ImGui::Text("Real Height: %f", realHeight);
         }
         ImGui::End();
     }
@@ -175,8 +184,8 @@ class DebugRenderingLayer : public Blazar::Layer {
 
     std::shared_ptr<OrthographicCamera> cam;
 
-    float zoom = 3.0;
-    glm::vec3 cam_pos = {0, 0, 0};
+    float m_Zoom = 3.0;
+    glm::vec3 m_CameraPosition = {0, 0, 0};
     float camSpeed = 1.0f;
 };
 

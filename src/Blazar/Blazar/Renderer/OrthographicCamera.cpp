@@ -7,23 +7,45 @@
 
 namespace Blazar {
 
-OrthographicCamera::OrthographicCamera(float x, float y, float zoom, float aspect) {
-    float w = zoom * aspect;
-    float h = zoom;
-    float halfWidth = w / 2.0f;
-    float halfHeight = h / 2.0f;
-    m_MatProjection = glm::ortho(x - halfWidth, x + halfWidth, y - halfHeight, y + halfHeight, -1.0f, 1.0f);
+OrthographicCamera::OrthographicCamera(float zoom, float aspect) : m_Zoom(zoom), m_Aspect(aspect) {
+    RecalculatePerspectiveMatrix();
 }
 
+OrthographicCamera::OrthographicCamera(float zoom, Viewport& viewport) : m_Zoom(zoom), m_Aspect(viewport.GetAspect()) {
+    RecalculatePerspectiveMatrix();
+}
 
 void OrthographicCamera::SetPosition(const glm::vec3& cameraPosition) {
     m_CameraPosition = cameraPosition;
     RecalculateViewMatrix();
 }
 
+void OrthographicCamera::SetViewport(Viewport& viewport) {
+    m_Aspect = viewport.GetAspect();
+    m_Viewport = viewport; // Copy
+    RecalculatePerspectiveMatrix();
+}
+
+void OrthographicCamera::SetZoom(float zoom) {
+    m_Zoom = zoom;
+    RecalculatePerspectiveMatrix();
+}
+
+const Viewport& OrthographicCamera::GetViewport() { return m_Viewport; }
+
+float OrthographicCamera::GetZoom() { return m_Zoom; }
+
+void OrthographicCamera::RecalculatePerspectiveMatrix() {
+    float w = m_Zoom * m_Aspect;
+    float h = m_Zoom;
+    float halfWidth = w / 2.0f;
+    float halfHeight = h / 2.0f;
+    m_MatProjection = glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
+    m_MatViewProjection = m_MatProjection * m_MatView;
+}
+
 void OrthographicCamera::RecalculateViewMatrix() {
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_CameraPosition);
-
     m_MatView = glm::inverse(transform);
     m_MatViewProjection = m_MatProjection * m_MatView;
 }

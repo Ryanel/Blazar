@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Blazar/Events/Events.h"
+#include "Blazar/Renderer/Viewport.h"
 
 namespace Blazar {
 
@@ -29,6 +30,8 @@ class BLAZAR_API Window {
     virtual bool IsVSync() const = 0;
 
     float GetAspect() const { return (float)GetWidth() / (float)GetHeight(); }
+
+    Viewport GetViewport() const { return Viewport({0, 0, (float)GetWidth(), (float)GetHeight()}); }
 
     static Window* Create(const WindowProperties& props = WindowProperties());
     virtual void* GetNativeWindow() = 0;

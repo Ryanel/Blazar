@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "Blazar/Log.h"
 #include "Blazar/Renderer/ShaderDataType.h"
 
 namespace Blazar {

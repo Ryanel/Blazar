@@ -12,9 +12,9 @@ class Camera {
     virtual void SetPosition(const glm::vec3& cameraPosition) = 0;
     const glm::vec3& GetPosition() const { return m_CameraPosition; }
 
-    const glm::mat4& GetProjection() const { return m_MatProjection; }
-    const glm::mat4& GetView() const { return m_MatView; }
-    const glm::mat4& GetViewProjection() const { return m_MatViewProjection; }
+    const virtual glm::mat4& GetProjection() const { return m_MatProjection; }
+    const virtual glm::mat4& GetView() const { return m_MatView; }
+    const virtual glm::mat4& GetViewProjection() const { return m_MatViewProjection; }
 
    protected:
     glm::mat4 m_MatProjection;
