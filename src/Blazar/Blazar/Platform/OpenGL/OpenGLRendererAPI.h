@@ -11,7 +11,7 @@ class OpenGLRendererAPI : public RendererAPI {
    public:
     virtual inline API GetAPI() override { return API::OpenGL; }
     virtual void Clear() override;
-    virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) override;
+    virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
     virtual void SetViewport(int x, int y, int width, int height) override;
 };
 

@@ -120,7 +120,7 @@ class DebugRenderingLayer : public Blazar::Layer {
             }
         )";
 
-        shader.reset(Shader::FromText(vertSrc, fragSrc));
+        shader = Shader::FromText(vertSrc, fragSrc);
         shader->Bind();
 
         // Camera
@@ -172,17 +172,17 @@ class DebugRenderingLayer : public Blazar::Layer {
     void OnEvent(Events::Event& ev) {}
 
    public:
-    std::shared_ptr<VertexArray> tri_vao;
-    std::shared_ptr<VertexBuffer> tri_vbo;
-    std::shared_ptr<IndexBuffer> tri_ibo;
+    Ref<VertexArray> tri_vao;
+    Ref<VertexBuffer> tri_vbo;
+    Ref<IndexBuffer> tri_ibo;
 
-    std::shared_ptr<VertexArray> sqr_vao;
-    std::shared_ptr<VertexBuffer> sqr_vbo;
-    std::shared_ptr<IndexBuffer> sqr_ibo;
+    Ref<VertexArray> sqr_vao;
+    Ref<VertexBuffer> sqr_vbo;
+    Ref<IndexBuffer> sqr_ibo;
 
-    std::shared_ptr<Shader> shader;
+    Ref<Shader> shader;
 
-    std::shared_ptr<OrthographicCamera> cam;
+    Ref<OrthographicCamera> cam;
 
     float m_Zoom = 3.0;
     glm::vec3 m_CameraPosition = {0, 0, 0};

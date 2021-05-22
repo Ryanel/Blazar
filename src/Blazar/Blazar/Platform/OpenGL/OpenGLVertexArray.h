@@ -14,16 +14,16 @@ class OpenGLVertexArray : public VertexArray {
     virtual void Bind() const override;
     virtual void Unbind() const override;
 
-    virtual void AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) override;
-    virtual void SetIndexBuffer(std::shared_ptr<IndexBuffer>& indexBuffer) override;
+    virtual void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) override;
+    virtual void SetIndexBuffer(Ref<IndexBuffer>& indexBuffer) override;
 
-    virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const;
-    virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const;
+    virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const;
+    virtual const Ref<IndexBuffer>& GetIndexBuffer() const;
 
    private:
     uint32_t m_Id;
     BufferLayout m_Layout;
-    std::vector<std::shared_ptr<VertexBuffer>> m_VertexBuffers;
-    std::shared_ptr<IndexBuffer> m_IndexBuffer;
+    std::vector<Ref<VertexBuffer>> m_VertexBuffers;
+    Ref<IndexBuffer> m_IndexBuffer;
 };
 };  // namespace Blazar

@@ -50,8 +50,8 @@ OpenGLShader::OpenGLShader(const std::string& vert_src, const std::string& frag_
     glDeleteShader(fragmentShader);
 }
 
-OpenGLShader* OpenGLShader::FromText(std::string vertex, std::string fragment) {
-    return new OpenGLShader(vertex, fragment);
+Ref<OpenGLShader> OpenGLShader::FromText(std::string vertex, std::string fragment) {
+    return std::make_shared<OpenGLShader>(vertex, fragment);
 }
 
 OpenGLShader::~OpenGLShader() { glDeleteProgram(m_Id); }

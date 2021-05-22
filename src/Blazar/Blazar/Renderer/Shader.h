@@ -1,16 +1,17 @@
 #pragma once
 
 #include <glm/glm.hpp>
-
 #include <string>
+
+#include "Blazar/Core.h"
 
 namespace Blazar {
 
 class Shader {
    public:
     // Factory methods
-    static Shader * FromFile(std::string path);
-    static Shader * FromText(std::string vertex, std::string fragment);
+    static Ref<Shader> FromFile(std::string path);
+    static Ref<Shader> FromText(std::string vertex, std::string fragment);
 
     virtual ~Shader() = default;
 

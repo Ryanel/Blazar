@@ -10,17 +10,17 @@ namespace Blazar {
 /// Camera with no perspective.
 class OrthographicCamera : public Camera {
    public:
-    /// Creates an orthographic camera with a center X and Y position, extending width/2 and height/2 in each axis.
     OrthographicCamera(float zoom, float aspect);
     OrthographicCamera(float zoom, Viewport& viewport);
     
+    /// Moves the camera to the specified cameraPosition
     virtual void SetPosition(const glm::vec3& cameraPosition) override;
     
-    void SetViewport(Viewport& viewport);
-    const Viewport& GetViewport();
+    virtual void SetViewport(Viewport& viewport) override;
+    virtual const Viewport& GetViewport() override;
 
-    void SetZoom(float zoom);
-    float GetZoom();
+    void SetZoom(float zoom); ///< Set the current zoom level
+    float GetZoom(); ///< Get the current zoom level
 
    private:
     float m_Zoom;

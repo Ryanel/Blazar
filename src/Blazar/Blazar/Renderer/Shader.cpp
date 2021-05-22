@@ -10,7 +10,7 @@
 
 namespace Blazar {
 
-Shader* Shader::FromFile(std::string path) {
+Ref<Shader> Shader::FromFile(std::string path) {
     std::string vertexCode, fragmentCode;
     std::ifstream vShaderFile, fShaderFile;
     // ensure ifstream objects can throw exceptions:
@@ -36,7 +36,7 @@ Shader* Shader::FromFile(std::string path) {
     return Shader::FromText(vertexCode, fragmentCode);
 }
 
-Shader* Shader::FromText(std::string vertex, std::string fragment) {
+Ref<Shader> Shader::FromText(std::string vertex, std::string fragment) {
     switch(Renderer::GetAPI()) {
         case RendererAPI::API::OpenGL:
             return OpenGLShader::FromText(vertex, fragment);
