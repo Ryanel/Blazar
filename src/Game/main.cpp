@@ -9,6 +9,7 @@
 
 #include "Blazar/Blazar.h"
 #include "Blazar/Events/AppEvents.h"
+#include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/Input/Keymap.h"
 #include "Blazar/Renderer/Buffer.h"
 #include "Blazar/Renderer/Camera.h"
@@ -155,7 +156,11 @@ class DebugRenderingLayer : public Blazar::Layer {
     }
 
     void OnImGUIRender() override {
-        if (ImGui::Begin("Camera Controls")) {
+        ImGUI_MainMenu_Toggle_Simple("Windows", "Camera Controls", "", this->showCameraControls, true);
+
+        if (!this->showCameraControls) { return; }
+        
+        if (ImGui::Begin("Camera Controls", &this->showCameraControls)) {
             float realWidth = m_Zoom * 2;
             float realHeight = m_Zoom * 2;
 
@@ -187,15 +192,17 @@ class DebugRenderingLayer : public Blazar::Layer {
     float m_Zoom = 3.0;
     glm::vec3 m_CameraPosition = {0, 0, 0};
     float camSpeed = 1.0f;
+    bool showCameraControls = true;
+    ;
 };
 
 class Game : public Blazar::Application {
    public:
     Game() {
         // PushLayer(new LogEventsLayer());
+        PushLayer(new ImGUIEditorMainLayer());
         PushLayer(new ImGUIFPSWindowLayer());
         PushLayer(new ImGUIDemoWindowLayer());
-        PushLayer(new ImGUIEditorMainLayer());
         PushLayer(new DebugRenderingLayer());
     }
 

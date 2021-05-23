@@ -54,9 +54,12 @@ void ImGuiLayer::Begin() {
     ImGui::NewFrame();
 }
 
-void ImGuiLayer::End() {
+void ImGuiLayer::End(bool draw) {
     ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    if (draw) {
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
 
     ImGuiIO& io = ImGui::GetIO();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {

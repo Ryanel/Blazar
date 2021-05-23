@@ -19,7 +19,7 @@ class BLAZAR_API ImGuiLayer : public Layer {
     void OnEvent(Events::Event& ev) override;
 
     void Begin();
-    void End();
+    void End(bool draw = true);
 
     inline const std::string& GetName() const { return m_DebugName; }
 

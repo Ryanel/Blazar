@@ -80,41 +80,46 @@ project "Blazar"
             "GLFW_INCLUDE_NONE"
         }
 
-        postbuildcommands
-        {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Game")
-        }
+        --postbuildcommands
+        --{
+        --    ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Game")
+        --}
 
 project "Game"
-     location "build/Game"
-     kind "ConsoleApp"
-     language "C++"
+    location "build/Game"
+    kind "ConsoleApp"
+    language "C++"
 
-     targetdir ("build/bin/" .. outputdir .. "/%{prj.name}")
-     objdir("build/Intermediate/" .. outputdir .. "/%{prj.name}")
+    targetdir ("build/bin/" .. outputdir .. "/%{prj.name}")
+    objdir("build/Intermediate/" .. outputdir .. "/%{prj.name}")
+    debugdir("build/bin/" .. outputdir .. "/%{prj.name}")
 
-     files
-     {
-         "src/%{prj.name}/**.h",
-         "src/%{prj.name}/**.cpp",
-     }
- 
-     includedirs
-     {
-         "src/%{prj.name}/",
-         "src/Blazar/",
-         "%{IncludeDir.GLAD}",
-         "%{IncludeDir.IMGUI}",
-         conan_includedirs
-     }
+    files
+    {
+        "src/%{prj.name}/**.h",
+        "src/%{prj.name}/**.cpp",
+    }
 
-     links
-     {
+    includedirs
+    {
+        "src/%{prj.name}/",
+        "src/Blazar/",
+        "%{IncludeDir.GLAD}",
+        "%{IncludeDir.IMGUI}",
+        conan_includedirs
+    }
+
+    links
+    {
         "Blazar",
         "IMGUI"
-     }
+    }
 
-     filter "configurations:Debug"
+    postbuildcommands {
+        "xcopy %{wks.location}..\\assets ..\\bin\\%{outputdir}\\%{prj.name}\\Contents\\ /Q /E /Y /I"
+    }
+
+    filter "configurations:Debug"
         defines "BLAZAR_DEBUG"
         symbols "On"
         runtime "Debug"

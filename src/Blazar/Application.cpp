@@ -2,6 +2,8 @@
 
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/ImGuiLayer.h"
+#include "Blazar/Input/Input.h"
+#include "Blazar/Input/Keymap.h"
 #include "Blazar/Renderer/Camera.h"
 #include "Blazar/Renderer/OrthographicCamera.h"
 #include "Blazar/Renderer/RenderCmd.h"
@@ -36,6 +38,11 @@ void Application::Run() {
         Timer frameTimer;
         Renderer::NewFrame();
 
+        // Input Processing
+        if (Input::KeyPressed(BLAZAR_KEY_GRAVE_ACCENT)) { renderImGUI = !renderImGUI; }
+
+        // Update
+
         // Begin render
         {
             // Clear the screen
@@ -48,7 +55,7 @@ void Application::Run() {
             // ImGUI
             m_ImGui->Begin();
             for (Layer* layer : m_LayerStack) { layer->OnImGUIRender(); }
-            m_ImGui->End();
+            m_ImGui->End(renderImGUI);
         }
 
         // Flip Windows

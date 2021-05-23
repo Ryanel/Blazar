@@ -1,11 +1,17 @@
 #include "DebugLayers.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Blazar/ImGui/CustomImGui.h"
+
 // Log Events
 
 void LogEventsLayer::OnEvent(Blazar::Events::Event& event) { LOG_GAME_TRACE("Event: {}", event.ToString()); }
 
 // FPS Window
 void ImGUIFPSWindowLayer::OnImGUIRender() {
+    ImGUI_MainMenu_Toggle_Simple("Windows", "Render Stats", "", this->show, true);
+
+    if (!this->show) { return; }
+
     ImGuiIO& io = ImGui::GetIO();
 
     ImGuiWindowFlags winFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoSavedSettings;

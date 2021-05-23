@@ -11,6 +11,7 @@
 
 namespace Blazar {
 
+/// Represents a running application in Blazar
 class BLAZAR_API Application {
    public:
     Application();
@@ -32,10 +33,12 @@ class BLAZAR_API Application {
     Timestep m_deltaTime;
     Timer m_FrameTimer;
 
+
    private:
     bool OnWindowClosed(Events::WindowCloseEvent&);
     static Application* s_Instance;
     ImGuiLayer* m_ImGui;
+    bool renderImGUI = false;
 };
 
 }  // namespace Blazar
