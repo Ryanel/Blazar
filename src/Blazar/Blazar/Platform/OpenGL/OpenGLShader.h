@@ -18,6 +18,8 @@ class OpenGLShader : public Shader {
     void Unbind() const;
 
     // Set uniforms
+    void SetInt(const std::string& name, const int val);
+
     void SetFloat(const std::string& name, const float val);
     void SetFloat2(const std::string& name, const glm::vec2& vec);
     void SetFloat3(const std::string& name, const glm::vec3& vec);

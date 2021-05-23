@@ -15,9 +15,11 @@ outputdir="%{cfg.buildcfg}-%{cfg.system}"
 IncludeDir= {}
 IncludeDir["GLAD"] = "src/Vendor/GLAD/include/"
 IncludeDir["IMGUI"] = "src/Vendor/IMGUI/"
+IncludeDir["STB"] = "src/Vendor/stb/"
 
 include "src/Vendor/GLAD"
 include "src/Vendor/imguipremake.lua"
+include "src/Vendor/stb/premake5.lua"
 
 project "Blazar"
     location "build/Blazar/"
@@ -34,7 +36,8 @@ project "Blazar"
 
     links {
         "GLAD",
-        "IMGUI"
+        "IMGUI",
+        "STB"
     }
 
     files
@@ -47,6 +50,7 @@ project "Blazar"
         "src/%{prj.name}/",
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.IMGUI}",
+        "%{IncludeDir.STB}",
         conan_includedirs
     }
 

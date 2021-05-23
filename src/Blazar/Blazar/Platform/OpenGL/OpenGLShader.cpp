@@ -45,6 +45,11 @@ OpenGLShader::OpenGLShader(const std::string& vert_src, const std::string& frag_
     glAttachShader(m_Id, fragmentShader);
     glLinkProgram(m_Id);
 
+    
+    #ifdef BLAZAR_DEBUG
+    glObjectLabel(GL_PROGRAM, m_Id, -1, fmt::format("Blazar Shader {}", m_Id).c_str());
+    #endif
+
     // Cleanup
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -59,6 +64,13 @@ OpenGLShader::~OpenGLShader() { glDeleteProgram(m_Id); }
 void OpenGLShader::Bind() const { glUseProgram(m_Id); }
 
 void OpenGLShader::Unbind() const { glUseProgram(0); }
+
+
+void OpenGLShader::SetInt(const std::string& name, const int val) {
+    GLint location = glGetUniformLocation(m_Id, name.c_str());
+    glUniform1i(location, val);
+}
+
 
 void OpenGLShader::SetFloat(const std::string& name, const float val) {
     GLint location = glGetUniformLocation(m_Id, name.c_str());

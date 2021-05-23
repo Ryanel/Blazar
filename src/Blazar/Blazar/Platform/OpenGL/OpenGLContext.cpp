@@ -26,6 +26,8 @@ void OpenGLContext::Init() {
     LOG_CORE_INFO(" * Renderer: {0}", glGetString(GL_RENDERER));
     LOG_CORE_INFO(" *  Version: {0}", glGetString(GL_VERSION));
     glEnable(GL_MULTISAMPLE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void OpenGLContext::Present() { glfwSwapBuffers(m_WindowHandle); }

@@ -17,8 +17,10 @@
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
 #include "Blazar/Renderer/Shader.h"
+#include "Blazar/Renderer/Texture.h"
 #include "Blazar/Renderer/VertexArray.h"
 #include "Blazar/Renderer/Viewport.h"
+#include "Blazar/Platform/OpenGL/OpenGLShader.h"
 
 using namespace Blazar;
 
@@ -42,43 +44,17 @@ class DebugRenderingLayer : public Blazar::Layer {
     DebugRenderingLayer() : Layer("Game") {}
 
     void OnAttach() override {
-        // Triangle
-        BufferLayout tri_layout = {
-            {ShaderDataType::Float3, "a_Position"},  // 00: Position
-            {ShaderDataType::Float4, "a_Color"},     // 12: Color
-        };
-
-        float tri_verts[7 * 3] = {
-            -0.5f, -0.5f, 0.0f, 1.0, 0.0, 0.0, 1.0,  // v0
-            0.5f,  -0.5f, 0.0f, 0.0, 1.0, 0.0, 1.0,  // v1
-            0.0f,  0.5f,  0.0f, 0.0, 0.0, 1.0, 1.0,  // v2,
-        };
-
-        uint32_t tri_indicies[3] = {0, 1, 2};
-
-        tri_vao.reset(VertexArray::Create());
-        tri_vbo.reset(VertexBuffer::Create(tri_verts, sizeof(tri_verts)));
-        tri_ibo.reset(IndexBuffer::Create(tri_indicies, sizeof(tri_indicies)));
-
-        tri_vbo->SetLayout(tri_layout);
-
-        tri_vao->Bind();
-        tri_vao->AddVertexBuffer(tri_vbo);
-        tri_vao->SetIndexBuffer(tri_ibo);
-
-        tri_vao->Unbind();
-
         // Square
         BufferLayout sqr_layout = {
             {ShaderDataType::Float3, "a_Position"},  // 00: Position
-            {ShaderDataType::Float4, "a_Color"},     // 12: Color
+            {ShaderDataType::Float2, "a_TexCoord"},  // 12: Color
         };
 
-        float sqr_verts[7 * 4] = {
-            -0.5f, -0.5f, 0.0f, 1.0, 0.0, 0.0, 1.0,  // v0
-            0.5f,  -0.5f, 0.0f, 0.0, 1.0, 0.0, 1.0,  // v1
-            0.5f,  0.5f,  0.0f, 0.0, 0.0, 1.0, 1.0,  // v2,
-            -0.5f, 0.5f,  0.0f, 1.0, 0.0, 1.0, 1.0,  // v3,
+        float sqr_verts[5 * 4] = {
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  // v0
+            0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,  // v1
+            0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // v2,
+            -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  // v3,
         };
 
         uint32_t sqr_indicies[6] = {0, 1, 2, 2, 3, 0};
@@ -96,16 +72,15 @@ class DebugRenderingLayer : public Blazar::Layer {
         std::string vertSrc = R"(
             #version 330 core
             layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
+            layout(location = 1) in vec2 a_TexCoord;
             
             uniform mat4 u_ViewProjection;
             uniform mat4 u_Transform;
 
-            out vec4 v_Color;
-        
+            out vec2 v_TexCoord;
             void main()
             {
-                v_Color = a_Color;
+                v_TexCoord = a_TexCoord;
                 gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
             }
         )";
@@ -114,15 +89,23 @@ class DebugRenderingLayer : public Blazar::Layer {
             #version 330 core
             layout(location = 0) out vec4 color;
 
-            in vec4 v_Color;
+            in vec2 v_TexCoord;
+
+            uniform sampler2D u_Texture;
+
             void main()
             {
-               color = vec4(1 - v_Color.rgb, 1);
+               color = texture(u_Texture, v_TexCoord);
             }
         )";
 
+        
         shader = Shader::FromText(vertSrc, fragSrc);
         shader->Bind();
+        std::dynamic_pointer_cast<Blazar::OpenGLShader>(shader)->SetInt("u_Texture", 0);
+
+        sampleTexture = Texture2D::Create("Contents/Textures/SampleTrans.png");
+        
 
         // Camera
         float aspect = Application::Get().GetWindow().GetAspect();
@@ -144,13 +127,12 @@ class DebugRenderingLayer : public Blazar::Layer {
         cam->SetZoom(m_Zoom);
         cam->SetPosition(m_CameraPosition);
 
-        glm::mat4 tri_pos = glm::translate(glm::mat4(1.0f), {0.5f, 0, 0});
-        glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {-0.5f, 0, 0});
+        glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {0, 0, 0});
 
         Renderer::BeginPass(*cam);
 
+        sampleTexture->Bind(0);
         Renderer::Submit(sqr_vao, shader, sqr_pos);
-        Renderer::Submit(tri_vao, shader, tri_pos);
 
         Renderer::EndPass();
     }
@@ -159,7 +141,7 @@ class DebugRenderingLayer : public Blazar::Layer {
         ImGUI_MainMenu_Toggle_Simple("Windows", "Camera Controls", "", this->showCameraControls, true);
 
         if (!this->showCameraControls) { return; }
-        
+
         if (ImGui::Begin("Camera Controls", &this->showCameraControls)) {
             float realWidth = m_Zoom * 2;
             float realHeight = m_Zoom * 2;
@@ -177,16 +159,12 @@ class DebugRenderingLayer : public Blazar::Layer {
     void OnEvent(Events::Event& ev) {}
 
    public:
-    Ref<VertexArray> tri_vao;
-    Ref<VertexBuffer> tri_vbo;
-    Ref<IndexBuffer> tri_ibo;
-
     Ref<VertexArray> sqr_vao;
     Ref<VertexBuffer> sqr_vbo;
     Ref<IndexBuffer> sqr_ibo;
 
     Ref<Shader> shader;
-
+    Ref<Texture> sampleTexture;
     Ref<OrthographicCamera> cam;
 
     float m_Zoom = 3.0;
