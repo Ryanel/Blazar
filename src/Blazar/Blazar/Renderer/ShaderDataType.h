@@ -45,6 +45,7 @@ static uint32_t ShaderDataTypeSize(ShaderDataType type) {
             return 1;
         default:
             BLAZAR_CORE_ASSERT(false, "Unknown ShaderDataType!");
+            return 0;
     }
 }
 

@@ -6,6 +6,7 @@
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Shader.h"
 
+
 namespace Blazar {
 
 OpenGLShader::OpenGLShader(const std::string& vert_src, const std::string& frag_src) {

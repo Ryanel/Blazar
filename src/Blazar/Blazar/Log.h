@@ -1,12 +1,14 @@
 #pragma once
 
+#include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
+
 #include <memory>
 #include "Blazar/Core.h"
 
 namespace Blazar {
-class BLAZAR_API Log {
+class Log {
    public:
     static void Init();
     inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }

@@ -2,10 +2,8 @@
 
 -- Conan
 editorintegration "On"
-include("build/conanbuildinfo.premake.lua")
 
 workspace "Blazar"
-    conan_basic_setup()
     architecture "x64"
     configurations { "Debug", "Release", "Distribution" }
     location "build"
@@ -13,18 +11,22 @@ workspace "Blazar"
 outputdir="%{cfg.buildcfg}-%{cfg.system}"
 
 IncludeDir= {}
-IncludeDir["GLAD"] = "src/Vendor/GLAD/include/"
-IncludeDir["IMGUI"] = "src/Vendor/IMGUI/"
-IncludeDir["STB"] = "src/Vendor/stb/"
+IncludeDir["GLAD"]     = "src/Vendor/GLAD/include/"
+IncludeDir["IMGUI"]    = "src/Vendor/IMGUI/"
+IncludeDir["STB"]      = "src/Vendor/stb/"
+IncludeDir["spdlog"]   = "src/Vendor/spdlog/include/"
+IncludeDir["GLFW"]     = "src/Vendor/glfw/include/"
+IncludeDir["GLM"]      = "src/Vendor/glm/"
 
 include "src/Vendor/GLAD"
-include "src/Vendor/imguipremake.lua"
+include "src/Vendor/vendor.lua"
 include "src/Vendor/stb/premake5.lua"
 
 project "Blazar"
     location "build/Blazar/"
     kind "StaticLib"
     language "C++"
+    cppdialect "C++17"
 
     targetdir ("build/bin/" .. outputdir .. "/%{prj.name}")
     objdir("build/Intermediate/" .. outputdir .. "/%{prj.name}")
@@ -37,7 +39,8 @@ project "Blazar"
     links {
         "GLAD",
         "IMGUI",
-        "STB"
+        "STB",
+        "GLFW"
     }
 
     files
@@ -51,19 +54,19 @@ project "Blazar"
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.IMGUI}",
         "%{IncludeDir.STB}",
+        "%{IncludeDir.spdlog}",
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.GLM}",
         conan_includedirs
     }
 
     filter "configurations:Debug"
-        defines "BLAZAR_DEBUG"
         symbols "On"
         runtime "Debug"
-        defines {
-            "BLAZAR_ENABLE_ASSERTS"
-        }
+        defines ({"BLAZAR_ENABLE_ASSERTS", "BLAZAR_DEBUG"})
 
     filter "configurations:Release"
-        defines "BLAZAR_RELEASE"
+        defines ({"BLAZAR_ENABLE_ASSERTS", "BLAZAR_RELEASE"})
         optimize "On"
         runtime "Release"
 
@@ -73,7 +76,6 @@ project "Blazar"
         runtime "Release"
 
     filter "system:windows"
-        cppdialect "C++17"
         staticruntime "Off"
         systemversion "latest"
 
@@ -84,15 +86,11 @@ project "Blazar"
             "GLFW_INCLUDE_NONE"
         }
 
-        --postbuildcommands
-        --{
-        --    ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Game")
-        --}
-
 project "Game"
     location "build/Game"
     kind "ConsoleApp"
     language "C++"
+    cppdialect "C++17"
 
     targetdir ("build/bin/" .. outputdir .. "/%{prj.name}")
     objdir("build/Intermediate/" .. outputdir .. "/%{prj.name}")
@@ -108,15 +106,18 @@ project "Game"
     {
         "src/%{prj.name}/",
         "src/Blazar/",
-        "%{IncludeDir.GLAD}",
+        "%{IncludeDir.spdlog}",
         "%{IncludeDir.IMGUI}",
+        "%{IncludeDir.GLAD}",
+        "%{IncludeDir.GLM}",
         conan_includedirs
     }
 
     links
     {
         "Blazar",
-        "IMGUI"
+        "IMGUI",
+        "GLFW"
     }
 
     postbuildcommands {
@@ -142,7 +143,6 @@ project "Game"
         runtime "Release"
 
     filter "system:windows"
-        cppdialect "C++17"
         systemversion "latest"
 
         defines
