@@ -22,9 +22,8 @@ void OpenGLContext::Init() {
     BLAZAR_CORE_ASSERT(status, "Could not initialize GLAD!");
 
     // Log renderer information.
-    LOG_CORE_INFO(" *   Vendor: {0}", glGetString(GL_VENDOR));
-    LOG_CORE_INFO(" * Renderer: {0}", glGetString(GL_RENDERER));
-    LOG_CORE_INFO(" *  Version: {0}", glGetString(GL_VERSION));
+    LOG_CORE_TRACE(" *   Vendor: {0}\n * Renderer: {1}\n *  Version: {2}", glGetString(GL_VENDOR),
+                  glGetString(GL_RENDERER), glGetString(GL_VERSION));
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

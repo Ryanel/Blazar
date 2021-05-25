@@ -38,7 +38,7 @@ class BLAZAR_API Application {
     bool OnWindowClosed(Events::WindowCloseEvent&);
     static Application* s_Instance;
     ImGuiLayer* m_ImGui;
-    bool renderImGUI = false;
+    bool renderImGUI = true;
 };
 
 }  // namespace Blazar

@@ -10,7 +10,9 @@
 #include "Blazar/Blazar.h"
 #include "Blazar/Events/AppEvents.h"
 #include "Blazar/ImGui/CustomImGui.h"
+#include "Blazar/ImGui/ImGuiLog.h"
 #include "Blazar/Input/Keymap.h"
+#include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Buffer.h"
 #include "Blazar/Renderer/Camera.h"
 #include "Blazar/Renderer/OrthographicCamera.h"
@@ -20,7 +22,6 @@
 #include "Blazar/Renderer/Texture.h"
 #include "Blazar/Renderer/VertexArray.h"
 #include "Blazar/Renderer/Viewport.h"
-#include "Blazar/Platform/OpenGL/OpenGLShader.h"
 
 using namespace Blazar;
 
@@ -99,13 +100,11 @@ class DebugRenderingLayer : public Blazar::Layer {
             }
         )";
 
-        
         shader = Shader::FromText(vertSrc, fragSrc);
         shader->Bind();
         std::dynamic_pointer_cast<Blazar::OpenGLShader>(shader)->SetInt("u_Texture", 0);
 
         sampleTexture = Texture2D::Create("Contents/Textures/SampleTrans.png");
-        
 
         // Camera
         float aspect = Application::Get().GetWindow().GetAspect();
@@ -122,6 +121,7 @@ class DebugRenderingLayer : public Blazar::Layer {
         if (Input::KeyPressed(BLAZAR_KEY_A)) { m_CameraPosition.x -= camSpeed * delta; }
         if (Input::KeyPressed(BLAZAR_KEY_D)) { m_CameraPosition.x += camSpeed * delta; }
         if (Input::KeyPressed(BLAZAR_KEY_S)) { m_CameraPosition.y -= camSpeed * delta; }
+        if (Input::KeyPressed(BLAZAR_KEY_Q)) { LOG_CORE_TRACE("Test Log"); }
 
         cam->SetViewport(windowViewport);
         cam->SetZoom(m_Zoom);
@@ -181,6 +181,7 @@ class Game : public Blazar::Application {
         PushLayer(new ImGUIEditorMainLayer());
         PushLayer(new ImGUIFPSWindowLayer());
         PushLayer(new ImGUIDemoWindowLayer());
+        PushLayer(new ImGUILogWindowLayer());
         PushLayer(new DebugRenderingLayer());
     }
 
