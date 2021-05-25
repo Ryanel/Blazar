@@ -88,7 +88,7 @@ project "Blazar"
 
 project "Game"
     location "build/Game"
-    kind "ConsoleApp"
+    kind "WindowedApp"
     language "C++"
     cppdialect "C++17"
 
