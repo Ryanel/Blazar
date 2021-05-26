@@ -75,7 +75,25 @@ void ImGUILogWindowLayer::OnImGUIRender() {
 }
 
 void ImGUILogWindowLayer::DisplayEntry(log_entry& entry) {
-    if (entry.details.level == spdlog::level::err) { ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(255, 0, 0))); }
+    switch (entry.details.level) {
+        case spdlog::level::err:
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(255, 0, 0)));
+            break;
+        case spdlog::level::warn:
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(255, 255, 0)));
+            break;
+        case spdlog::level::critical:
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(200, 0, 0)));
+            break;
+        case spdlog::level::trace:
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(200, 200, 200)));
+            break;
+        case spdlog::level::info:
+        default:
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(255, 255, 255)));
+            break;
+    }
+
     ImGui::TableNextRow();
 
     ImGui::TableNextColumn();  // Source
@@ -90,7 +108,8 @@ void ImGUILogWindowLayer::DisplayEntry(log_entry& entry) {
 
     ImGui::TableNextColumn();  // Message
     ImGui::Text("%s", entry.msg.c_str());
-    if (entry.details.level == spdlog::level::err) { ImGui::PopStyleColor(1); }
+
+    ImGui::PopStyleColor(1);
 }
 
 }  // namespace Blazar

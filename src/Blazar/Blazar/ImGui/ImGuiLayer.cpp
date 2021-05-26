@@ -27,10 +27,13 @@ void ImGuiLayer::OnAttach() {
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowBorderSize = 0.0f;
-    style.WindowRounding = 0;
+    style.WindowRounding = 4;
+    style.WindowPadding.x = 2;
+    style.WindowPadding.y = 2;
     style.FrameRounding = 0;
-    style.FramePadding.x = 6;
+    style.FramePadding.x = 4;
     style.FramePadding.y = 4;
+    style.WindowTitleAlign.x = 0.50f;
 
     Application& app = Application::Get();
     io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
