@@ -40,6 +40,12 @@ void ImGUILogWindowLayer::OnImGUIRender() {
             ImGui::Text("Current Entries: %d", Log::s_LogEntries.size());
             ImGui::DragInt("Entries to Store", &Log::s_MaxLogEntries, 1.0f, 1, 10000000);
             ImGui::DragInt("Entries to Display", &m_EntriesToShow, 1.0f, 0, 10000000);
+
+            if (ImGui::Button("Clear Log")) { Log::s_LogEntries.clear(); }
+
+            if (m_EntriesToShow > Log::s_MaxLogEntries) { m_EntriesToShow = Log::s_MaxLogEntries; }
+
+
         }
 
         ImGui::Separator();
@@ -75,9 +81,7 @@ void ImGUILogWindowLayer::DisplayEntry(log_entry& entry) {
 
     ImGui::TableNextColumn();  // Severity
 
-
     ImGui::Text(spdlog::level::to_string_view(entry.details.level).data());
-
 
     ImGui::TableNextColumn();  // Time
     ImGui::Text("%s", entry.time_fmt.c_str());
