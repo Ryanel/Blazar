@@ -5,7 +5,3 @@
 #include "Blazar/Log.h"
 #include "Blazar/Layer/Layer.h"
 #include "Blazar/Input/Input.h"
-
-// ---- Entry Point------------------------------
-#include "Blazar/Entry.h"
-// ----------------------------------------------

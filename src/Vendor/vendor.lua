@@ -22,6 +22,7 @@ files
     "glfw/src/vulkan.c",
     "glfw/src/window.c"
 }
+
 filter "system:linux"
     pic "On"
 
@@ -45,6 +46,16 @@ filter "system:linux"
     defines
     {
         "_GLFW_X11"
+    }
+
+    links {
+        "Xrandr",
+        "Xi",
+        "GLU",
+        "GL",
+        "X11",
+        "dl",
+        "pthread",
     }
 
 filter "system:windows"
@@ -111,8 +122,11 @@ project "IMGUI"
     filter "system:windows"
         systemversion "latest"
 
+    filter "system:linux"
+        defines("IMGUI_IMPL_OPENGL_LOADER_GLAD")
 
--- ImGUI
+
+-- GLM
 project "GLM"
     kind "StaticLib"
     language "C++"

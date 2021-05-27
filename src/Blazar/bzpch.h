@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _BLAZAR_PCH_H
+#define _BLAZAR_PCH_H
 
 // Standard library
 #include <cstdint>
@@ -17,3 +18,5 @@
 // Blazar specific
 #include <Blazar/Core.h>
 #include <Blazar/Log.h>
+
+#endif

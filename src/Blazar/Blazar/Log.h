@@ -18,6 +18,21 @@ struct log_entry {
     spdlog::details::log_msg details;
 };
 
+
+class Log {
+   public:
+    static void Init();
+    inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+    inline static std::shared_ptr<spdlog::logger>& GetGameLogger() { return s_ClientLogger; }
+
+    static void PushLog(log_entry& entry);
+    static std::vector<log_entry> s_LogEntries;
+    static int s_MaxLogEntries;
+   private:
+    static std::shared_ptr<spdlog::logger> s_CoreLogger;
+    static std::shared_ptr<spdlog::logger> s_ClientLogger;
+};
+
 template <typename Mutex>
 class memory_logger : public spdlog::sinks::base_sink<Mutex> {
    protected:
@@ -43,19 +58,6 @@ class memory_logger : public spdlog::sinks::base_sink<Mutex> {
 using memory_logger_mt = memory_logger<std::mutex>;
 using memory_logger_st = memory_logger<spdlog::details::null_mutex>;
 
-class Log {
-   public:
-    static void Init();
-    inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
-    inline static std::shared_ptr<spdlog::logger>& GetGameLogger() { return s_ClientLogger; }
-
-    static void PushLog(log_entry& entry);
-    static std::vector<log_entry> s_LogEntries;
-    static int s_MaxLogEntries;
-   private:
-    static std::shared_ptr<spdlog::logger> s_CoreLogger;
-    static std::shared_ptr<spdlog::logger> s_ClientLogger;
-};
 };  // namespace Blazar
 
 #define LOG_CORE_TRACE(...) ::Blazar::Log::GetCoreLogger()->trace(__VA_ARGS__)

@@ -8,6 +8,7 @@
 #include "Debug/DebugLayers.h"
 
 #include "Blazar/Blazar.h"
+#include "Blazar/Entry.h"
 #include "Blazar/Events/AppEvents.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/ImGui/ImGuiLog.h"
@@ -93,13 +94,13 @@ class DebugRenderingLayer : public Blazar::Layer {
             in vec2 v_TexCoord;
 
             uniform sampler2D u_Texture;
-
+            
             void main()
             {
                color = texture(u_Texture, v_TexCoord);
             }
         )";
-
+ 
         shader = Shader::FromText(vertSrc, fragSrc);
         shader->Bind();
         std::dynamic_pointer_cast<Blazar::OpenGLShader>(shader)->SetInt("u_Texture", 0);
@@ -188,4 +189,8 @@ class Game : public Blazar::Application {
     ~Game() {}
 };
 
-Blazar::Application* Blazar::CreateApplication() { return new Game(); }
+namespace Blazar {
+
+Application* CreateApplication() { return new Game(); }
+
+}

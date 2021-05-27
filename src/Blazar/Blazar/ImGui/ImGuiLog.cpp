@@ -9,7 +9,7 @@
 
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/ImGui/ImGUILog.h"
+#include "Blazar/ImGui/ImGuiLog.h"
 #include "Blazar/ImGui/ImGuiLayer.h"
 #include "Blazar/Layer/Layer.h"
 
@@ -65,9 +65,11 @@ void ImGUILogWindowLayer::OnImGUIRender() {
 
                 if (entry.details.level >= m_filterSeverity) { DisplayEntry(entry); }
             }
+            
+            if (m_ScrollToBottom) { ImGui::SetScrollHereY(); }
+            ImGui::EndTable();
         }
-        if (m_ScrollToBottom) { ImGui::SetScrollHereY(); }
-        ImGui::EndTable();
+        
     }
     ImGui::End();
 }

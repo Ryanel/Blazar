@@ -12,7 +12,7 @@ outputdir="%{cfg.buildcfg}-%{cfg.system}"
 
 IncludeDir= {}
 IncludeDir["GLAD"]     = "src/Vendor/GLAD/include/"
-IncludeDir["IMGUI"]    = "src/Vendor/IMGUI/"
+IncludeDir["IMGUI"]    = "src/Vendor/imgui/"
 IncludeDir["STB"]      = "src/Vendor/stb/"
 IncludeDir["spdlog"]   = "src/Vendor/spdlog/include/"
 IncludeDir["GLFW"]     = "src/Vendor/glfw/include/"
@@ -34,8 +34,6 @@ project "Blazar"
     pchheader "bzpch.h"
     pchsource "src/Blazar/bzpch.cpp"
 
-    linkoptions { conan_exelinkflags }
-
     links {
         "GLAD",
         "IMGUI",
@@ -56,8 +54,7 @@ project "Blazar"
         "%{IncludeDir.STB}",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.GLFW}",
-        "%{IncludeDir.GLM}",
-        conan_includedirs
+        "%{IncludeDir.GLM}"
     }
 
     filter "configurations:Debug"
@@ -86,6 +83,18 @@ project "Blazar"
             "GLFW_INCLUDE_NONE"
         }
 
+    filter "system:linux"
+        defines
+        {
+            "BLAZAR_PLATFORM_LINUX",
+            "BLAZAR_BUILD_STATIC",
+            "GLFW_INCLUDE_NONE"
+        }
+
+        links { "dl", "pthread" }
+
+        defines { "_X11" }
+
 project "Game"
     location "build/Game"
     kind "WindowedApp"
@@ -110,19 +119,19 @@ project "Game"
         "%{IncludeDir.IMGUI}",
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.GLM}",
-        conan_includedirs
+        "%{IncludeDir.STB}"
     }
 
     links
     {
         "Blazar",
         "IMGUI",
-        "GLFW"
+        "GLFW",
+        "GLAD",
+        "STB"
     }
 
-    postbuildcommands {
-        "xcopy %{wks.location}..\\assets ..\\bin\\%{outputdir}\\%{prj.name}\\Contents\\ /Q /E /Y /I"
-    }
+
 
     filter "configurations:Debug"
         defines "BLAZAR_DEBUG"
@@ -150,11 +159,21 @@ project "Game"
             "BLAZAR_PLATFORM_WINDOWS",
             "BLAZAR_BUILD_STATIC"
         }
+        postbuildcommands {
+            "xcopy %{wks.location}..\\assets ..\\bin\\%{outputdir}\\%{prj.name}\\Contents\\ /Q /E /Y /I"
+        }
 
-project "Build Configuration"
-    kind "None"
-    files
-    {
-        "premake5.lua",
-        "conanfile.txt"
-    }
+    filter "system:linux"
+        defines
+        {
+            "BLAZAR_PLATFORM_LINUX",
+            "BLAZAR_BUILD_STATIC"
+        }
+
+        links { "dl", "pthread", "GL", "X11", "GLAD"}
+
+        defines { "_X11" }
+
+        postbuildcommands {
+            "cp -r %{wks.location}/../assets ../bin/%{outputdir}/%{prj.name}/Contents/"
+        }
