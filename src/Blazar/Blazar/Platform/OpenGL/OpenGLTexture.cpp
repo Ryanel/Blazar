@@ -11,7 +11,8 @@ namespace Blazar {
 // ----------------------------------------------------
 // Vertex Buffer
 // ----------------------------------------------------
-OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Path(path) {
+OpenGLTexture2D::OpenGLTexture2D(const std::string& path, TextureProperties& properties)
+    : m_Path(path), m_Properties(properties) {
     // Hardcoded Parameters, TODO
     bool retainTexture = false;
     int mipmaps = 1;
@@ -23,7 +24,6 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Path(path) {
 
     // TODO: Proper error handling code here
     BLAZAR_CORE_ASSERT(data, "Failed to load image");
-
     m_Width = width;
     m_Height = height;
     m_Channels = channels;
@@ -36,15 +36,24 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Path(path) {
     glTextureStorage2D(m_Id, mipmaps, gpuFormat, m_Width, m_Height);
 
     // Params
-    glTextureParameteri(m_Id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(m_Id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    int filterMode = m_Properties.filtering == TextureFilterMode::Bilinear ? GL_LINEAR : GL_NEAREST;
+    glTextureParameteri(m_Id, GL_TEXTURE_MIN_FILTER, filterMode);
+    glTextureParameteri(m_Id, GL_TEXTURE_MAG_FILTER, filterMode);
+
+    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_S,
+                        properties.wrap_x == TextureWrappingMode::Repeat ? GL_REPEAT : GL_CLAMP_TO_BORDER);
+    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_T,
+                        properties.wrap_y == TextureWrappingMode::Repeat ? GL_REPEAT : GL_CLAMP_TO_BORDER);
 
     // Upload
     glTextureSubImage2D(m_Id, 0, 0, 0, m_Width, m_Height, fileFormat, GL_UNSIGNED_BYTE, data);
 
-    #ifdef BLAZAR_DEBUG
+    LOG_CORE_TRACE("Create Texture {} with width: {}, height: {}, mips: {}, channels: {}", path, width, height, mipmaps,
+                   m_Channels);
+#ifdef BLAZAR_DEBUG
     glObjectLabel(GL_TEXTURE, m_Id, -1, path.c_str());
-    #endif
+#endif
 
     if (!retainTexture) { stbi_image_free(data); }
 }

@@ -6,6 +6,16 @@
 
 namespace Blazar {
 
+enum class TextureWrappingMode { Clamp, Repeat };
+
+enum class TextureFilterMode { None, Bilinear };
+
+struct TextureProperties {
+    TextureWrappingMode wrap_x = TextureWrappingMode::Clamp;
+    TextureWrappingMode wrap_y = TextureWrappingMode::Clamp;
+    TextureFilterMode filtering = TextureFilterMode::None;
+};
+
 class Texture {
    public:
     virtual ~Texture() {}
@@ -18,7 +28,7 @@ class Texture {
 class Texture2D : public Texture {
    public:
     // Factory method
-    static Ref<Texture> Create(const std::string& path);
+    static Ref<Texture> Create(const std::string& path, TextureProperties& properties = TextureProperties());
 };
 
 };  // namespace Blazar
