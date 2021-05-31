@@ -133,18 +133,21 @@ project "Game"
         "STB"
     }
 
-    defines ("BLAZAR_IMGUI_ENABLED")
-
     filter "configurations:Debug"
         defines "BLAZAR_DEBUG"
         symbols "On"
         runtime "Debug"
         defines {
-            "BLAZAR_ENABLE_ASSERTS"
+            "BLAZAR_ENABLE_ASSERTS",
+            "BLAZAR_IMGUI_ENABLED"
         }
 
     filter "configurations:Release"
         defines "BLAZAR_RELEASE"
+        defines {
+            "BLAZAR_ENABLE_ASSERTS",
+            "BLAZAR_IMGUI_ENABLED"
+        }
         optimize "On"
         runtime "Release"
 
@@ -162,7 +165,7 @@ project "Game"
             "BLAZAR_BUILD_STATIC"
         }
         postbuildcommands {
-            "xcopy %{wks.location}..\\assets ..\\bin\\%{outputdir}\\%{prj.name}\\Contents\\ /Q /E /Y /I"
+            'xcopy "%{wks.location}..\\assets" "..\\bin\\%{outputdir}\\%{prj.name}\\Contents\\" /Q /E /Y /I'
         }
 
     filter "system:linux"

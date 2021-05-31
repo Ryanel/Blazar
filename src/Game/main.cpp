@@ -39,6 +39,8 @@ class ImGUIEditorMainLayer : public Blazar::Layer {
             }
             ImGui::EndMainMenuBar();
         }
+
+        ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
     }
 };
 #endif
@@ -154,8 +156,7 @@ class DebugRenderingLayer : public Blazar::Layer {
             ImGui::SliderFloat("Zoom", &m_Zoom, 1, 10);
             ImGui::DragFloat3("Position", &m_CameraPosition.x, 0.025f);
 
-            ImGui::Text("Real Width: %f", realWidth);
-            ImGui::Text("Real Height: %f", realHeight);
+            ImGui::Text("Real Width: %f, Height: %f", realWidth, realHeight);
         }
         ImGui::End();
     }
