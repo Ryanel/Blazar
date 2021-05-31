@@ -6,6 +6,7 @@
 
 void LogEventsLayer::OnEvent(Blazar::Events::Event& event) { LOG_GAME_TRACE("Event: {}", event.ToString()); }
 
+#ifdef BLAZAR_IMGUI_ENABLED
 // FPS Window
 void ImGUIFPSWindowLayer::OnImGUIRender() {
     ImGUI_MainMenu_Toggle_Simple("Windows", "Render Stats", "", this->show, true);
@@ -42,3 +43,4 @@ void ImGUIFPSWindowLayer::OnImGUIRender() {
 
     ImGui::End();
 }
+#endif

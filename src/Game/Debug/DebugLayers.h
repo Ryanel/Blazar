@@ -13,7 +13,7 @@ class LogEventsLayer : public Blazar::Layer {
     void OnUpdate() override {}
     void OnEvent(Blazar::Events::Event& event) override;
 };
-
+#ifdef BLAZAR_IMGUI_ENABLED
 class ImGUIFPSWindowLayer : public Blazar::Layer {
    public:
     bool show = true;
@@ -33,3 +33,4 @@ class ImGUIDemoWindowLayer : public Blazar::Layer {
         ImGui::ShowDemoWindow(&this->show);
     }
 };
+#endif

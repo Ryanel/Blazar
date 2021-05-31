@@ -23,7 +23,13 @@ WindowsWindow::WindowsWindow(const WindowProperties& props) { Init(props); }
 WindowsWindow::~WindowsWindow() { Shutdown(); }
 bool WindowsWindow::IsVSync() const { return m_Data.VSync; }
 void* WindowsWindow::GetNativeWindow() { return (void*)this->m_Window; }
-void WindowsWindow::Shutdown() { glfwDestroyWindow(m_Window); }
+void WindowsWindow::Shutdown() { 
+    glfwDestroyWindow(m_Window); 
+
+    // Delete the context. Not really needed, added to prevent valgrind from complaining.
+    // Using delete only because I don't want to incur smart pointer overhead.
+    delete m_Context;
+}
 
 void WindowsWindow::OnUpdate() {
     glfwPollEvents();

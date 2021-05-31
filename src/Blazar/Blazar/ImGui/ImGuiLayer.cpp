@@ -1,5 +1,6 @@
 #include <bzpch.h>
 
+#ifdef BLAZAR_IMGUI_ENABLED
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -74,3 +75,4 @@ void ImGuiLayer::End(bool draw) {
 }
 
 }  // namespace Blazar
+#endif

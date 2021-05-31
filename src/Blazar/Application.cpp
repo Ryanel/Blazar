@@ -1,13 +1,16 @@
 #include "bzpch.h"
 
 #include "Blazar/Application.h"
-#include "Blazar/ImGui/ImGuiLayer.h"
 #include "Blazar/Input/Input.h"
 #include "Blazar/Input/Keymap.h"
 #include "Blazar/Renderer/Camera.h"
 #include "Blazar/Renderer/OrthographicCamera.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
+
+#ifdef BLAZAR_IMGUI_ENABLED
+#include "Blazar/ImGui/ImGuiLayer.h"
+#endif
 
 namespace Blazar {
 Application* Application::s_Instance;
@@ -17,14 +20,16 @@ Application::Application() {
     s_Instance = this;
 
     // Create the window
-    m_Window = std::unique_ptr<Window>(Window::Create());
+    m_Window.reset(Window::Create());
     m_Window->SetEventCallback(BLAZAR_BIND_EVENT_FN(Application::OnEvent));
     m_Window->SetVSync(true);
 
     Renderer::Init(RendererAPI::API::OpenGL);
-
+    
+    #ifdef BLAZAR_IMGUI_ENABLED
     m_ImGui = new ImGuiLayer();
     PushOverlay(m_ImGui);
+    #endif
 }
 
 Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
@@ -40,10 +45,14 @@ void Application::Run() {
         Renderer::NewFrame();
 
         // Input Processing
+        #ifdef BLAZAR_IMGUI_ENABLED
+        
         if (Input::KeyPressed(BLAZAR_KEY_GRAVE_ACCENT) && (!m_ImGuiShowKeyPressedLastFrame)) {
             m_RenderImGui = !m_RenderImGui;
         }
         m_ImGuiShowKeyPressedLastFrame = Input::KeyPressed(BLAZAR_KEY_GRAVE_ACCENT);
+
+        #endif
         // Update
 
         // Begin render
@@ -56,9 +65,11 @@ void Application::Run() {
             for (Layer* layer : m_LayerStack) { layer->OnUpdate(); }
 
             // ImGUI
+            #ifdef BLAZAR_IMGUI_ENABLED
             m_ImGui->Begin();
             for (Layer* layer : m_LayerStack) { layer->OnImGUIRender(); }
             m_ImGui->End(m_RenderImGui);
+            #endif
         }
 
         // Flip Windows

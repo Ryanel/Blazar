@@ -11,7 +11,7 @@ namespace Blazar {
 // ----------------------------------------------------
 // Vertex Buffer
 // ----------------------------------------------------
-OpenGLTexture2D::OpenGLTexture2D(const std::string& path, TextureProperties& properties)
+OpenGLTexture2D::OpenGLTexture2D(const std::string& path, const TextureProperties& properties)
     : m_Path(path), m_Properties(properties) {
     // Hardcoded Parameters, TODO
     bool retainTexture = false;

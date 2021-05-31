@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef BLAZAR_IMGUI_ENABLED
 #include "Blazar/Core.h"
 #include "Blazar/Events/AppEvents.h"
 #include "Blazar/Events/Events.h"
@@ -22,5 +23,5 @@ class ImGUILogWindowLayer : public Blazar::Layer {
     spdlog::level::level_enum m_filterSeverity = spdlog::level::trace;
     int m_EntriesToShow = 200;
 };
-
-}  // namespace Blazar
+};  // namespace Blazar
+#endif

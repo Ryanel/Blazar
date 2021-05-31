@@ -57,6 +57,8 @@ project "Blazar"
         "%{IncludeDir.GLM}"
     }
 
+    defines ("BLAZAR_IMGUI_ENABLED")
+
     filter "configurations:Debug"
         symbols "On"
         runtime "Debug"
@@ -131,7 +133,7 @@ project "Game"
         "STB"
     }
 
-
+    defines ("BLAZAR_IMGUI_ENABLED")
 
     filter "configurations:Debug"
         defines "BLAZAR_DEBUG"

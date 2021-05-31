@@ -7,7 +7,7 @@
 
 namespace Blazar {
 
-Ref<Texture> Texture2D::Create(const std::string& path, TextureProperties& properties) {
+Ref<Texture> Texture2D::Create(const std::string& path, const TextureProperties& properties) {
     switch (Renderer::GetAPI()) {
         case RendererAPI::API::OpenGL:
             return std::make_shared<OpenGLTexture2D>(path, properties);

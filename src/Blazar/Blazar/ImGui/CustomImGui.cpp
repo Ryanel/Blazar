@@ -1,5 +1,6 @@
 #include <bzpch.h>
 
+#ifdef BLAZAR_IMGUI_ENABLED
 #include <imgui.h>
 
 #include "CustomImGui.h"
@@ -17,3 +18,4 @@ void ImGUI_MainMenu_Toggle_Simple(const char* cat, const char* name, const char*
         ImGui::EndMainMenuBar();
     }
 }
+#endif

@@ -26,6 +26,7 @@
 
 using namespace Blazar;
 
+#ifdef BLAZAR_IMGUI_ENABLED
 class ImGUIEditorMainLayer : public Blazar::Layer {
    public:
     ImGUIEditorMainLayer() : Layer("ImGUI Editor Main") {}
@@ -40,6 +41,7 @@ class ImGUIEditorMainLayer : public Blazar::Layer {
         }
     }
 };
+#endif
 
 class DebugRenderingLayer : public Blazar::Layer {
    public:
@@ -138,6 +140,7 @@ class DebugRenderingLayer : public Blazar::Layer {
         Renderer::EndPass();
     }
 
+#ifdef BLAZAR_IMGUI_ENABLED
     void OnImGUIRender() override {
         ImGUI_MainMenu_Toggle_Simple("Windows", "Camera Controls", "", this->showCameraControls, true);
 
@@ -156,6 +159,7 @@ class DebugRenderingLayer : public Blazar::Layer {
         }
         ImGui::End();
     }
+#endif
 
     void OnEvent(Events::Event& ev) {}
 
@@ -179,10 +183,13 @@ class Game : public Blazar::Application {
    public:
     Game() {
         // PushLayer(new LogEventsLayer());
+        #ifdef BLAZAR_IMGUI_ENABLED
         PushLayer(new ImGUIEditorMainLayer());
         PushLayer(new ImGUIFPSWindowLayer());
         PushLayer(new ImGUIDemoWindowLayer());
         PushLayer(new ImGUILogWindowLayer());
+        #endif
+        
         PushLayer(new DebugRenderingLayer());
     }
 

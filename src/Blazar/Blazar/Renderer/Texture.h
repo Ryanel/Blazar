@@ -6,8 +6,10 @@
 
 namespace Blazar {
 
+/// Determines whether a texture's U or V axis will repeat or clamp
 enum class TextureWrappingMode { Clamp, Repeat };
 
+/// The texture filtering mode, how smooth or pixilated the texture is
 enum class TextureFilterMode { None, Bilinear };
 
 struct TextureProperties {
@@ -28,7 +30,7 @@ class Texture {
 class Texture2D : public Texture {
    public:
     // Factory method
-    static Ref<Texture> Create(const std::string& path, TextureProperties& properties = TextureProperties());
+    static Ref<Texture> Create(const std::string& path, const TextureProperties& properties = TextureProperties());
 };
 
 };  // namespace Blazar

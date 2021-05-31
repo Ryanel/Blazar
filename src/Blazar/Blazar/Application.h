@@ -4,10 +4,13 @@
 #include "Blazar/Events/AppEvents.h"
 #include "Blazar/Events/Events.h"
 #include "Blazar/Layer/LayerStack.h"
-#include "Blazar/ImGui/ImGuiLayer.h"
 #include "Blazar/Window.h"
 #include "Blazar/Time/Timestep.h"
 #include "Blazar/Time/Timer.h"
+
+#ifdef BLAZAR_IMGUI_ENABLED
+#include "Blazar/ImGui/ImGuiLayer.h"
+#endif
 
 namespace Blazar {
 
@@ -33,13 +36,16 @@ class BLAZAR_API Application {
     Timestep m_deltaTime;
     Timer m_FrameTimer;
 
-
    private:
     bool OnWindowClosed(Events::WindowCloseEvent&);
     static Application* s_Instance;
+
+    #ifdef BLAZAR_IMGUI_ENABLED
     ImGuiLayer* m_ImGui;
     bool m_RenderImGui = true;
     bool m_ImGuiShowKeyPressedLastFrame = false;
+
+    #endif
 };
 
 }  // namespace Blazar
