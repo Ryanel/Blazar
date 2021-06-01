@@ -33,11 +33,9 @@ void Log::Init() {
     s_CoreLogger->trace("Logging enabled");
     s_ClientLogger->trace("Logging enabled");
 
-    s_ClientLogger->error("Test Error");
 }
 
 void Log::PushLog(log_entry& entry) {
-    // TODO: Don't hardcode
     if (s_LogEntries.size() >= s_MaxLogEntries) { s_LogEntries.erase(s_LogEntries.begin()); }
 
     s_LogEntries.push_back(entry);

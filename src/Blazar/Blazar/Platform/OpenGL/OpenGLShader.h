@@ -10,14 +10,16 @@ namespace Blazar {
 
 class OpenGLShader : public Shader {
    public:
+    // Lifecycle
+    OpenGLShader(const std::string& vert_src, const std::string& frag_src);
+    virtual ~OpenGLShader();
     static Ref<OpenGLShader> FromText(std::string vertex, std::string fragment);
 
-    virtual ~OpenGLShader();
-
+    // Binding
     void Bind() const;
     void Unbind() const;
 
-    // Set uniforms
+    // Uniform setting
     void SetInt(const std::string& name, const int val);
 
     void SetFloat(const std::string& name, const float val);
@@ -28,8 +30,11 @@ class OpenGLShader : public Shader {
     void SetMat3(const std::string& name, const glm::mat3& matrix);
     void SetMat4(const std::string& name, const glm::mat4& matrix);
 
-    OpenGLShader(const std::string& vert_src, const std::string& frag_src);
    private:
+    void CacheUniforms();
+    int GetUniformLocation(const std::string& name) const;
+   private:
+    std::unordered_map<std::string, int> m_UniformMap;
     uint32_t m_Id;
 };
 

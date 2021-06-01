@@ -108,7 +108,6 @@ class DebugRenderingLayer : public Blazar::Layer {
         shader = Shader::FromText(vertSrc, fragSrc);
         shader->Bind();
         std::dynamic_pointer_cast<Blazar::OpenGLShader>(shader)->SetInt("u_Texture", 0);
-
         sampleTexture = Texture2D::Create("Contents/Textures/SampleTrans.png");
 
         // Camera
@@ -140,7 +139,7 @@ class DebugRenderingLayer : public Blazar::Layer {
         Renderer::Submit(sqr_vao, shader, sqr_pos);
 
         Renderer::EndPass();
-    }
+    } 
 
 #ifdef BLAZAR_IMGUI_ENABLED
     void OnImGUIRender() override {
