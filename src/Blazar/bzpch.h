@@ -18,5 +18,5 @@
 // Blazar specific
 #include <Blazar/Core.h>
 #include <Blazar/Log.h>
-
+#include <Blazar/Instrumentation/instrumentor.h>
 #endif

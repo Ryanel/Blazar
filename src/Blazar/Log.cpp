@@ -12,6 +12,7 @@ std::vector<log_entry> Log::s_LogEntries;
 int Log::s_MaxLogEntries = 200;
 
 void Log::Init() {
+    BLAZAR_PROFILE_FUNCTION();
     spdlog::set_pattern("%^[%T] %n: %v%$");
 
     auto memlogger = std::make_shared<memory_logger_mt>();

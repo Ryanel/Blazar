@@ -3,12 +3,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "imgui.h"
 
+#include "Blazar/Blazar.h"
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Renderer.h"
 
 namespace Blazar {
 
 void Sandbox::OnAttach() {
+    BLAZAR_PROFILE_FUNCTION();
     // Square
     BufferLayout sqr_layout = {
         {ShaderDataType::Float3, "a_Position"},  // 00: Position
@@ -76,6 +78,7 @@ void Sandbox::OnAttach() {
 void Sandbox::OnDetached() {}
 
 void Sandbox::OnUpdate(Blazar::Timestep ts) {
+    BLAZAR_PROFILE_FUNCTION();
     glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {0, 0, 0});
 
     Renderer::BeginPass(*m_cameraController);
@@ -87,11 +90,12 @@ void Sandbox::OnUpdate(Blazar::Timestep ts) {
 }
 
 void Sandbox::OnImGUIRender() {
+    BLAZAR_PROFILE_FUNCTION();
     ImGui::Begin("Tweakables");
     ImGui::Text("Put Tweakables Here");
     ImGui::End();
 }
 
-void Sandbox::OnEvent(Blazar::Events::Event& e) {}
+void Sandbox::OnEvent(Blazar::Events::Event& e) { BLAZAR_PROFILE_FUNCTION(); }
 
 }  // namespace Blazar

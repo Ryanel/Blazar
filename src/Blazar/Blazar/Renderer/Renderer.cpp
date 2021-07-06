@@ -13,6 +13,7 @@ RendererAPI* s_RendererAPI;
 PassData* Renderer::m_PassData = nullptr;
 
 void Renderer::Init(RendererAPI::API toCreate) {
+    BLAZAR_PROFILE_FUNCTION();
     BLAZAR_CORE_ASSERT(s_RendererAPI == nullptr, "Attempting to add another RendererAPI, not allowed!");
     m_PassData = new PassData();
     switch (toCreate) {

@@ -11,6 +11,7 @@ using namespace Blazar;
 class Game : public Blazar::Application {
    public:
     Game() {
+        BLAZAR_PROFILE_FUNCTION();
         PushLayer(new Sandbox());
 
         Editor* editor = new Editor();

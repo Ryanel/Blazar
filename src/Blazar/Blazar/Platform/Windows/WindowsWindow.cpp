@@ -18,8 +18,15 @@ static void GLFWErrorCallback(int error, const char* description) {
 }
 
 Window::~Window() {}
-Window* Window::Create(const WindowProperties& props) { return new WindowsWindow(props); }
-WindowsWindow::WindowsWindow(const WindowProperties& props) { Init(props); }
+Window* Window::Create(const WindowProperties& props) { 
+    BLAZAR_PROFILE_FUNCTION();
+    return new WindowsWindow(props); 
+}
+WindowsWindow::WindowsWindow(const WindowProperties& props) { 
+    BLAZAR_PROFILE_FUNCTION();
+    Init(props); 
+
+}
 WindowsWindow::~WindowsWindow() { Shutdown(); }
 bool WindowsWindow::IsVSync() const { return m_Data.VSync; }
 void* WindowsWindow::GetNativeWindow() { return (void*)this->m_Window; }
@@ -32,8 +39,16 @@ void WindowsWindow::Shutdown() {
 }
 
 void WindowsWindow::OnUpdate() {
-    glfwPollEvents();
-    m_Context->Present();
+    {
+        BLAZAR_PROFILE_SCOPE("Event Handling");
+        glfwPollEvents();
+    }
+
+    {
+        BLAZAR_PROFILE_SCOPE("Present");
+        m_Context->Present();
+    }
+
     m_viewport->width = GetWidth();
     m_viewport->height = GetHeight();
     m_viewport->x = 0;
@@ -41,11 +56,13 @@ void WindowsWindow::OnUpdate() {
 }
 
 void WindowsWindow::SetVSync(bool enabled) {
+    BLAZAR_PROFILE_FUNCTION();
     glfwSwapInterval(enabled ? 1 : 0);
     m_Data.VSync = enabled;
 }
 
 void WindowsWindow::Init(const WindowProperties& props) {
+    BLAZAR_PROFILE_SCOPE("Windows Window: Init");
     m_Data.Title = props.Title;
     m_Data.Width = props.Width;
     m_Data.Height = props.Height;
@@ -68,8 +85,10 @@ void WindowsWindow::Init(const WindowProperties& props) {
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_SAMPLES, props.MSAA);
 
-    m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-
+    {
+        BLAZAR_PROFILE_SCOPE("GLFW Create Window");
+        m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+    }
     m_Context = new OpenGLContext(m_Window);
     m_Context->Init();
 

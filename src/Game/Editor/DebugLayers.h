@@ -7,25 +7,20 @@
 
 using namespace Blazar;
 
-class LogEventsLayer : public Blazar::Layer {
-   public:
-    LogEventsLayer() : Layer("Debug Event Layer") {}
-    void OnUpdate(Blazar::Timestep ts) override {}
-    void OnEvent(Blazar::Events::Event& event) override;
-};
 #ifdef BLAZAR_IMGUI_ENABLED
 class ImGUIFPSWindowLayer : public Blazar::Layer {
    public:
     bool show = true;
-    ImGUIFPSWindowLayer() : Layer("ImGUI: FPS") {}
+    ImGUIFPSWindowLayer() : Layer("ImGUI: FPS") { m_UpdatePath = LayerUpdatePath::Render; }
     void OnImGUIRender() override;
 };
 
 class ImGUIDemoWindowLayer : public Blazar::Layer {
    public:
     bool show = false;
-    ImGUIDemoWindowLayer() : Layer("ImGUI Demo Window") {}
+    ImGUIDemoWindowLayer() : Layer("ImGUI Demo Window") { m_UpdatePath = LayerUpdatePath::Render; }
     void OnImGUIRender() override {
+        BLAZAR_PROFILE_FUNCTION();
         ImGUI_MainMenu_Toggle_Simple("Windows", "ImGUI Demo", "", this->show, true);
 
         if (!this->show) { return; }

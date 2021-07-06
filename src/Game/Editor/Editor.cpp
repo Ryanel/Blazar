@@ -11,7 +11,7 @@
 
 namespace Blazar {
 
-Editor::Editor() : Layer("ImGUI Editor Main") {}
+Editor::Editor() : Layer("ImGUI Editor Main") { m_UpdatePath = LayerUpdatePath::Render; }
 
 void Editor::Setup() {
     // Add layers after this one here
@@ -28,6 +28,7 @@ void Editor::OnDetached() {}
 void Editor::OnUpdate(Blazar::Timestep ts) {}
 
 void Editor::OnImGUIRender() {
+    BLAZAR_PROFILE_FUNCTION();
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("Exit")) { Application::Get().m_Running = false; }

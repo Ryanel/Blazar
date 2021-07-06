@@ -139,8 +139,11 @@ project "Game"
         runtime "Debug"
         defines {
             "BLAZAR_ENABLE_ASSERTS",
-            "BLAZAR_IMGUI_ENABLED"
+            "BLAZAR_IMGUI_ENABLED",
+            "BLAZAR_CONSOLE_WINDOW",
+            
         }
+        kind "ConsoleApp"
 
     filter "configurations:Release"
         defines "BLAZAR_RELEASE"

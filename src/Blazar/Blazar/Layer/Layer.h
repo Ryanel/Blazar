@@ -5,6 +5,12 @@
 #include "Blazar/Time//Timestep.h"
 
 namespace Blazar {
+
+enum class LayerUpdatePath {
+    Update,
+    Render
+};
+
 class BLAZAR_API Layer {
    public:
     Layer(const std::string& name = "Unnamed Layer");
@@ -17,6 +23,7 @@ class BLAZAR_API Layer {
     virtual void OnImGUIRender() {}
     inline const std::string& GetName() const { return m_DebugName; }
 
+    LayerUpdatePath m_UpdatePath = LayerUpdatePath::Update;
    protected:
     std::string m_DebugName;
 };

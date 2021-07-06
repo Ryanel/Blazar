@@ -10,6 +10,7 @@
 namespace Blazar {
 class Sandbox : public Blazar::Layer {
    public:
+    Sandbox() : Blazar::Layer("Sandbox") { m_UpdatePath = LayerUpdatePath::Render; }
     virtual void OnAttach() override;
     virtual void OnDetached() override;
 

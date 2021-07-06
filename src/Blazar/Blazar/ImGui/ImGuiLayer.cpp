@@ -16,6 +16,7 @@ ImGuiLayer::ImGuiLayer() : Layer("ImGUI") { this->m_DebugName = "ImGUI"; }
 ImGuiLayer::~ImGuiLayer() {}
 
 void ImGuiLayer::OnAttach() {
+    BLAZAR_PROFILE_FUNCTION();
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
@@ -48,6 +49,7 @@ void ImGuiLayer::OnUpdate(Blazar::Timestep ts) {}
 void ImGuiLayer::OnEvent(Events::Event& ev) {}
 
 void ImGuiLayer::Begin() {
+    BLAZAR_PROFILE_FUNCTION();
     ImGuiIO& io = ImGui::GetIO();
     Application& app = Application::Get();
     io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
@@ -59,6 +61,7 @@ void ImGuiLayer::Begin() {
 }
 
 void ImGuiLayer::End(bool draw) {
+    BLAZAR_PROFILE_FUNCTION();
     ImGui::Render();
 
     if (draw) {

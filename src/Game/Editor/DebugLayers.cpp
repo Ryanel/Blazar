@@ -2,13 +2,10 @@
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/Renderer/Renderer.h"
 
-// Log Events
-
-void LogEventsLayer::OnEvent(Blazar::Events::Event& event) { LOG_GAME_TRACE("Event: {}", event.ToString()); }
-
 #ifdef BLAZAR_IMGUI_ENABLED
 // FPS Window
 void ImGUIFPSWindowLayer::OnImGUIRender() {
+    BLAZAR_PROFILE_FUNCTION();
     ImGUI_MainMenu_Toggle_Simple("Windows", "Render Stats", "", this->show, true);
 
     if (!this->show) { return; }
