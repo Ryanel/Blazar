@@ -11,7 +11,6 @@ LayerStack::~LayerStack() {
     for (Layer* layer : m_Layers) { 
         layer->OnDetached();
         delete layer; 
-    
     }
 }
 

@@ -20,8 +20,8 @@ void OrthographicCamera::SetPosition(const glm::vec3& cameraPosition) {
     RecalculateViewMatrix();
 }
 
-void OrthographicCamera::SetViewport(Viewport& viewport) {
-    m_Aspect = viewport.GetAspect();
+void OrthographicCamera::SetViewport(Ref<Viewport> viewport) {
+    m_Aspect = viewport->GetAspect();
     m_Viewport = viewport; // Copy
     RecalculatePerspectiveMatrix();
 }
@@ -31,7 +31,7 @@ void OrthographicCamera::SetZoom(float zoom) {
     RecalculatePerspectiveMatrix();
 }
 
-const Viewport& OrthographicCamera::GetViewport() { return m_Viewport; }
+const Viewport& OrthographicCamera::GetViewport() { return *m_Viewport; }
 
 float OrthographicCamera::GetZoom() { return m_Zoom; }
 

@@ -16,7 +16,7 @@ class OrthographicCamera : public Camera {
     /// Moves the camera to the specified cameraPosition
     virtual void SetPosition(const glm::vec3& cameraPosition) override;
     
-    virtual void SetViewport(Viewport& viewport) override;
+    virtual void SetViewport(Ref<Viewport> viewport) override;
     virtual const Viewport& GetViewport() override;
 
     void SetZoom(float zoom); ///< Set the current zoom level
@@ -25,7 +25,7 @@ class OrthographicCamera : public Camera {
    private:
     float m_Zoom;
     float m_Aspect;
-    Viewport m_Viewport;
+    Ref<Viewport> m_Viewport;
     void RecalculatePerspectiveMatrix();
     void RecalculateViewMatrix();
 };

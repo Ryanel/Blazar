@@ -44,7 +44,7 @@ void ImGuiLayer::OnAttach() {
 }
 
 void ImGuiLayer::OnDetached() {}
-void ImGuiLayer::OnUpdate() {}
+void ImGuiLayer::OnUpdate(Blazar::Timestep ts) {}
 void ImGuiLayer::OnEvent(Events::Event& ev) {}
 
 void ImGuiLayer::Begin() {

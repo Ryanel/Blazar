@@ -12,7 +12,7 @@ struct WindowProperties {
     unsigned int Height;  ///< The Width of the Window
     unsigned int MSAA;    ///< The Current MSAA Level. 0 means MSAA is disabled
 
-    WindowProperties(const std::string& title = "Blazar Engine", unsigned int width = 1600, unsigned int height = 900)
+    WindowProperties(const std::string& title = "Blazar Engine", unsigned int width = 1024, unsigned int height = 768)
         : Title(title), Width(width), Height(height), MSAA(4) {}
 };
 
@@ -31,10 +31,13 @@ class BLAZAR_API Window {
 
     float GetAspect() const { return (float)GetWidth() / (float)GetHeight(); }
 
-    Viewport GetViewport() const { return Viewport({0, 0, (float)GetWidth(), (float)GetHeight()}); }
+    Ref<Viewport> GetViewport() const { return m_viewport; }
 
     static Window* Create(const WindowProperties& props = WindowProperties());
     virtual void* GetNativeWindow() = 0;
+
+  protected:
+    Ref<Viewport> m_viewport;
 };
 
 };  // namespace Blazar

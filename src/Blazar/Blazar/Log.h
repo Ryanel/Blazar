@@ -1,13 +1,13 @@
 #pragma once
 
+#include <memory>
+#include <mutex>
+
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/sinks/base_sink.h>
 #include <spdlog/spdlog.h>
 
-#include <mutex>
-
-#include <memory>
 #include "Blazar/Core.h"
 
 namespace Blazar {
@@ -18,7 +18,6 @@ struct log_entry {
     spdlog::details::log_msg details;
 };
 
-
 class Log {
    public:
     static void Init();
@@ -28,6 +27,7 @@ class Log {
     static void PushLog(log_entry& entry);
     static std::vector<log_entry> s_LogEntries;
     static int s_MaxLogEntries;
+
    private:
     static std::shared_ptr<spdlog::logger> s_CoreLogger;
     static std::shared_ptr<spdlog::logger> s_ClientLogger;

@@ -34,6 +34,8 @@ void WindowsWindow::Shutdown() {
 void WindowsWindow::OnUpdate() {
     glfwPollEvents();
     m_Context->Present();
+    m_viewport->width = GetWidth();
+    m_viewport->height = GetHeight();
 }
 
 void WindowsWindow::SetVSync(bool enabled) {
@@ -45,6 +47,12 @@ void WindowsWindow::Init(const WindowProperties& props) {
     m_Data.Title = props.Title;
     m_Data.Width = props.Width;
     m_Data.Height = props.Height;
+
+    m_viewport.reset(new Viewport());
+    m_viewport->x = 0;
+    m_viewport->y = 0;
+    m_viewport->width = props.Width;
+    m_viewport->height = props.Height;
 
     LOG_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
@@ -72,7 +80,7 @@ void WindowsWindow::Init(const WindowProperties& props) {
 
         data.Width = width;
         data.Height = height;
-
+        
         Events::WindowResizeEvent ev(width, height);
         data.EventCallback(ev);
     });

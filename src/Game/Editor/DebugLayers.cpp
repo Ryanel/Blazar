@@ -1,6 +1,6 @@
 #include "DebugLayers.h"
-#include "Blazar/Renderer/Renderer.h"
 #include "Blazar/ImGui/CustomImGui.h"
+#include "Blazar/Renderer/Renderer.h"
 
 // Log Events
 

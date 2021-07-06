@@ -37,8 +37,6 @@ void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
 void Application::PushOverlay(Layer* layer) { m_LayerStack.PushOverlay(layer); }
 
 void Application::Run() {
-    m_deltaTime = 0.016f;
-
     while (m_Running) {
         // Start timing
         Timer frameTimer;
@@ -62,7 +60,7 @@ void Application::Run() {
             RenderCmd::Clear();
 
             // Update all layers
-            for (Layer* layer : m_LayerStack) { layer->OnUpdate(); }
+            for (Layer* layer : m_LayerStack) { layer->OnUpdate(m_deltaTime); }
 
             // ImGUI
             #ifdef BLAZAR_IMGUI_ENABLED

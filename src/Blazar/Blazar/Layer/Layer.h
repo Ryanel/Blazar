@@ -2,6 +2,7 @@
 
 #include "Blazar/Core.h"
 #include "Blazar/Events/Events.h"
+#include "Blazar/Time//Timestep.h"
 
 namespace Blazar {
 class BLAZAR_API Layer {
@@ -11,7 +12,7 @@ class BLAZAR_API Layer {
 
     virtual void OnAttach() {}
     virtual void OnDetached() {}
-    virtual void OnUpdate() {}
+    virtual void OnUpdate(Blazar::Timestep ts) {}
     virtual void OnEvent(Events::Event& ev) {}
     virtual void OnImGUIRender() {}
     inline const std::string& GetName() const { return m_DebugName; }

@@ -14,7 +14,7 @@ class Camera {
     virtual void SetPosition(const glm::vec3& cameraPosition) = 0;
     const glm::vec3& GetPosition() const { return m_CameraPosition; }
 
-    virtual void SetViewport(Viewport& viewport) = 0; ///< Set the current viewport
+    virtual void SetViewport(Ref<Viewport> viewport) = 0; ///< Set the current viewport
     virtual const Viewport& GetViewport() = 0; ///< Gets the current viewport.
 
     const virtual glm::mat4& GetProjection() const { return m_MatProjection; }

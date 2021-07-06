@@ -10,7 +10,7 @@ using namespace Blazar;
 class LogEventsLayer : public Blazar::Layer {
    public:
     LogEventsLayer() : Layer("Debug Event Layer") {}
-    void OnUpdate() override {}
+    void OnUpdate(Blazar::Timestep ts) override {}
     void OnEvent(Blazar::Events::Event& event) override;
 };
 #ifdef BLAZAR_IMGUI_ENABLED
