@@ -87,7 +87,7 @@ class VertexBuffer {
     virtual const BufferLayout& GetLayout() const = 0;
 
     // Factory method
-    static VertexBuffer* Create(float* verticies, size_t size);
+    static Ref<VertexBuffer> Create(float* verticies, size_t size);
 };
 
 class IndexBuffer {
@@ -97,7 +97,7 @@ class IndexBuffer {
     virtual void Unbind() const = 0;
     virtual uint32_t GetCount() const = 0;
     // Factory method
-    static IndexBuffer* Create(uint32_t* verticies, size_t size);
+    static Ref<IndexBuffer> Create(uint32_t* verticies, size_t size);
 };
 
 };  // namespace Blazar

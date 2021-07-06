@@ -36,6 +36,8 @@ void WindowsWindow::OnUpdate() {
     m_Context->Present();
     m_viewport->width = GetWidth();
     m_viewport->height = GetHeight();
+    m_viewport->x = 0;
+    m_viewport->y = 0;
 }
 
 void WindowsWindow::SetVSync(bool enabled) {

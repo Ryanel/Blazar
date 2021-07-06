@@ -21,6 +21,7 @@ class Camera {
     const virtual glm::mat4& GetView() const { return m_MatView; }
     const virtual glm::mat4& GetViewProjection() const { return m_MatViewProjection; }
 
+    virtual void BeginPass() = 0;
    protected:
     glm::mat4 m_MatProjection;
     glm::mat4 m_MatView;

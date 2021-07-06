@@ -24,18 +24,12 @@ void Sandbox::OnAttach() {
 
     uint32_t sqr_indicies[6] = {0, 1, 2, 2, 3, 0};
 
-    Ref<VertexBuffer> sqr_vbo;
-    Ref<IndexBuffer> sqr_ibo;
-
-    m_squareVAO.reset(VertexArray::Create());
-    sqr_vbo.reset(VertexBuffer::Create(sqr_verts, sizeof(sqr_verts)));
-    sqr_ibo.reset(IndexBuffer::Create(sqr_indicies, sizeof(sqr_indicies)));
-
+    Ref<VertexBuffer> sqr_vbo = VertexBuffer::Create(sqr_verts, sizeof(sqr_verts));
+    Ref<IndexBuffer> sqr_ibo = IndexBuffer::Create(sqr_indicies, sizeof(sqr_indicies));
     sqr_vbo->SetLayout(sqr_layout);
 
+    m_squareVAO = VertexArray::Create(sqr_vbo, sqr_ibo);
     m_squareVAO->Bind();
-    m_squareVAO->AddVertexBuffer(sqr_vbo);
-    m_squareVAO->SetIndexBuffer(sqr_ibo);
 
     std::string vertSrc = R"(
             #version 330 core

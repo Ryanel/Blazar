@@ -49,7 +49,8 @@ void Renderer::NewFrame() {
     renderer_stats.drawCalls = 0;
 }
 
-void Renderer::BeginPass(Camera& cam) { 
+void Renderer::BeginPass(Camera& cam) {
+    cam.BeginPass();
     renderer_stats.passesThisFrame++; 
     m_PassData->MatViewProjection = cam.GetViewProjection();
 }

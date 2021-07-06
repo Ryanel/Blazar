@@ -22,11 +22,11 @@ class OrthographicCamera : public Camera {
     void SetZoom(float zoom); ///< Set the current zoom level
     float GetZoom(); ///< Get the current zoom level
 
+    virtual void BeginPass() override;
    private:
     float m_Zoom;
-    float m_Aspect;
     Ref<Viewport> m_Viewport;
-    void RecalculatePerspectiveMatrix();
+    void RecalculatePerspectiveMatrix(float aspect);
     void RecalculateViewMatrix();
 };
 

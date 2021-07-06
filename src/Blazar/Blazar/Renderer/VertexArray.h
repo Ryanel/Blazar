@@ -18,7 +18,8 @@ class VertexArray {
     virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
     virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
     // Factory method
-    static VertexArray* Create();
+    static Ref<VertexArray> Create();
+    static Ref<VertexArray> Create(const Ref<VertexBuffer> vertBuffer, Ref<IndexBuffer> indexBuffer);
 };
 
 }  // namespace Blazar

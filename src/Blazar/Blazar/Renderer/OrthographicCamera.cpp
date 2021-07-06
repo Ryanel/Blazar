@@ -7,12 +7,12 @@
 
 namespace Blazar {
 
-OrthographicCamera::OrthographicCamera(float zoom, float aspect) : m_Zoom(zoom), m_Aspect(aspect) {
-    RecalculatePerspectiveMatrix();
+OrthographicCamera::OrthographicCamera(float zoom, float aspect) : m_Zoom(zoom) {
+    RecalculatePerspectiveMatrix(aspect);
 }
 
-OrthographicCamera::OrthographicCamera(float zoom, Viewport& viewport) : m_Zoom(zoom), m_Aspect(viewport.GetAspect()) {
-    RecalculatePerspectiveMatrix();
+OrthographicCamera::OrthographicCamera(float zoom, Viewport& viewport) : m_Zoom(zoom) {
+    RecalculatePerspectiveMatrix(m_Viewport->GetAspect());
 }
 
 void OrthographicCamera::SetPosition(const glm::vec3& cameraPosition) {
@@ -21,22 +21,23 @@ void OrthographicCamera::SetPosition(const glm::vec3& cameraPosition) {
 }
 
 void OrthographicCamera::SetViewport(Ref<Viewport> viewport) {
-    m_Aspect = viewport->GetAspect();
-    m_Viewport = viewport; // Copy
-    RecalculatePerspectiveMatrix();
+    m_Viewport = viewport;  // Copy
+    RecalculatePerspectiveMatrix(m_Viewport->GetAspect());
 }
 
 void OrthographicCamera::SetZoom(float zoom) {
     m_Zoom = zoom;
-    RecalculatePerspectiveMatrix();
+    RecalculatePerspectiveMatrix(m_Viewport->GetAspect());
 }
 
 const Viewport& OrthographicCamera::GetViewport() { return *m_Viewport; }
 
 float OrthographicCamera::GetZoom() { return m_Zoom; }
 
-void OrthographicCamera::RecalculatePerspectiveMatrix() {
-    float w = m_Zoom * m_Aspect;
+void OrthographicCamera::BeginPass() { RecalculatePerspectiveMatrix(m_Viewport->GetAspect()); }
+
+void OrthographicCamera::RecalculatePerspectiveMatrix(float aspect) {
+    float w = m_Zoom * aspect;
     float h = m_Zoom;
     float halfWidth = w / 2.0f;
     float halfHeight = h / 2.0f;
