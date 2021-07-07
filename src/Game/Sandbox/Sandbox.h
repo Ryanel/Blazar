@@ -2,10 +2,12 @@
 
 #include "Blazar/Blazar.h"
 
-#include "Blazar/Renderer/OrthographicCamera.h"
+#include "Blazar/Renderer/Cameras/OrthographicCamera.h"
 #include "Blazar/Renderer/Shader.h"
 #include "Blazar/Renderer/Texture.h"
 #include "Blazar/Renderer/VertexArray.h"
+
+#include "Blazar/Assets/Resource.h"
 
 namespace Blazar {
 class Sandbox : public Blazar::Layer {
@@ -21,7 +23,7 @@ class Sandbox : public Blazar::Layer {
    private:
     Blazar::Ref<VertexArray> m_squareVAO;
     Blazar::Ref<Shader> m_shader;
-    Blazar::Ref<Texture> m_texture;
+    Blazar::Resource<Texture2D> m_texture;
     Blazar::Ref<OrthographicCamera> m_cameraController;
 };
 }  // namespace Blazar

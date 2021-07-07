@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Blazar/Renderer/OrthographicCamera.h"
+#include "OrthographicCamera.h"
 
 namespace Blazar {
 

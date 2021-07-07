@@ -7,6 +7,9 @@
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Renderer.h"
 
+#include "Blazar/Assets/Resource.h"
+#include "Blazar/Assets/ResourceManager.h"
+
 namespace Blazar {
 
 void Sandbox::OnAttach() {
@@ -66,7 +69,13 @@ void Sandbox::OnAttach() {
     m_shader = Shader::FromText(vertSrc, fragSrc);
     m_shader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetInt("u_Texture", 0);
-    m_texture = Texture2D::Create("Contents/Textures/SampleTrans.png");
+
+    ResourceManager manager;
+
+    auto tex = manager.Load<Texture2D>("Textures/SampleTrans.png");
+    if (tex) { m_texture = std::move(tex.value()); }
+    //if (tex) { m_texture = Resource<Texture2D>(tex.value()); }
+    // m_texture = Texture2D::Create("Contents/Textures/SampleTrans.png");
 
     // Camera
     auto& gameWindow = Application::Get().GetWindow();

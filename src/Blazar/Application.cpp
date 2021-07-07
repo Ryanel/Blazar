@@ -3,8 +3,6 @@
 #include "Blazar/Application.h"
 #include "Blazar/Input/Input.h"
 #include "Blazar/Input/Keymap.h"
-#include "Blazar/Renderer/Camera.h"
-#include "Blazar/Renderer/OrthographicCamera.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
 
@@ -28,7 +26,6 @@ Application::Application() {
 
     m_ImGui = new ImGuiLayer();
     PushOverlay(m_ImGui);
-
 }
 
 Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
@@ -76,12 +73,11 @@ void Application::Run() {
                 if (layer->m_UpdatePath == LayerUpdatePath::Render) { layer->OnUpdate(m_deltaTime); }
             }
 
-// ImGUI
+            // ImGUI
 
             m_ImGui->Begin();
             for (Layer* layer : m_LayerStack) { layer->OnImGUIRender(); }
             m_ImGui->End(m_RenderImGui);
-
         }
 
         // Flip Windows

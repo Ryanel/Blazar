@@ -3,7 +3,7 @@
 #include "RendererAPI.h"
 #include "VertexArray.h"
 
-#include "Camera.h"
+#include "Cameras/Camera.h"
 #include "Shader.h"
 
 namespace Blazar {

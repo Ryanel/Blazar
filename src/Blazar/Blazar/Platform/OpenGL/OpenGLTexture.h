@@ -9,6 +9,7 @@ namespace Blazar {
 class OpenGLTexture2D : public Texture2D {
    public:
     OpenGLTexture2D(const std::string& path, const TextureProperties& properties);
+    OpenGLTexture2D(const std::string& path, std::vector<char>& data, const TextureProperties& properties);
     virtual ~OpenGLTexture2D();
 
     virtual uint32_t GetWidth() const override { return m_Width; }
