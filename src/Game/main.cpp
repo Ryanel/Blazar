@@ -6,12 +6,14 @@
 #include "Editor/Editor.h"
 #include "Sandbox/Sandbox.h"
 
+#include "Tracy.hpp"
+
 using namespace Blazar;
 
 class Game : public Blazar::Application {
    public:
     Game() {
-        BLAZAR_PROFILE_FUNCTION();
+        ZoneScoped;
         PushLayer(new Sandbox());
 
         Editor* editor = new Editor();
@@ -24,6 +26,11 @@ class Game : public Blazar::Application {
 
 namespace Blazar {
 
-Application* CreateApplication() { return new Game(); }
+Application* CreateApplication() { 
+    ZoneScoped;
+    tracy::SetThreadName("Main Thread");
+    return new Game(); 
+
+}
 
 }  // namespace Blazar

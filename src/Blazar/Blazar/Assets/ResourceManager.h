@@ -10,24 +10,50 @@ namespace Blazar {
 
 // Loads and caches resources from disk.
 class ResourceManager {
-   public:
+   protected:
     ResourceManager() : m_loadedResources() {}
     bool GetBinaryFromDisk(std::string_view path, std::vector<char>& outBuffer);
     // void LoadFromArchive();
 
    public:
+    static ResourceManager* Get();
+
+   public:
     template <class T>
     std::optional<Resource<T>> Load(std::string path) {
-        std::vector<char> binaryData;
-        // Determine where this resource is
-        if (GetBinaryFromDisk(path, binaryData)) {
-            auto result = DeserializeToResource<T>(path, binaryData);
-            if (result != nullptr) { return std::optional<Resource<T>>(Resource<T>(path, result)); }
+        ZoneScoped;
+        LOG_CORE_TRACE("[Res Man]: Attempting to load {}", path);
+
+        // Check cache
+        {
+            ZoneScopedN("Check Cache");
+            std::unordered_map<std::string, ResourceBase*>::const_iterator cached_item = m_loadedResources.find(path);
+
+            if (cached_item != m_loadedResources.end()) {
+                LOG_CORE_TRACE("[Res Man]: Found in cache");
+                Resource<T>* resource = static_cast<Resource<T>*>(cached_item->second);
+                return std::optional<Resource<T>>(*resource);
+            }
+        }
+
+        {
+            ZoneScopedN("Check Disk");
+            LOG_CORE_TRACE("[Res Man]: Not in cache, checking FS");
+            std::vector<char> binaryData;
+            // Determine where this resource is
+            if (GetBinaryFromDisk(path, binaryData)) {
+                auto result = DeserializeToResource<T>(path, binaryData);
+                if (result != nullptr) {
+                    auto* resource = new Resource<T>(path, result);
+                    m_loadedResources[path] = resource;  // Cache
+                    return std::optional<Resource<T>>(*resource);
+                }
+            }
         }
         return std::nullopt;
     }
 
    private:
-    std::unordered_map<std::string, ResourceBase> m_loadedResources;
+    std::unordered_map<std::string, ResourceBase*> m_loadedResources;
 };
 }  // namespace Blazar

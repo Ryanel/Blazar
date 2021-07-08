@@ -27,7 +27,7 @@ Texture2D* DeserializeToResource(std::string_view path, std::vector<char>& data)
     TextureProperties properties;
     switch (Renderer::GetAPI()) {
         case RendererAPI::API::OpenGL:
-            return new OpenGLTexture2D(std::string(path), data, properties);
+            return OpenGLTexture2D::FromData(data, properties);
         case RendererAPI::API::None:
             BLAZAR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
             return nullptr;

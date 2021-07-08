@@ -12,7 +12,7 @@ struct WindowProperties {
     unsigned int Height;  ///< The Width of the Window
     unsigned int MSAA;    ///< The Current MSAA Level. 0 means MSAA is disabled
 
-    WindowProperties(const std::string& title = "Blazar Engine", unsigned int width = 1024, unsigned int height = 768)
+    WindowProperties(const std::string& title = "Blazar Engine", unsigned int width = 1600, unsigned int height = 900)
         : Title(title), Width(width), Height(height), MSAA(4) {}
 };
 

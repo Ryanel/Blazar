@@ -15,9 +15,12 @@
 #include "Blazar/ImGui/ImGuiLayer.h"
 #include "Blazar/Layer/Layer.h"
 
+#include "Tracy.hpp"
+
 namespace Blazar {
 
 void ImGUILogWindowLayer::OnImGUIRender() {
+    ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("Windows", "Log", "", this->m_Show, true);
 
     if (!m_Show) { return; }
@@ -52,8 +55,10 @@ void ImGUILogWindowLayer::OnImGUIRender() {
 
         ImGui::Separator();
 
+
         if (ImGui::BeginTable("log#entry_table", 4,
                               ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_ScrollY)) {
+            ZoneScopedN("Log Entry Display");
             ImGui::TableSetupScrollFreeze(0, 1);
             ImGui::TableSetupColumn("Source", ImGuiTableColumnFlags_NoResize, 1.0);
             ImGui::TableSetupColumn("Severity", ImGuiTableColumnFlags_None, 1.0);

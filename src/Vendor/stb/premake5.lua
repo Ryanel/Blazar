@@ -20,7 +20,14 @@ project "STB"
 
     filter "system:windows"
         systemversion "latest"
-        staticruntime "On"
+
+    filter "configurations:Debug"
+        symbols "On"
+        runtime "Debug"
+
+    filter "configurations:Release"
+        optimize "On"
+        runtime "Release"
 
 
 group("")

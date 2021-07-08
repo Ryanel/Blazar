@@ -18,20 +18,13 @@ static void GLFWErrorCallback(int error, const char* description) {
 }
 
 Window::~Window() {}
-Window* Window::Create(const WindowProperties& props) { 
-    BLAZAR_PROFILE_FUNCTION();
-    return new WindowsWindow(props); 
-}
-WindowsWindow::WindowsWindow(const WindowProperties& props) { 
-    BLAZAR_PROFILE_FUNCTION();
-    Init(props); 
-
-}
+Window* Window::Create(const WindowProperties& props) { return new WindowsWindow(props); }
+WindowsWindow::WindowsWindow(const WindowProperties& props) { Init(props); }
 WindowsWindow::~WindowsWindow() { Shutdown(); }
 bool WindowsWindow::IsVSync() const { return m_Data.VSync; }
 void* WindowsWindow::GetNativeWindow() { return (void*)this->m_Window; }
-void WindowsWindow::Shutdown() { 
-    glfwDestroyWindow(m_Window); 
+void WindowsWindow::Shutdown() {
+    glfwDestroyWindow(m_Window);
 
     // Delete the context. Not really needed, added to prevent valgrind from complaining.
     // Using delete only because I don't want to incur smart pointer overhead.
@@ -40,38 +33,36 @@ void WindowsWindow::Shutdown() {
 
 void WindowsWindow::OnUpdate() {
     {
-        BLAZAR_PROFILE_SCOPE("Event Handling");
+        ZoneScopedN("Poll Events");
         glfwPollEvents();
     }
 
     {
-        BLAZAR_PROFILE_SCOPE("Present");
+        ZoneScopedN("Present");
         m_Context->Present();
     }
 
-    m_viewport->width = GetWidth();
-    m_viewport->height = GetHeight();
-    m_viewport->x = 0;
-    m_viewport->y = 0;
+    m_viewport->width = (float)GetWidth();
+    m_viewport->height = (float)GetHeight();
+    m_viewport->x = 0.0f;
+    m_viewport->y = 0.0f;
 }
 
 void WindowsWindow::SetVSync(bool enabled) {
-    BLAZAR_PROFILE_FUNCTION();
     glfwSwapInterval(enabled ? 1 : 0);
     m_Data.VSync = enabled;
 }
 
 void WindowsWindow::Init(const WindowProperties& props) {
-    BLAZAR_PROFILE_SCOPE("Windows Window: Init");
     m_Data.Title = props.Title;
     m_Data.Width = props.Width;
     m_Data.Height = props.Height;
 
     m_viewport.reset(new Viewport());
-    m_viewport->x = 0;
-    m_viewport->y = 0;
-    m_viewport->width = props.Width;
-    m_viewport->height = props.Height;
+    m_viewport->x = 0.0f;
+    m_viewport->y = 0.0f;
+    m_viewport->width = (float)props.Width;
+    m_viewport->height = (float)props.Height;
 
     LOG_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
@@ -86,12 +77,14 @@ void WindowsWindow::Init(const WindowProperties& props) {
     glfwWindowHint(GLFW_SAMPLES, props.MSAA);
 
     {
-        BLAZAR_PROFILE_SCOPE("GLFW Create Window");
+        ZoneScopedN("GLFW Create Window");
         m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
     }
-    m_Context = new OpenGLContext(m_Window);
-    m_Context->Init();
-
+    {
+        ZoneScopedN("Create OpenGL Context");
+        m_Context = new OpenGLContext(m_Window);
+        m_Context->Init();
+    }
     glfwSetWindowUserPointer(m_Window, &m_Data);
     SetVSync(true);
 
@@ -101,7 +94,7 @@ void WindowsWindow::Init(const WindowProperties& props) {
 
         data.Width = width;
         data.Height = height;
-        
+
         Events::WindowResizeEvent ev(width, height);
         data.EventCallback(ev);
     });

@@ -36,13 +36,15 @@ class BLAZAR_API Application {
     Timestep m_deltaTime = 0.016f;
     Timer m_FrameTimer;
 
+    bool m_RenderImGui = true;
+    Ref<Viewport> m_EditorGameWindow;
+
    private:
     bool OnWindowClosed(Events::WindowCloseEvent&);
     static Application* s_Instance;
 
 #ifdef BLAZAR_IMGUI_ENABLED
     ImGuiLayer* m_ImGui;
-    bool m_RenderImGui = true;
     bool m_ImGuiShowKeyPressedLastFrame = false;
 
 #endif

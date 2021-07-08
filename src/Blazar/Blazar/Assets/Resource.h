@@ -2,7 +2,7 @@
 
 #include <string>
 
-#define BLAZAR_CONFIG_LOGRESOURCEUSAGE
+#include "Blazar/Config.h"
 
 namespace Blazar {
 
@@ -25,6 +25,8 @@ class ResourceBase {
     ResourceBase(const std::string& path, size_t size, RC* rc) : m_path(path), m_size(size), m_refcount(rc) {}
 
    public:
+    ResourceBase() : m_path(""), m_size(0), m_refcount(nullptr) {}
+
     // Copy
     ResourceBase(const ResourceBase& other)
         : m_path(other.m_path), m_size(other.m_size), m_refcount(other.m_refcount) {}
@@ -50,11 +52,11 @@ class Resource : public ResourceBase {
     };
 
    public:
-    Resource() : ResourceBase(""), m_data(new ResourcePointer<T>(nullptr)) { m_refcount->Lock(); }
+    Resource() : ResourceBase("", 0, nullptr), m_data(nullptr) {}
 
     // Constructor
     Resource(const std::string& path, T* data) : ResourceBase(path), m_data(new ResourcePointer(data)) {
-#ifdef BLAZAR_CONFIG_LOGRESOURCEUSAGE
+#ifdef BLAZAR_CONFIG_LOG_RESOURCE_USAGE
         LOG_CORE_TRACE("[Resource] Created: {}", m_path);
 #endif
         m_refcount->Lock();
@@ -63,15 +65,16 @@ class Resource : public ResourceBase {
     // Copy
     Resource(const Resource& res) : ResourceBase(res), m_data(res.m_data) {
         m_refcount->Lock();
-#ifdef BLAZAR_CONFIG_LOGRESOURCEUSAGE
+#ifdef BLAZAR_CONFIG_LOG_RESOURCE_USAGE
         LOG_CORE_TRACE("[Resource] Copied {}, ref: {} +", m_path, m_refcount->Get());
 #endif
     }
 
+    // Move
     Resource(Resource&& other) : ResourceBase(other.m_path, other.m_size, other.m_refcount), m_data(other.m_data) {
-#ifdef BLAZAR_CONFIG_LOGRESOURCEUSAGE
+#ifdef BLAZAR_CONFIG_LOG_RESOURCE_USAGE
         LOG_CORE_TRACE("[Resource] Moved {}, ref: {} =", m_path, m_refcount->Get());
-        #endif
+#endif
         other.m_path = "";
         other.m_size = 0;
         other.m_refcount = nullptr;
@@ -106,14 +109,14 @@ class Resource : public ResourceBase {
         m_refcount->Release();
 
         if (m_refcount->Get() == 0) {
-#ifdef BLAZAR_CONFIG_LOGRESOURCEUSAGE
+#ifdef BLAZAR_CONFIG_LOG_RESOURCE_USAGE
             LOG_CORE_TRACE("[Resource] Destroyed {}, no more references", m_path);
 #endif
             if (m_data->data != nullptr) { delete m_data->data; }
             delete m_data;
             delete m_refcount;
         } else {
-#ifdef BLAZAR_CONFIG_LOGRESOURCEUSAGE
+#ifdef BLAZAR_CONFIG_LOG_RESOURCE_USAGE
             LOG_CORE_TRACE("[Resource] {}, ref: {} -", m_path, m_refcount->Get());
 #endif
         }
@@ -129,7 +132,7 @@ class Resource : public ResourceBase {
     ResourcePointer<T>* m_data;
 };
 
+// Deserializes a resource into a T from binary data.
 template <class T>
 T* DeserializeToResource(std::string_view path, std::vector<char>& data);
-
 }  // namespace Blazar

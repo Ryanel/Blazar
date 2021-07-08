@@ -10,10 +10,12 @@
 #include "Blazar/Assets/Resource.h"
 #include "Blazar/Assets/ResourceManager.h"
 
+#include "Tracy.hpp"
+
 namespace Blazar {
 
 void Sandbox::OnAttach() {
-    BLAZAR_PROFILE_FUNCTION();
+    ZoneScoped;
     // Square
     BufferLayout sqr_layout = {
         {ShaderDataType::Float3, "a_Position"},  // 00: Position
@@ -70,12 +72,13 @@ void Sandbox::OnAttach() {
     m_shader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetInt("u_Texture", 0);
 
-    ResourceManager manager;
 
-    auto tex = manager.Load<Texture2D>("Textures/SampleTrans.png");
-    if (tex) { m_texture = std::move(tex.value()); }
-    //if (tex) { m_texture = Resource<Texture2D>(tex.value()); }
-    // m_texture = Texture2D::Create("Contents/Textures/SampleTrans.png");
+    auto tex = ResourceManager::Get()->Load<Texture2D>("Textures/SampleTrans.png");
+    if (tex) {
+        m_texture = std::move(tex.value());
+    } else {
+        throw;
+    }
 
     // Camera
     auto& gameWindow = Application::Get().GetWindow();
@@ -87,8 +90,17 @@ void Sandbox::OnAttach() {
 void Sandbox::OnDetached() {}
 
 void Sandbox::OnUpdate(Blazar::Timestep ts) {
-    BLAZAR_PROFILE_FUNCTION();
+    ZoneScoped;
     glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {0, 0, 0});
+
+    if (Application::Get().m_RenderImGui) {
+        m_cameraController->SetViewport(Application::Get().m_EditorGameWindow);
+    } else {
+        auto& gameWindow = Application::Get().GetWindow();
+        m_cameraController->SetViewport(gameWindow.GetViewport());
+    }
+
+    m_cameraController->SetPosition({0, 0, 0});
 
     Renderer::BeginPass(*m_cameraController);
     {
@@ -99,12 +111,20 @@ void Sandbox::OnUpdate(Blazar::Timestep ts) {
 }
 
 void Sandbox::OnImGUIRender() {
-    BLAZAR_PROFILE_FUNCTION();
-    ImGui::Begin("Tweakables");
-    ImGui::Text("Put Tweakables Here");
+    ZoneScoped;
+
+    ImGui::Begin("Loaded Assets");
+    {
+        ImGui::BeginChild("Asset");
+        ImVec2 wsize = ImGui::GetWindowSize();
+        ImGui::Image((ImTextureID)m_texture->GetId(), wsize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::EndChild();
+    }
     ImGui::End();
 }
 
-void Sandbox::OnEvent(Blazar::Events::Event& e) { BLAZAR_PROFILE_FUNCTION(); }
+void Sandbox::OnEvent(Blazar::Events::Event& e) {
+    ZoneScoped;
+}
 
 }  // namespace Blazar

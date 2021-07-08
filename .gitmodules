@@ -13,3 +13,6 @@
 [submodule "src/Vendor/glm"]
 	path = src/Vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "src/Vendor/tracy"]
+	path = src/Vendor/tracy
+	url = https://github.com/wolfpld/tracy

@@ -5,6 +5,8 @@
 #include "Blazar/ImGui/CustomImGui.h"
 #include <imgui.h>
 
+#include "Tracy.hpp"
+
 using namespace Blazar;
 
 #ifdef BLAZAR_IMGUI_ENABLED
@@ -20,7 +22,7 @@ class ImGUIDemoWindowLayer : public Blazar::Layer {
     bool show = false;
     ImGUIDemoWindowLayer() : Layer("ImGUI Demo Window") { m_UpdatePath = LayerUpdatePath::Render; }
     void OnImGUIRender() override {
-        BLAZAR_PROFILE_FUNCTION();
+        ZoneScoped;
         ImGUI_MainMenu_Toggle_Simple("Windows", "ImGUI Demo", "", this->show, true);
 
         if (!this->show) { return; }

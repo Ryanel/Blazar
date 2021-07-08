@@ -5,7 +5,10 @@
 
 namespace Blazar {
 
+ResourceManager* g_resourceManager;
+
 bool ResourceManager::GetBinaryFromDisk(std::string_view path, std::vector<char>& outBuffer) {
+    ZoneScoped;
     // Check the filesystem if the file exists
     std::string newPath = "Contents/" + std::string(path);
     std::filesystem::path fpath = std::filesystem::path(newPath);
@@ -32,10 +35,14 @@ bool ResourceManager::GetBinaryFromDisk(std::string_view path, std::vector<char>
         return true;
     }
 
-    
     LOG_CORE_WARN("fpath: {} exists: {}", fpath, std::filesystem::exists(fpath));
 
     return false;
+}
+
+ResourceManager* ResourceManager::Get() {
+    if (g_resourceManager == nullptr) { g_resourceManager = new ResourceManager(); }
+    return g_resourceManager;
 }
 
 }  // namespace Blazar

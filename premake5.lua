@@ -2,7 +2,7 @@
 
 -- Conan
 editorintegration "On"
-
+editAndContinue "Off"
 workspace "Blazar"
     architecture "x64"
     configurations { "Debug", "Release", "Distribution" }
@@ -17,6 +17,7 @@ IncludeDir["STB"]      = "src/Vendor/stb/"
 IncludeDir["spdlog"]   = "src/Vendor/spdlog/include/"
 IncludeDir["GLFW"]     = "src/Vendor/glfw/include/"
 IncludeDir["GLM"]      = "src/Vendor/glm/"
+IncludeDir["Tracy"]      = "src/Vendor/tracy/"
 
 include "src/Vendor/GLAD"
 include "src/Vendor/vendor.lua"
@@ -38,7 +39,8 @@ project "Blazar"
         "GLAD",
         "IMGUI",
         "STB",
-        "GLFW"
+        "GLFW",
+        "Tracy"
     }
 
     files
@@ -54,18 +56,19 @@ project "Blazar"
         "%{IncludeDir.STB}",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.GLFW}",
-        "%{IncludeDir.GLM}"
+        "%{IncludeDir.GLM}",
+        "%{IncludeDir.Tracy}"
     }
 
-    defines ("BLAZAR_IMGUI_ENABLED")
+    defines("TRACY_ENABLE")
 
     filter "configurations:Debug"
         symbols "On"
         runtime "Debug"
-        defines ({"BLAZAR_ENABLE_ASSERTS", "BLAZAR_DEBUG"})
+        defines ({"BLAZAR_DEBUG"})
 
     filter "configurations:Release"
-        defines ({"BLAZAR_ENABLE_ASSERTS", "BLAZAR_RELEASE"})
+        defines ({"BLAZAR_RELEASE"})
         optimize "On"
         runtime "Release"
 
@@ -84,6 +87,8 @@ project "Blazar"
             "BLAZAR_BUILD_STATIC",
             "GLFW_INCLUDE_NONE"
         }
+
+        disablewarnings({"26812", "26495", "26451", "26498", "6201"})
 
     filter "system:linux"
         defines
@@ -121,7 +126,8 @@ project "Game"
         "%{IncludeDir.IMGUI}",
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.GLM}",
-        "%{IncludeDir.STB}"
+        "%{IncludeDir.STB}",
+        "%{IncludeDir.Tracy}"
     }
 
     links
@@ -130,27 +136,20 @@ project "Game"
         "IMGUI",
         "GLFW",
         "GLAD",
-        "STB"
+        "STB",
+        "Tracy"
     }
+
+    defines("TRACY_ENABLE")
 
     filter "configurations:Debug"
         defines "BLAZAR_DEBUG"
         symbols "On"
         runtime "Debug"
-        defines {
-            "BLAZAR_ENABLE_ASSERTS",
-            "BLAZAR_IMGUI_ENABLED",
-            "BLAZAR_CONSOLE_WINDOW",
-            
-        }
         kind "ConsoleApp"
 
     filter "configurations:Release"
         defines "BLAZAR_RELEASE"
-        defines {
-            "BLAZAR_ENABLE_ASSERTS",
-            "BLAZAR_IMGUI_ENABLED"
-        }
         optimize "On"
         runtime "Release"
 

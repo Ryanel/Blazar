@@ -6,6 +6,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include "TracyOpenGL.hpp"
+
 namespace Blazar {
 
 OpenGLContext::OpenGLContext(GLFWwindow* handle) : m_WindowHandle(handle) {
@@ -35,11 +37,16 @@ void OpenGLContext::Init() {
         if (versionMinor < 5) { BLAZAR_CORE_ASSERT(true, "Blazar requires at least OpenGL 3.5!"); }
     }
 
+    TracyGpuContext;
+
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void OpenGLContext::Present() { glfwSwapBuffers(m_WindowHandle); }
+void OpenGLContext::Present() {
+    glfwSwapBuffers(m_WindowHandle);
+    TracyGpuCollect;
+}
 
 }  // namespace Blazar

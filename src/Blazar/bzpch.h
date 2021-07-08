@@ -1,6 +1,9 @@
 #ifndef _BLAZAR_PCH_H
 #define _BLAZAR_PCH_H
 
+// For MSBUILD, disabling warnings on not using their extension methods
+#define _CRT_SECURE_NO_WARNINGS
+
 // Standard library
 #include <cstdint>
 #include <filesystem>
@@ -18,5 +21,8 @@
 // Blazar specific
 #include <Blazar/Core.h>
 #include <Blazar/Log.h>
-#include <Blazar/Instrumentation/instrumentor.h>
+
+// Globally available libraries
+#include <Tracy.hpp>
+
 #endif

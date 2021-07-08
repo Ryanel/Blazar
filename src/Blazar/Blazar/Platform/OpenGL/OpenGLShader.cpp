@@ -67,7 +67,9 @@ void OpenGLShader::Bind() const { glUseProgram(m_Id); }
 void OpenGLShader::Unbind() const { glUseProgram(0); }
 
 void OpenGLShader::SetInt(const std::string& name, const int val) { glUniform1i(GetUniformLocation(name), val); }
-void OpenGLShader::SetFloat(const std::string& name, const float val) { glUniform1f(GetUniformLocation(name), val); }
+void OpenGLShader::SetFloat(const std::string& name, const float val) {
+    glUniform1f(GetUniformLocation(name), val);
+}
 
 void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2& vec) {
     glUniform2f(GetUniformLocation(name), vec.x, vec.y);
@@ -90,7 +92,7 @@ void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& matrix) {
 }
 
 void OpenGLShader::CacheUniforms() {
-    // Modified from answer by Nichol Bolas on 
+    // Modified from answer by Nichol Bolas on
     // https://stackoverflow.com/questions/440144/in-opengl-is-there-a-way-to-get-a-list-of-all-uniforms-attribs-used-by-a-shade
 
     GLint numActiveUniforms = 0;
@@ -104,12 +106,14 @@ void OpenGLShader::CacheUniforms() {
 
     std::vector<GLint> values(properties.size());
     for (int location = 0; location < numActiveUniforms; ++location) {
-        glGetProgramResourceiv(m_Id, GL_UNIFORM, location, properties.size(), &properties[0], values.size(), NULL,
+        glGetProgramResourceiv(m_Id, GL_UNIFORM, location, (GLsizei)properties.size(), &properties[0],
+                               (GLsizei)values.size(),
+                               NULL,
                                &values[0]);
 
         nameData.resize(values[0]);  // The length of the name.
-        glGetProgramResourceName(m_Id, GL_UNIFORM, location, nameData.size(), NULL, &nameData[0]);
-        std::string name((char*)&nameData[0], nameData.size() - 1);
+        glGetProgramResourceName(m_Id, GL_UNIFORM, location, (GLsizei)nameData.size(), NULL, &nameData[0]);
+        std::string name((char*)&nameData[0], (GLsizei)nameData.size() - 1);
 
         m_UniformMap[name] = location;
     }
@@ -119,7 +123,9 @@ int OpenGLShader::GetUniformLocation(const std::string& name) const {
     auto& result = m_UniformMap.find(name);
 
 #ifdef BLAZAR_DEBUG
-    if (result == m_UniformMap.end()) { LOG_CORE_WARN("Attempted to get undefined uniform \"{}\" in shader {}.", name, m_Id); }
+    if (result == m_UniformMap.end()) {
+        LOG_CORE_WARN("Attempted to get undefined uniform \"{}\" in shader {}.", name, m_Id);
+    }
 #endif
 
     return (result != m_UniformMap.end()) ? result->second : -1;

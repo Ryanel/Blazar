@@ -2,10 +2,12 @@
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/Renderer/Renderer.h"
 
+#include "Tracy.hpp"
+
 #ifdef BLAZAR_IMGUI_ENABLED
 // FPS Window
 void ImGUIFPSWindowLayer::OnImGUIRender() {
-    BLAZAR_PROFILE_FUNCTION();
+    ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("Windows", "Render Stats", "", this->show, true);
 
     if (!this->show) { return; }

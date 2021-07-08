@@ -7,22 +7,28 @@
 #include <GLFW/glfw3.h>
 #include "OpenGLRendererAPI.h"
 
+#include <TracyOpenGL.hpp>
+
 namespace Blazar {
 
 void OpenGLRendererAPI::Clear() {
-    BLAZAR_PROFILE_FUNCTION();
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    TracyGpuZoneS("Clear", 12);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void OpenGLRendererAPI::SetClearColor(float r, float g, float b, float a) {
+    TracyGpuZoneS("SetClearColor", 12);
+    glClearColor(r,g,b,a);
+}
+
 void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray) {
-    BLAZAR_PROFILE_FUNCTION();
+    TracyGpuZoneS("DrawIndexed", 12);
     vertexArray->Bind();
-    glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, (GLsizei)vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
 void OpenGLRendererAPI::SetViewport(int x, int y, int width, int height) {
-    BLAZAR_PROFILE_FUNCTION();
+    TracyGpuZoneS("SetViewport", 12);
     glViewport(x, y, width, height);
 }
 

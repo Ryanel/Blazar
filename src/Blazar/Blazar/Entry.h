@@ -1,26 +1,22 @@
 #pragma once
 
-#include "Blazar/Instrumentation/instrumentor.h"
 
 namespace Blazar {
 extern Application* CreateApplication();
 }
 
 #ifdef BLAZAR_CREATE_APPLICATION
+#include "Tracy.hpp"
     #ifdef BLAZAR_PLATFORM_WINDOWS
         #ifdef BLAZAR_CONSOLE_WINDOW
             int main(int argc, char** argv) {
+                ZoneScoped;
                 using namespace Blazar;
 
-                BLAZAR_PROFILE_BEGIN_SESSION("Startup", "Instrumentation-Startup.json");
                 Log::Init();
                 auto app = CreateApplication();
-                BLAZAR_PROFILE_END_SESSION();
-
-                BLAZAR_PROFILE_BEGIN_SESSION("Running", "Instrumentation-Running.json");
                 app->Run();
                 delete app;
-                BLAZAR_PROFILE_END_SESSION();
 
                 return 0;
             }

@@ -10,11 +10,12 @@
 #include "Blazar/ImGui/ImGuiLayer.h"
 #endif
 
+#include "Tracy.hpp"
+
 namespace Blazar {
 Application* Application::s_Instance;
 
 Application::Application() {
-    BLAZAR_PROFILE_FUNCTION();
     LOG_CORE_TRACE("Creating Application");
     s_Instance = this;
     // Create the window
@@ -25,31 +26,25 @@ Application::Application() {
     Renderer::Init(RendererAPI::API::OpenGL);
 
     m_ImGui = new ImGuiLayer();
+    m_EditorGameWindow = std::make_shared<Viewport>();
     PushOverlay(m_ImGui);
 }
 
 Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
 
-void Application::PushLayer(Layer* layer) {
-    BLAZAR_PROFILE_FUNCTION();
-    m_LayerStack.PushLayer(layer);
-}
-void Application::PushOverlay(Layer* layer) {
-    BLAZAR_PROFILE_FUNCTION();
-    m_LayerStack.PushOverlay(layer);
-}
-
+void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
+void Application::PushOverlay(Layer* layer) { m_LayerStack.PushOverlay(layer); }
 void Application::Run() {
-    BLAZAR_PROFILE_FUNCTION();
+    ZoneScoped;
+
     while (m_Running) {
-        BLAZAR_PROFILE_SCOPE("Main Loop");
         // Start timing
         Timer frameTimer;
         Renderer::NewFrame();
 
         // Update
         {
-            BLAZAR_PROFILE_SCOPE("Update");
+            ZoneScopedN("Update");
 
             if (Input::KeyPressed(BLAZAR_KEY_GRAVE_ACCENT) && (!m_ImGuiShowKeyPressedLastFrame)) {
                 m_RenderImGui = !m_RenderImGui;
@@ -63,10 +58,19 @@ void Application::Run() {
 
         // Begin render
         {
-            BLAZAR_PROFILE_SCOPE("Render");
+            ZoneScopedN("Render");
             // Clear the screen
+
             RenderCmd::SetViewport(0, 0, GetWindow().GetWidth(), GetWindow().GetHeight());
+            RenderCmd::SetClearColor(0.05f, 0.05f, 0.1f, 1.0f);
             RenderCmd::Clear();
+
+            if (m_RenderImGui) {
+                RenderCmd::SetViewport(
+                    (int)m_EditorGameWindow->x,
+                    (int)(GetWindow().GetHeight() - m_EditorGameWindow->y - m_EditorGameWindow->height),
+                    (int)m_EditorGameWindow->width, (int)m_EditorGameWindow->height);
+            }
 
             // Update all layers
             for (Layer* layer : m_LayerStack) {
@@ -74,14 +78,18 @@ void Application::Run() {
             }
 
             // ImGUI
-
             m_ImGui->Begin();
             for (Layer* layer : m_LayerStack) { layer->OnImGUIRender(); }
             m_ImGui->End(m_RenderImGui);
         }
 
         // Flip Windows
-        m_Window->OnUpdate();
+        {
+            ZoneScopedN("Window Flip");
+            m_Window->OnUpdate();
+        }
+
+        FrameMark;
         m_deltaTime = frameTimer.Elapsed();
     }
 }
