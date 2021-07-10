@@ -60,17 +60,17 @@ project "Blazar"
         "%{IncludeDir.Tracy}"
     }
 
-    defines("TRACY_ENABLE")
-
     filter "configurations:Debug"
         symbols "On"
         runtime "Debug"
         defines ({"BLAZAR_DEBUG"})
+        defines("TRACY_ENABLE")
 
     filter "configurations:Release"
         defines ({"BLAZAR_RELEASE"})
         optimize "On"
         runtime "Release"
+        defines("TRACY_ENABLE")
 
     filter "configurations:Distrobution"
         defines ({"BLAZAR_DIST", "BLAZAR_RELEASE"})
@@ -140,18 +140,20 @@ project "Game"
         "Tracy"
     }
 
-    defines("TRACY_ENABLE")
+    
 
     filter "configurations:Debug"
-        defines "BLAZAR_DEBUG"
+        defines ({"BLAZAR_DEBUG", "BLAZAR_CONSOLE_WINDOW"})
         symbols "On"
         runtime "Debug"
         kind "ConsoleApp"
+        defines("TRACY_ENABLE")
 
     filter "configurations:Release"
         defines "BLAZAR_RELEASE"
         optimize "On"
         runtime "Release"
+        defines("TRACY_ENABLE")
 
     filter "configurations:Distrobution"
         defines ({"BLAZAR_DIST", "BLAZAR_RELEASE"})

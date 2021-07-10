@@ -3,6 +3,7 @@
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <mutex>
 
 #include "Resource.h"
 
@@ -24,9 +25,12 @@ class ResourceManager {
         ZoneScoped;
         LOG_CORE_TRACE("[Res Man]: Attempting to load {}", path);
 
+        // TODO: We lock here to avoid bugs right now, but this needs to be Optimized!
+        std::lock_guard<std::mutex> lock(m_loadedResourceLock);
         // Check cache
         {
             ZoneScopedN("Check Cache");
+
             std::unordered_map<std::string, ResourceBase*>::const_iterator cached_item = m_loadedResources.find(path);
 
             if (cached_item != m_loadedResources.end()) {
@@ -53,7 +57,10 @@ class ResourceManager {
         return std::nullopt;
     }
 
+    void Unload(std::string path);
+
    private:
     std::unordered_map<std::string, ResourceBase*> m_loadedResources;
+    std::mutex m_loadedResourceLock;
 };
 }  // namespace Blazar

@@ -45,4 +45,10 @@ ResourceManager* ResourceManager::Get() {
     return g_resourceManager;
 }
 
+void ResourceManager::Unload(std::string path) {
+    std::lock_guard<std::mutex> lck(m_loadedResourceLock);
+    std::unordered_map<std::string, ResourceBase*>::const_iterator cached_item = m_loadedResources.find(path);
+    if (cached_item != m_loadedResources.end()) { m_loadedResources.erase(cached_item); }
+}
+
 }  // namespace Blazar

@@ -10,7 +10,6 @@ extern Application* CreateApplication();
     #ifdef BLAZAR_PLATFORM_WINDOWS
         #ifdef BLAZAR_CONSOLE_WINDOW
             int main(int argc, char** argv) {
-                ZoneScoped;
                 using namespace Blazar;
 
                 Log::Init();

@@ -1,7 +1,5 @@
 #pragma once
 
-#define BLAZAR_CONSOLE_WINDOW
-
 // Logging
 #define BLAZAR_CONFIG_LOG_RESOURCE_USAGE
 #define BLAZAR_ENABLE_ASSERTS
