@@ -31,9 +31,14 @@ void Editor::OnUpdate(Blazar::Timestep ts) {}
 
 void Editor::OnImGUIRender() {
     ZoneScoped;
+    auto& app = Application::Get();
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Exit")) { Application::Get().m_Running = false; }
+            if (ImGui::MenuItem("Exit")) { app.m_Running = false; }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Windows")) {
+            if (ImGui::MenuItem("Game", "", &app.m_UseEditorWindow)) { app.m_UseEditorWindow != app.m_UseEditorWindow; }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
@@ -41,17 +46,23 @@ void Editor::OnImGUIRender() {
 
     ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
-    if (ImGui::Begin("Game",nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDocking)) {
-        auto gameSize = ImGui::GetWindowSize();
-        auto gamePos = ImGui::GetWindowPos();
-        Application::Get().m_EditorGameWindow->x = gamePos.x;
-        Application::Get().m_EditorGameWindow->y = gamePos.y;
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    if (app.m_UseEditorWindow) {
+        if (ImGui::Begin("Game", &app.m_UseEditorWindow, ImGuiWindowFlags_NoBackground)) {
+            auto gameSize = ImGui::GetContentRegionAvail();
+            auto gamePos = ImGui::GetWindowPos();
+            app.m_RenderViewport->x = gamePos.x;
+            app.m_RenderViewport->y = gamePos.y;
 
-        Application::Get().m_EditorGameWindow->width = gameSize.x;
-        Application::Get().m_EditorGameWindow->height = gameSize.y;
+            app.m_RenderViewport->width = gameSize.x;
+            app.m_RenderViewport->height = gameSize.y;
+
+
+            ImGui::Image((ImTextureID)app.m_GameRenderTexture->GetColorId(), gameSize, ImVec2(0, 1), ImVec2(1, 0));
+        }
+        ImGui::End();
     }
-
-    ImGui::End();
+    ImGui::PopStyleVar();
 }
 
 void Editor::OnEvent(Blazar::Events::Event& e) {}

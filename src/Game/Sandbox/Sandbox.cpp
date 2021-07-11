@@ -5,6 +5,7 @@
 
 #include "Blazar/Blazar.h"
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
+#include "Blazar/Renderer/RenderTexture.h"
 #include "Blazar/Renderer/Renderer.h"
 
 #include "Blazar/Assets/Resource.h"
@@ -42,7 +43,6 @@ void Sandbox::OnAttach() {
     m_shader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetInt("u_Texture", 0);
 
-
     auto tex = ResourceManager::Get()->Load<Texture2D>("Textures/SampleTrans.png");
     if (tex) {
         m_texture = std::move(tex.value());
@@ -63,14 +63,9 @@ void Sandbox::OnUpdate(Blazar::Timestep ts) {
     ZoneScoped;
     glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {0, 0, 0});
 
-    if (Application::Get().m_RenderImGui) {
-        m_cameraController->SetViewport(Application::Get().m_EditorGameWindow);
-    } else {
-        auto& gameWindow = Application::Get().GetWindow();
-        m_cameraController->SetViewport(gameWindow.GetViewport());
-    }
+    m_cameraController->SetViewport(Application::Get().m_RenderViewport);
 
-    m_cameraController->SetPosition({0, 0, 0});
+    m_cameraController->SetPosition({0, 0.00, 0});
 
     Renderer::BeginPass(*m_cameraController);
     {
@@ -80,21 +75,8 @@ void Sandbox::OnUpdate(Blazar::Timestep ts) {
     Renderer::EndPass();
 }
 
-void Sandbox::OnImGUIRender() {
-    ZoneScoped;
+void Sandbox::OnImGUIRender() { ZoneScoped; }
 
-    ImGui::Begin("Loaded Assets");
-    {
-        ImGui::BeginChild("Asset");
-        ImVec2 wsize = ImGui::GetWindowSize();
-        ImGui::Image((ImTextureID)m_texture->GetId(), wsize, ImVec2(0, 1), ImVec2(1, 0));
-        ImGui::EndChild();
-    }
-    ImGui::End();
-}
-
-void Sandbox::OnEvent(Blazar::Events::Event& e) {
-    ZoneScoped;
-}
+void Sandbox::OnEvent(Blazar::Events::Event& e) { ZoneScoped; }
 
 }  // namespace Blazar

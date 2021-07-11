@@ -59,6 +59,7 @@ void Renderer::BeginPass(Camera& cam) {
     renderer_stats.passesThisFrame++; 
     m_PassData->MatViewProjection = cam.GetViewProjection();
 }
+
 void Renderer::EndPass() {}
 
 }  // namespace Blazar

@@ -7,7 +7,7 @@
 #include "Blazar/Time/Timer.h"
 #include "Blazar/Time/Timestep.h"
 #include "Blazar/Window.h"
-
+#include "Blazar/Renderer/RenderTexture.h"
 #ifdef BLAZAR_IMGUI_ENABLED
 #include "Blazar/ImGui/ImGuiLayer.h"
 #endif
@@ -29,15 +29,18 @@ class BLAZAR_API Application {
     inline Window& GetWindow() { return *m_Window; }
     inline static Application& Get() { return *s_Instance; }
 
-    std::unique_ptr<Window> m_Window;
-    bool m_Running = true;
+   public:
     LayerStack m_LayerStack;
-
+    std::unique_ptr<Window> m_Window;
     Timestep m_deltaTime = 0.016f;
     Timer m_FrameTimer;
 
+    bool m_Running = true;
     bool m_RenderImGui = true;
-    Ref<Viewport> m_EditorGameWindow;
+    bool m_UseEditorWindow = true;
+    Ref<Viewport> m_RenderViewport;
+
+    Ref<RenderTexture> m_GameRenderTexture;
 
    private:
     bool OnWindowClosed(Events::WindowCloseEvent&);
