@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Blazar/Renderer/Shader.h"
+#include "Blazar/Renderer/Primitives/Shader.h"
 #include "Blazar/Renderer/Renderer.h"
 
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"

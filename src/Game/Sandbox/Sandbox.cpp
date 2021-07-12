@@ -3,14 +3,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "imgui.h"
 
-#include "Blazar/Blazar.h"
-#include "Blazar/Platform/OpenGL/OpenGLShader.h"
-#include "Blazar/Renderer/RenderTexture.h"
-#include "Blazar/Renderer/Renderer.h"
-
 #include "Blazar/Assets/Resource.h"
 #include "Blazar/Assets/ResourceManager.h"
-
+#include "Blazar/Blazar.h"
+#include "Blazar/Platform/OpenGL/OpenGLShader.h"
+#include "Blazar/Renderer/Primitives/RenderTexture.h"
+#include "Blazar/Renderer/RenderCmd.h"
+#include "Blazar/Renderer/RenderItem.h"
+#include "Blazar/Renderer/Renderer.h"
 #include "Tracy.hpp"
 
 namespace Blazar {
@@ -64,18 +64,24 @@ void Sandbox::OnUpdate(Blazar::Timestep ts) {
     glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {0, 0, 0});
 
     m_cameraController->SetViewport(Application::Get().m_RenderViewport);
-
     m_cameraController->SetPosition({0, 0.00, 0});
 
-    Renderer::BeginPass(*m_cameraController);
+    RenderCmd::BeginPass();
+    RenderCmd::PassSetCamera(&(*m_cameraController));
     {
-        m_texture->Bind(0);
-        Renderer::Submit(m_squareVAO, m_shader, sqr_pos);
+        RenderCmd::SetShader(m_shader);
+        RenderCmd::UploadCameraProps();
+        RenderCmd::BindTexture(&(m_texture.get()));
+        // RenderCmd::SetTranslation(sqr_pos);
+        std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetMat4("u_Transform", sqr_pos);
+        RenderCmd::DrawIndexed(m_squareVAO);
     }
-    Renderer::EndPass();
+    RenderCmd::EndPass();
 }
 
-void Sandbox::OnImGUIRender() { ZoneScoped; }
+void Sandbox::OnImGUIRender() {
+    ZoneScoped;
+}
 
 void Sandbox::OnEvent(Blazar::Events::Event& e) { ZoneScoped; }
 

@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "Blazar/Renderer/Shader.h"
+#include "Blazar/Renderer/Primitives/Shader.h"
 
 namespace Blazar {
 

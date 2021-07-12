@@ -1,10 +1,13 @@
 #pragma once
 
+#include "Primitives/Shader.h"
+#include "Primitives/VertexArray.h"
+#include "RenderItem.h"
 #include "RendererAPI.h"
-#include "VertexArray.h"
 
 #include "Cameras/Camera.h"
-#include "Shader.h"
+
+#include <queue>
 
 namespace Blazar {
 
@@ -15,23 +18,22 @@ struct RendererStats {
 
 struct PassData {
     glm::mat4 MatViewProjection;
+    Ref<RenderTexture> currentRenderTexture = nullptr;
+    Ref<Shader> currentShader = nullptr;
 };
 
 class Renderer {
    public:
-    static void NewFrame();
-    static void BeginPass(Camera& cam);
-    static void EndPass();
-
     static void Init(RendererAPI::API toCreate);
-    static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader,
-                       const glm::mat4& transform = glm::mat4(1.0f));
+    static void Submit(RenderItem* item);
+    static void ProcessQueue();
+    static void Flush();
 
     static RendererAPI::API GetAPI() { return s_RendererAPI->GetAPI(); }
 
-   private:
     static PassData* m_PassData;
-
+    static std::deque<RenderItem*> m_RenderQueue;
+    static std::deque<RenderItem*> m_LastFrameRenderQueue;
 };
 extern RendererStats renderer_stats;
 

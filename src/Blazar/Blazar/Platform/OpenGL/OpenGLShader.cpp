@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
-#include "Blazar/Renderer/Shader.h"
+#include "Blazar/Renderer/Primitives/Shader.h"
 
 namespace Blazar {
 

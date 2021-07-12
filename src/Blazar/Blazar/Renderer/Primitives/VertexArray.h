@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Blazar/Renderer/Buffer.h"
+#include "Blazar/Renderer/Primitives/Buffer.h"
 
 namespace Blazar {
 

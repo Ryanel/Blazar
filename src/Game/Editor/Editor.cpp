@@ -8,6 +8,8 @@
 
 #include "Blazar/ImGui/ImGuiLog.h"
 #include "Editor/DebugLayers.h"
+#include "Editor/RenderListViewer.h"
+#include "Editor/FPSWidget.h"
 
 #include "Tracy.hpp"
 
@@ -18,9 +20,11 @@ Editor::Editor() : Layer("ImGUI Editor Main") { m_UpdatePath = LayerUpdatePath::
 void Editor::Setup() {
     // Add layers after this one here
     auto& app = Application::Get();
-    app.PushLayer(new ImGUIFPSWindowLayer());
+    //app.PushLayer(new ImGUIFPSWindowLayer());
     app.PushLayer(new ImGUIDemoWindowLayer());
     app.PushLayer(new ImGUILogWindowLayer());
+    app.PushLayer(new RenderListWindowLayer());
+    app.PushLayer(new FPSWidgetWindowLayer());
 }
 
 void Editor::OnAttach() {}
@@ -58,7 +62,7 @@ void Editor::OnImGUIRender() {
             app.m_RenderViewport->height = gameSize.y;
 
 
-            ImGui::Image((ImTextureID)app.m_GameRenderTexture->GetColorId(), gameSize, ImVec2(0, 1), ImVec2(1, 0));
+            ImGui::Image((ImTextureID)app.m_GameRenderTexture->m_ColorTexture->GetId(), gameSize, ImVec2(0, 1), ImVec2(1, 0));
         }
         ImGui::End();
     }

@@ -7,7 +7,7 @@
 #include "Blazar/Time/Timer.h"
 #include "Blazar/Time/Timestep.h"
 #include "Blazar/Window.h"
-#include "Blazar/Renderer/RenderTexture.h"
+#include "Blazar/Renderer/Primitives/RenderTexture.h"
 #ifdef BLAZAR_IMGUI_ENABLED
 #include "Blazar/ImGui/ImGuiLayer.h"
 #endif

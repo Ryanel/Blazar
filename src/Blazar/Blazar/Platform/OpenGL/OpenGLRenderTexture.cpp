@@ -4,7 +4,8 @@
 #include <stb_image.h>
 
 #include "Blazar/Platform/OpenGL/OpenGLRenderTexture.h"
-#include "Blazar/Renderer/Texture.h"
+#include "Blazar/Platform/OpenGL/OpenGLTexture.h"
+#include "Blazar/Renderer/Primitives/Texture.h"
 
 namespace Blazar {
 OpenGLRenderTexture::OpenGLRenderTexture() {}
@@ -14,17 +15,11 @@ OpenGLRenderTexture::OpenGLRenderTexture(const RenderTextureProperties& properti
     glBindFramebuffer(GL_FRAMEBUFFER, m_Id);
     // Bind color buffer
     {
-        glGenTextures(1, &m_ColorBufferID);
-        glBindTexture(GL_TEXTURE_2D, m_ColorBufferID);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Properties.width, m_Properties.height, 0, GL_RGB, GL_UNSIGNED_BYTE,
-                     NULL);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        m_ColorTexture.reset(
+            OpenGLTexture2D::Uninitialized(m_Properties.width, m_Properties.height, Blazar::TextureProperties()));
 
         // Attach to color
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorBufferID, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorTexture->GetId(), 0);
     }
 
     // Bind Depth + Stencil
@@ -54,7 +49,6 @@ OpenGLRenderTexture::~OpenGLRenderTexture() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);  // back to default
     glDeleteFramebuffers(1, &m_Id);
 
-    if (m_ColorBufferID != 0) { glDeleteTextures(1, &m_ColorBufferID); }
     if (m_DepthStencilID != 0) { glDeleteRenderbuffers(1, &m_DepthStencilID); }
 
     LOG_CORE_TRACE("Delete RenderTexture {} with width: {}, height: {}, msaa: {}", m_Id, m_Properties.width,

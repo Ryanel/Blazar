@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include "Blazar/Renderer/Buffer.h"
-#include "Blazar/Renderer/VertexArray.h"
+#include "Blazar/Renderer/Primitives/Buffer.h"
+#include "Blazar/Renderer/Primitives/VertexArray.h"
 
 namespace Blazar {
 

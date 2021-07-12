@@ -1,8 +1,8 @@
 #include "bzpch.h"
 
 #include <glad/glad.h>
-#include "Blazar/Renderer/Buffer.h"
-#include "Blazar/Renderer/ShaderDataType.h"
+#include "Blazar/Renderer/Primitives/Buffer.h"
+#include "Blazar/Renderer/Primitives/ShaderDataType.h"
 #include "Blazar/Platform/OpenGL/OpenGLBuffer.h"
 #include "Blazar/Platform/OpenGL/OpenGLVertexArray.h"
 

@@ -23,7 +23,7 @@ class ImGUIDemoWindowLayer : public Blazar::Layer {
     ImGUIDemoWindowLayer() : Layer("ImGUI Demo Window") { m_UpdatePath = LayerUpdatePath::Render; }
     void OnImGUIRender() override {
         ZoneScoped;
-        ImGUI_MainMenu_Toggle_Simple("Windows", "ImGUI Demo", "", this->show, true);
+        //ImGUI_MainMenu_Toggle_Simple("Windows", "ImGUI Demo", "", this->show, true);
 
         if (!this->show) { return; }
 

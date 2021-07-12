@@ -1,6 +1,6 @@
 #include "bzpch.h"
 
-#include "Blazar/Renderer/Texture.h"
+#include "Blazar/Renderer/Primitives/Texture.h"
 #include "Blazar/Renderer/Renderer.h"
 
 #include "Blazar/Platform/OpenGL/OpenGLTexture.h"

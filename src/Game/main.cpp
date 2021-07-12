@@ -14,10 +14,11 @@ class Game : public Blazar::Application {
    public:
     Game() {
         ZoneScoped;
-        PushLayer(new Sandbox());
 
         Editor* editor = new Editor();
         PushLayer(editor);
+        PushLayer(new Sandbox());
+
         editor->Setup();
     }
 
@@ -26,11 +27,10 @@ class Game : public Blazar::Application {
 
 namespace Blazar {
 
-Application* CreateApplication() { 
+Application* CreateApplication() {
     ZoneScoped;
     tracy::SetThreadName("Main Thread");
-    return new Game(); 
-
+    return new Game();
 }
 
 }  // namespace Blazar

@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "Blazar/Renderer/Viewport.h"
+#include "Blazar/Renderer/Primitives/Viewport.h"
 
 namespace Blazar {
 

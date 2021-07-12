@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Blazar/Renderer/VertexArray.h"
+#include "Blazar/Renderer/Primitives/VertexArray.h"
 #include "Blazar/Renderer/RendererAPI.h"
 
 namespace Blazar {

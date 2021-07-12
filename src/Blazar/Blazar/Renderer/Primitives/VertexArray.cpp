@@ -1,7 +1,7 @@
 #include "bzpch.h"
 
 #include "Buffer.h"
-#include "Renderer.h"
+#include "Blazar/Renderer/Renderer.h"
 
 #include "Blazar/Platform/OpenGL/OpenGLBuffer.h"
 #include "Blazar/Platform/OpenGL/OpenGLVertexArray.h"

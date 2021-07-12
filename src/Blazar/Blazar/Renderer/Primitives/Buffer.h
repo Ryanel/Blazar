@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Blazar/Log.h"
-#include "Blazar/Renderer/ShaderDataType.h"
+#include "Blazar/Renderer/Primitives/ShaderDataType.h"
 
 namespace Blazar {
 
@@ -88,6 +88,7 @@ class VertexBuffer {
 
     // Factory method
     static Ref<VertexBuffer> Create(float* verticies, size_t size);
+    static Ref<VertexBuffer> Create(float* verticies, size_t size, BufferLayout& layout);
 };
 
 class IndexBuffer {

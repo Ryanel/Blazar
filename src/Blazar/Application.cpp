@@ -6,9 +6,7 @@
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
 
-#ifdef BLAZAR_IMGUI_ENABLED
 #include "Blazar/ImGui/ImGuiLayer.h"
-#endif
 
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Tracy.hpp"
@@ -28,9 +26,7 @@ Application::Application() {
     Renderer::Init(RendererAPI::API::OpenGL);
 
     m_ImGui = new ImGuiLayer();
-    m_RenderViewport = std::make_shared<Viewport>();
-    m_RenderViewport->width = 32;
-    m_RenderViewport->height = 32;
+    m_RenderViewport = std::make_shared<Viewport>(0, 0, 32, 32);
 
     RenderTextureProperties renderProperties;
     renderProperties.width = m_RenderViewport->width;
@@ -46,56 +42,50 @@ Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
 
 void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
 void Application::PushOverlay(Layer* layer) { m_LayerStack.PushOverlay(layer); }
+
 void Application::Run() {
     ZoneScoped;
 
+    // Create a fullscreen quad to render the game to.
+    BufferLayout quad_layout = {
+        {ShaderDataType::Float3, "a_Position"},  // 00: Position
+        {ShaderDataType::Float2, "a_TexCoord"},  // 12: Color
+    };
+
+    float quad_verts[5 * 4] = {
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,  // v0
+        1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,  // v1
+        1.0f,  1.0f,  0.0f, 1.0f, 1.0f,  // v2,
+        -1.0f, 1.0f,  0.0f, 0.0f, 1.0f,  // v3,
+    };
+
+    uint32_t quad_indicies[6] = {0, 1, 2, 2, 3, 0};
+    Ref<VertexBuffer> quad_vbo = VertexBuffer::Create(quad_verts, sizeof(quad_verts), quad_layout);
+    Ref<IndexBuffer> quad_ibo = IndexBuffer::Create(quad_indicies, sizeof(quad_indicies));
+    Ref<VertexArray> quad_vao = VertexArray::Create(quad_vbo, quad_ibo);
+
+    // Setup the shader
+    Ref<Shader> fullscreenShader = Shader::FromFile("Contents/Shaders/ScreenTexture");
+    fullscreenShader->Bind();
+    std::dynamic_pointer_cast<Blazar::OpenGLShader>(fullscreenShader)->SetInt("u_Texture", 0);
+
+    // Run Loop
     while (m_Running) {
-        // Start timing
         Timer frameTimer;
-        Renderer::NewFrame();
 
         // Check if the renderbuffer needs to be changed.
         if (!(m_UseEditorWindow && m_RenderImGui)) {
-            m_RenderViewport->width = GetWindow().GetViewport()->width;
-            m_RenderViewport->height = GetWindow().GetViewport()->height;
+            m_RenderViewport->Set(0, 0, GetWindow().GetViewport()->width, GetWindow().GetViewport()->height);
         }
-
-        RenderTextureProperties renderProperties;
-        renderProperties.width = m_RenderViewport->width;
-        renderProperties.height = m_RenderViewport->height;
+        RenderTextureProperties renderProperties(m_RenderViewport->width, m_RenderViewport->height);
 
         if ((m_GameRenderTexture->GetWidth() != renderProperties.width) ||
             (m_GameRenderTexture->GetHeight() != renderProperties.height)) {
             m_GameRenderTexture = RenderTexture::Create(renderProperties);
+            m_GameRenderTexture->Unbind();
         }
 
-        // Create a fullscreen quad for rendering the game
-
-        BufferLayout quad_layout = {
-            {ShaderDataType::Float3, "a_Position"},  // 00: Position
-            {ShaderDataType::Float2, "a_TexCoord"},  // 12: Color
-        };
-
-        float quad_verts[5 * 4] = {
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  // v0
-            0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,  // v1
-            0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // v2,
-            -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  // v3,
-        };
-
-        uint32_t quad_indicies[6] = {0, 1, 2, 2, 3, 0};
-        Ref<VertexBuffer> quad_vbo = VertexBuffer::Create(quad_verts, sizeof(quad_verts));
-        Ref<IndexBuffer> quad_ibo = IndexBuffer::Create(quad_indicies, sizeof(quad_indicies));
-        quad_vbo->SetLayout(quad_layout);
-
-        Ref<VertexArray> quad_vao = VertexArray::Create(quad_vbo, quad_ibo);
-        // quad_vao->Bind();
-
-        Ref<Shader> fullscreenShader = Shader::FromFile("Contents/Shaders/ScreenTexture");
-        fullscreenShader->Bind();
-        std::dynamic_pointer_cast<Blazar::OpenGLShader>(fullscreenShader)->SetInt("u_Texture", 0);
-
-        // Update
+        // Update Code. No rendering here
         {
             ZoneScopedN("Update");
 
@@ -109,9 +99,11 @@ void Application::Run() {
             }
         }
 
-        // Begin render
+        // Rendering Code!
         {
             ZoneScopedN("Render");
+            renderer_stats.passesThisFrame = 0;
+            renderer_stats.drawCalls = 0;
             // Clear the screen
             RenderCmd::SetViewport(0, 0, GetWindow().GetWidth(), GetWindow().GetHeight());
             RenderCmd::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
@@ -119,8 +111,8 @@ void Application::Run() {
 
             // Render Game
             {
-                m_GameRenderTexture->Bind();
-                RenderCmd::SetViewport(0, 0, m_RenderViewport->width, m_RenderViewport->height);
+                RenderCmd::SetRenderTexture(m_GameRenderTexture);
+                RenderCmd::SetViewport(0, 0, m_GameRenderTexture->GetWidth(), m_GameRenderTexture->GetHeight());
                 RenderCmd::SetClearColor(0.05f, 0.05f, 0.1f, 1.0f);
                 RenderCmd::Clear();
 
@@ -129,19 +121,25 @@ void Application::Run() {
                     if (layer->m_UpdatePath == LayerUpdatePath::Render) { layer->OnUpdate(m_deltaTime); }
                 }
 
-                m_GameRenderTexture->Unbind();
+                RenderCmd::SetRenderTexture(nullptr);
 
-                if (!m_RenderImGui || !m_UseEditorWindow) {
-                    fullscreenShader->Bind();
-                    glBindTexture(GL_TEXTURE0, m_GameRenderTexture->GetColorId());
+                if (!m_RenderImGui || !m_UseEditorWindow && false) {
+                    RenderCmd::SetViewport(0, 0, GetWindow().GetWidth(), GetWindow().GetHeight());
+                    RenderCmd::SetShader(fullscreenShader);
+                    RenderCmd::BindTexture(m_GameRenderTexture->m_ColorTexture);
                     RenderCmd::DrawIndexed(quad_vao);
                 }
             }
+
+            Renderer::Submit(new RenderItem(RenderItemType::FRAME_SYNC));
+            Renderer::ProcessQueue();
 
             // ImGUI
             m_ImGui->Begin();
             for (Layer* layer : m_LayerStack) { layer->OnImGUIRender(); }
             m_ImGui->End(m_RenderImGui);
+
+            Renderer::Flush();
         }
 
         // Flip Windows

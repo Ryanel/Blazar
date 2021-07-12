@@ -4,7 +4,7 @@
 
 #include "RendererAPI.h"
 
-#include "VertexArray.h"
+#include "Primitives/VertexArray.h"
 
 namespace Blazar {
 

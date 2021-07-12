@@ -4,7 +4,7 @@
 #include <stb_image.h>
 
 #include "Blazar/Platform/OpenGL/OpenGLTexture.h"
-#include "Blazar/Renderer/Texture.h"
+#include "Blazar/Renderer/Primitives/Texture.h"
 
 namespace Blazar {
 OpenGLTexture2D::OpenGLTexture2D() {}
@@ -100,6 +100,25 @@ OpenGLTexture2D* OpenGLTexture2D::FromData(std::vector<char>& fdata, const Textu
 
     if (!retainTexture) { stbi_image_free(data); }
 
+    return tex;
+}
+
+OpenGLTexture2D* OpenGLTexture2D::Uninitialized(int width, int height, const TextureProperties& properties) {
+    OpenGLTexture2D* tex = new OpenGLTexture2D();
+    glGenTextures(1, &tex->m_Id);
+    glBindTexture(GL_TEXTURE_2D, tex->m_Id);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+     int filterMode = tex->m_Properties.filtering == TextureFilterMode::Bilinear ? GL_LINEAR : GL_NEAREST;
+
+    glTextureParameteri(tex->m_Id, GL_TEXTURE_MIN_FILTER, filterMode);
+    glTextureParameteri(tex->m_Id, GL_TEXTURE_MAG_FILTER, filterMode);
+
+    glTextureParameteri(tex->m_Id, GL_TEXTURE_WRAP_S,
+                        properties.wrap_x == TextureWrappingMode::Repeat ? GL_REPEAT : GL_CLAMP_TO_BORDER);
+    glTextureParameteri(tex->m_Id, GL_TEXTURE_WRAP_T,
+                        properties.wrap_y == TextureWrappingMode::Repeat ? GL_REPEAT : GL_CLAMP_TO_BORDER);
     return tex;
 }
 

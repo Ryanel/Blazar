@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Blazar/Renderer/Cameras/Camera.h"
-#include "Blazar/Renderer/Viewport.h"
+#include "Blazar/Renderer/Primitives/Viewport.h"
 
 namespace Blazar {
 

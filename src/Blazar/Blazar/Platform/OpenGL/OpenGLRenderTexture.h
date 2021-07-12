@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "Blazar/Renderer/RenderTexture.h"
+#include "Blazar/Renderer/Primitives/RenderTexture.h"
 
 namespace Blazar {
 
