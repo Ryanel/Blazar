@@ -17,6 +17,9 @@ class Shader {
 
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
+
+    void SetName(std::string n) { name = n; }
+    std::string name;
 };
 
 };  // namespace Blazar

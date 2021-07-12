@@ -32,23 +32,19 @@ void Sandbox::OnAttach() {
 
     uint32_t sqr_indicies[6] = {0, 1, 2, 2, 3, 0};
 
-    Ref<VertexBuffer> sqr_vbo = VertexBuffer::Create(sqr_verts, sizeof(sqr_verts));
+    Ref<VertexBuffer> sqr_vbo = VertexBuffer::Create(sqr_verts, sizeof(sqr_verts), sqr_layout);
     Ref<IndexBuffer> sqr_ibo = IndexBuffer::Create(sqr_indicies, sizeof(sqr_indicies));
-    sqr_vbo->SetLayout(sqr_layout);
 
     m_squareVAO = VertexArray::Create(sqr_vbo, sqr_ibo);
     m_squareVAO->Bind();
 
     m_shader = Shader::FromFile("Contents/Shaders/Simple");
+    m_shader->SetName("Simple");
     m_shader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetInt("u_Texture", 0);
 
-    auto tex = ResourceManager::Get()->Load<Texture2D>("Textures/SampleTrans.png");
-    if (tex) {
-        m_texture = std::move(tex.value());
-    } else {
-        throw;
-    }
+    auto tex = ResourceManager::Get()->Load<Texture2D>("Textures/SampleTrans.png", true);
+    m_texture = std::move(tex.value());
 
     // Camera
     auto& gameWindow = Application::Get().GetWindow();
@@ -71,17 +67,16 @@ void Sandbox::OnUpdate(Blazar::Timestep ts) {
     {
         RenderCmd::SetShader(m_shader);
         RenderCmd::UploadCameraProps();
-        RenderCmd::BindTexture(&(m_texture.get()));
         // RenderCmd::SetTranslation(sqr_pos);
-        std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetMat4("u_Transform", sqr_pos);
+        //std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetMat4("u_Transform", sqr_pos);
+        RenderCmd::SetShaderMat4("u_Transform", sqr_pos);
+        RenderCmd::BindTexture(&(m_texture.get()));
         RenderCmd::DrawIndexed(m_squareVAO);
     }
     RenderCmd::EndPass();
 }
 
-void Sandbox::OnImGUIRender() {
-    ZoneScoped;
-}
+void Sandbox::OnImGUIRender() { ZoneScoped; }
 
 void Sandbox::OnEvent(Blazar::Events::Event& e) { ZoneScoped; }
 

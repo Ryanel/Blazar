@@ -60,17 +60,15 @@ void Renderer::ProcessQueue() {
             continue;
         }
 
-        RenderItem_SetClearColor* clearColor = nullptr;
+        RenderItem_ClearColor* clearColor = nullptr;
         RenderItem_SetViewport* setViewport = nullptr;
         RenderItem_PassSetCamera* setCamera = nullptr;
         RenderItem_SetRenderTexture* setRenderTexture = nullptr;
 
         switch (item->type) {
-            case RenderItemType::SET_CLEAR_COLOR:
-                clearColor = (RenderItem_SetClearColor*)item;
+            case RenderItemType::CLEAR_COLOR:
+                clearColor = (RenderItem_ClearColor*)item;
                 s_RendererAPI->SetClearColor(clearColor->r, clearColor->g, clearColor->b, clearColor->a);
-                break;
-            case RenderItemType::CLEAR:
                 s_RendererAPI->Clear();
                 break;
             case RenderItemType::DRAW_VERTEX_ARRAY:
@@ -107,6 +105,16 @@ void Renderer::ProcessQueue() {
             case RenderItemType::SET_VIEWPORT:
                 setViewport = (RenderItem_SetViewport*)item;
                 s_RendererAPI->SetViewport(setViewport->x, setViewport->y, setViewport->w, setViewport->h);
+                break;
+
+            case RenderItemType::SET_MAT4:
+                BLAZAR_CORE_ASSERT(m_PassData->currentShader != nullptr, "No shader bound");
+                {
+                    RenderItem_SetShaderMat4* ssm4 = (RenderItem_SetShaderMat4*)(item);
+                    std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_PassData->currentShader)
+                        ->SetMat4(ssm4->str, ssm4->mat);
+                }
+
                 break;
 
             case RenderItemType::PASS_SET_CAMERA:

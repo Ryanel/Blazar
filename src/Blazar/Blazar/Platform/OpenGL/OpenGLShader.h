@@ -30,11 +30,13 @@ class OpenGLShader : public Shader {
     void SetMat3(const std::string& name, const glm::mat3& matrix);
     void SetMat4(const std::string& name, const glm::mat4& matrix);
 
+    std::unordered_map<std::string, int> m_UniformMap;
+
    private:
     void CacheUniforms();
     int GetUniformLocation(const std::string& name) const;
+
    private:
-    std::unordered_map<std::string, int> m_UniformMap;
     uint32_t m_Id;
 };
 

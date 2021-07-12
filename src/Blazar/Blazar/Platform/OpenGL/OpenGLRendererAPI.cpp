@@ -12,23 +12,23 @@
 namespace Blazar {
 
 void OpenGLRendererAPI::Clear() {
-    TracyGpuZoneS("Clear", 12);
+    //TracyGpuZone("Clear");
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void OpenGLRendererAPI::SetClearColor(float r, float g, float b, float a) {
-    TracyGpuZoneS("SetClearColor", 12);
+    //TracyGpuZone("SetClearColor");
     glClearColor(r,g,b,a);
 }
 
 void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray) {
-    TracyGpuZoneS("DrawIndexed", 12);
+    //TracyGpuZone("DrawIndexed");
     vertexArray->Bind();
     glDrawElements(GL_TRIANGLES, (GLsizei)vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
 void OpenGLRendererAPI::SetViewport(int x, int y, int width, int height) {
-    TracyGpuZoneS("SetViewport", 12);
+    //TracyGpuZone("SetViewport");
     glViewport(x, y, width, height);
 }
 

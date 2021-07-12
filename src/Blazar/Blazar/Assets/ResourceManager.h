@@ -1,9 +1,9 @@
 #pragma once
 
+#include <mutex>
 #include <optional>
 #include <string>
 #include <unordered_map>
-#include <mutex>
 
 #include "Resource.h"
 
@@ -21,7 +21,7 @@ class ResourceManager {
 
    public:
     template <class T>
-    std::optional<Resource<T>> Load(std::string path) {
+    std::optional<Resource<T>> Load(std::string path, bool required = false) {
         ZoneScoped;
         LOG_CORE_TRACE("[Res Man]: Attempting to load {}", path);
 
@@ -54,6 +54,8 @@ class ResourceManager {
                 }
             }
         }
+
+        if (required == true) { throw; }
         return std::nullopt;
     }
 

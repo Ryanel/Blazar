@@ -8,9 +8,8 @@ namespace Blazar {
 
 class RenderCmd {
    public:
-    inline static void Clear() { Renderer::Submit(new RenderItem(RenderItemType::CLEAR)); }
-    inline static void SetClearColor(float r, float g, float b, float a) {
-        Renderer::Submit(new RenderItem_SetClearColor(r, g, b, a));
+    inline static void Clear(float r, float g, float b, float a) {
+        Renderer::Submit(new RenderItem_ClearColor(r, g, b, a));
     }
 
     inline static void DrawIndexed(const Ref<VertexArray>& vertexArray) {
@@ -35,6 +34,11 @@ class RenderCmd {
     inline static void PassSetCamera(Camera* camera) { Renderer::Submit(new RenderItem_PassSetCamera(camera)); }
     inline static void SetRenderTexture(Ref<RenderTexture> tex) {
         Renderer::Submit(new RenderItem_SetRenderTexture(tex));
+    }
+
+
+    inline static void SetShaderMat4(std::string str, glm::mat4& mat) {
+        Renderer::Submit(new RenderItem_SetShaderMat4(str, mat));
     }
 };
 

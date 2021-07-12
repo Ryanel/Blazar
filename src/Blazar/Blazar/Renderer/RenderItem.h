@@ -15,13 +15,14 @@ enum class RenderItemType {
     DRAW_VERTEX_ARRAY,      // Draws a vertex array
     BIND_TEXTURE2D,         // Binds a texture to the current context
     CLEAR,                  // Clears the entire buffer
-    SET_CLEAR_COLOR,        // Sets the clear color
+    CLEAR_COLOR,        // Sets the clear color
     PASS_START,             // Starts a pass
     PASS_END,               // Ends a pass
     PASS_SET_CAMERA,        // Sets the camera for a pass.
     SET_VIEWPORT,           // Sets the viewport
     SET_RENDERTEXTURE,      // Sets a rendertexture
     CAMERA_SETSHADERPROPS,  // Sets the viewprojection from the currentCamera
+    SET_MAT4,               // Set a mat4 on the current shader
 };
 
 inline const char* RenderItemString(RenderItemType v) {
@@ -33,30 +34,29 @@ inline const char* RenderItemString(RenderItemType v) {
         case Blazar::RenderItemType::BIND_VERTEX_ARRAY:
             return "Bind VAO";
         case Blazar::RenderItemType::DRAW_VERTEX_ARRAY:
-            return "Draw VAO";
+            return "Render VAO";
         case Blazar::RenderItemType::BIND_TEXTURE2D:
-            return "Bind Texture2D";
-        case Blazar::RenderItemType::CLEAR:
-            return "Clear";
-        case Blazar::RenderItemType::SET_CLEAR_COLOR:
-            return "Set Clear Color";
+            return "Shader <- Texture2D";
+        case Blazar::RenderItemType::CLEAR_COLOR:
+            return "Render Clear";
         case Blazar::RenderItemType::PASS_START:
-            return "Pass Start";
+            return "Start Pass";
         case Blazar::RenderItemType::PASS_END:
-            return "Pass End";
+            return "End Pass";
         case Blazar::RenderItemType::PASS_SET_CAMERA:
-            return "Pass Set Camera";
+            return "Pass Camera";
         case Blazar::RenderItemType::SET_VIEWPORT:
-            return "Set Viewport";
+            return "Viewport";
         case Blazar::RenderItemType::SET_RENDERTEXTURE:
-            return "Set Render Texture";
+            return "Render Texture";
+        case Blazar::RenderItemType::SET_MAT4:
+            return "Shader <- Mat4";
         case Blazar::RenderItemType::CAMERA_SETSHADERPROPS:
-            return "Set Camera Shader Props";
+            return "Shader <- CameraProps";
         default:
             return "Unknown";
     }
 }
-
 
 class RenderItem {
    public:
@@ -66,10 +66,10 @@ class RenderItem {
     virtual ~RenderItem() {}
 };
 
-class RenderItem_SetClearColor : public RenderItem {
+class RenderItem_ClearColor : public RenderItem {
    public:
-    RenderItem_SetClearColor(float r, float g, float b, float a)
-        : RenderItem(RenderItemType::SET_CLEAR_COLOR), r(r), g(g), b(b), a(a) {}
+    RenderItem_ClearColor(float r, float g, float b, float a)
+        : RenderItem(RenderItemType::CLEAR_COLOR), r(r), g(g), b(b), a(a) {}
 
     float r, g, b, a;
 };
@@ -117,6 +117,15 @@ class RenderItem_SetRenderTexture : public RenderItem {
     RenderItem_SetRenderTexture(Ref<RenderTexture> tex) : RenderItem(RenderItemType::SET_RENDERTEXTURE), tex(tex) {}
 
     Ref<RenderTexture> tex;
+};
+
+class RenderItem_SetShaderMat4 : public RenderItem {
+   public:
+    RenderItem_SetShaderMat4(std::string str, glm::mat4& mat)
+        : RenderItem(RenderItemType::SET_MAT4), str(str), mat(mat) {}
+
+    std::string str;
+    glm::mat4 mat;
 };
 
 }  // namespace Blazar

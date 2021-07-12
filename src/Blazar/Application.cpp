@@ -66,6 +66,7 @@ void Application::Run() {
 
     // Setup the shader
     Ref<Shader> fullscreenShader = Shader::FromFile("Contents/Shaders/ScreenTexture");
+    fullscreenShader->SetName("ScreenTexture");
     fullscreenShader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(fullscreenShader)->SetInt("u_Texture", 0);
 
@@ -106,15 +107,13 @@ void Application::Run() {
             renderer_stats.drawCalls = 0;
             // Clear the screen
             RenderCmd::SetViewport(0, 0, GetWindow().GetWidth(), GetWindow().GetHeight());
-            RenderCmd::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-            RenderCmd::Clear();
+            RenderCmd::Clear(0.3f, 0.3f, 0.3f, 1.0f);
 
             // Render Game
             {
                 RenderCmd::SetRenderTexture(m_GameRenderTexture);
                 RenderCmd::SetViewport(0, 0, m_GameRenderTexture->GetWidth(), m_GameRenderTexture->GetHeight());
-                RenderCmd::SetClearColor(0.05f, 0.05f, 0.1f, 1.0f);
-                RenderCmd::Clear();
+                RenderCmd::Clear(0.05f, 0.05f, 0.1f, 1.0f);
 
                 // Update all layers
                 for (Layer* layer : m_LayerStack) {
