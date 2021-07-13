@@ -44,11 +44,11 @@ class ResourceBase {
 
 template <typename T>
 class Resource : public ResourceBase {
-    template <typename T>
+    template <typename Q>
     class ResourcePointer {
        public:
-        ResourcePointer(T* d) : data(d) {}
-        T* data;
+        ResourcePointer(Q* d) : data(d) {}
+        Q* data;
     };
 
    public:

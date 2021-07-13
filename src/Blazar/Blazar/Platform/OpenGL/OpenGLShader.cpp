@@ -120,7 +120,7 @@ void OpenGLShader::CacheUniforms() {
 }
 
 int OpenGLShader::GetUniformLocation(const std::string& name) const {
-    auto& result = m_UniformMap.find(name);
+    std::unordered_map<std::string, int>::const_iterator result = m_UniformMap.find(name);
 
 #ifdef BLAZAR_DEBUG
     if (result == m_UniformMap.end()) {
