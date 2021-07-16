@@ -130,15 +130,14 @@ void Application::Run() {
                 }
             }
 
-            Renderer::Submit(new RenderItem(RenderItemType::FRAME_SYNC));
-            Renderer::ProcessQueue();
+            Renderer::Submit(RenderCommand(RenderCommandID::FRAME_SYNC));
+
+            Renderer::FlushQueue();
 
             // ImGUI
             m_ImGui->Begin();
             for (Layer* layer : m_LayerStack) { layer->OnImGUIRender(); }
             m_ImGui->End(m_RenderImGui);
-
-            Renderer::Flush();
         }
 
         // Flip Windows

@@ -4,7 +4,7 @@
 #include "Blazar/Renderer/Renderer.h"
 #include "DebugLayers.h"
 #include "Tracy.hpp"
-
+/*
 void RenderListWindowLayer::ListItemRenderItem(RenderItem* item, int index) {
     std::string str;
 
@@ -14,7 +14,7 @@ void RenderListWindowLayer::ListItemRenderItem(RenderItem* item, int index) {
             str = fmt::format("{}: Set Viewport to {}x{} @ ({}, {})", index, vp->w, vp->h, vp->x, vp->y);
         } break;
         default:
-            str = fmt::format("{}: {}", index, RenderItemString(item->type));
+            str = fmt::format("{}: {}", index, RenderCommandString(item->type));
             break;
     }
 
@@ -54,7 +54,7 @@ void RenderListWindowLayer::OnImGUIRender() {
             int i = 0;
             for (auto& x : Renderer::m_LastFrameRenderQueue) {
                 if (i == selected) {
-                    std::string str = fmt::format("Render Item {}: {}", i, RenderItemString(x->type));
+                    std::string str = fmt::format("Render Item {}: {}", i, RenderCommandString(x->type));
                     ImGui::Text(str.c_str());
                     ImGui::Separator();
 
@@ -148,3 +148,4 @@ void RenderListWindowLayer::OnImGUIRender() {
     }
     ImGui::End();
 }
+*/

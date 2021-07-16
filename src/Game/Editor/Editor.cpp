@@ -23,7 +23,7 @@ void Editor::Setup() {
     //app.PushLayer(new ImGUIFPSWindowLayer());
     app.PushLayer(new ImGUIDemoWindowLayer());
     app.PushLayer(new ImGUILogWindowLayer());
-    app.PushLayer(new RenderListWindowLayer());
+    //app.PushLayer(new RenderListWindowLayer());
     app.PushLayer(new FPSWidgetWindowLayer());
 }
 

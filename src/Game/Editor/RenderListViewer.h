@@ -14,6 +14,6 @@ class RenderListWindowLayer : public Blazar::Layer {
     bool show = true;
     int selected = -1;
     RenderListWindowLayer() : Layer("Editor Render Lists") { m_UpdatePath = LayerUpdatePath::Render; }
-    void ListItemRenderItem(RenderItem* item, int index);
+    //void ListItemRenderItem(RenderItem* item, int index);
     void OnImGUIRender() override;
 };

@@ -63,14 +63,14 @@ void Sandbox::OnUpdate(Blazar::Timestep ts) {
     m_cameraController->SetPosition({0, 0.00, 0});
 
     RenderCmd::BeginPass();
-    RenderCmd::PassSetCamera(&(*m_cameraController));
+    RenderCmd::PassSetCamera(m_cameraController);
     {
         RenderCmd::SetShader(m_shader);
         RenderCmd::UploadCameraProps();
         // RenderCmd::SetTranslation(sqr_pos);
         //std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetMat4("u_Transform", sqr_pos);
         RenderCmd::SetShaderMat4("u_Transform", sqr_pos);
-        RenderCmd::BindTexture(&(m_texture.get()));
+        //RenderCmd::BindTexture(&m_texture.get()));
         RenderCmd::DrawIndexed(m_squareVAO);
     }
     RenderCmd::EndPass();
