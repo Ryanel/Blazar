@@ -20,6 +20,8 @@ class Shader {
 
     void SetName(std::string n) { name = n; }
     std::string name;
+
+    virtual void SetMat4(const std::string& str, const glm::mat4& mat) = 0;
 };
 
 };  // namespace Blazar

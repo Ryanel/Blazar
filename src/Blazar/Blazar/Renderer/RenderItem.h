@@ -20,8 +20,8 @@ enum RenderCommandID {
     SET_SHADER,             // Sets the current shader
     BIND_VERTEX_ARRAY,      // Binds a vertex arrray
     DRAW_VERTEX_ARRAY,      // Draws a vertex array
-    BIND_TEXTURE2D,         // Binds a texture to the current context
-    CLEAR,                  // Clears the entire buffer
+    BIND_TEXTURE2D,         // Binds a texture to the current context,
+    BIND_TEXTURE2D_RAW,     // Binds a raw texture to the current context
     CLEAR_COLOR,            // Sets the clear color
     PASS_START,             // Starts a pass
     PASS_END,               // Ends a pass
@@ -44,6 +44,8 @@ inline const char* RenderCommandString(RenderCommandID v) {
             return "Render VAO";
         case Blazar::RenderCommandID::BIND_TEXTURE2D:
             return "Shader <- Texture2D";
+        case Blazar::RenderCommandID::BIND_TEXTURE2D_RAW:
+            return "Shader <- Texture2D*";
         case Blazar::RenderCommandID::CLEAR_COLOR:
             return "Render Clear";
         case Blazar::RenderCommandID::PASS_START:
@@ -74,6 +76,7 @@ class RenderCommand {
     RenderCommand(RenderCommandID id, Color& data) : m_id(id), data(data) {}
     RenderCommand(RenderCommandID id, Rectangle& data) : m_id(id), data(data) {}
     RenderCommand(RenderCommandID id, std::pair<Ref<Texture2D>, int>& data) : m_id(id), data(data) {}
+    RenderCommand(RenderCommandID id, std::pair<Texture2D*, int>& data) : m_id(id), data(data) {}
     RenderCommand(RenderCommandID id, Ref<RenderTexture>& data) : m_id(id), data(data) {}
     RenderCommand(RenderCommandID id, Ref<Shader>& data) : m_id(id), data(data) {}
     RenderCommand(RenderCommandID id, Ref<Camera>& data) : m_id(id), data(data) {}
@@ -81,8 +84,8 @@ class RenderCommand {
     RenderCommand(RenderCommandID id, std::pair<std::string, glm::mat4>& data) : m_id(id), data(data) {}
 
    public:
-    std::variant<std::monostate, std::pair<Ref<Texture2D>,int>, Ref<Shader>, Ref<VertexArray>, Ref<Camera>, Color, Rectangle,
-                 std::pair<std::string, glm::mat4>, Ref<RenderTexture>>
+    std::variant<std::monostate, std::pair<Ref<Texture2D>, int>, std::pair<Texture2D*, int>, Ref<Shader>, Ref<VertexArray>, Ref<Camera>, Color,
+                 Rectangle, std::pair<std::string, glm::mat4>, Ref<RenderTexture>>
         data;
 };
 }  // namespace Blazar

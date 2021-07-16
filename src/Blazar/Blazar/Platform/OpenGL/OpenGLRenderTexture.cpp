@@ -36,8 +36,8 @@ OpenGLRenderTexture::OpenGLRenderTexture(const RenderTextureProperties& properti
 
     bool isComplete = (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
 
-    LOG_CORE_TRACE("Create RenderTexture {} with width: {}, height: {}, msaa: {}", m_Id, m_Properties.width,
-                   m_Properties.height, m_Properties.msaa);
+    //LOG_CORE_TRACE("Create RenderTexture {} with width: {}, height: {}, msaa: {}", m_Id, m_Properties.width,
+    //               m_Properties.height, m_Properties.msaa);
 
     BLAZAR_CORE_ASSERT(isComplete, "Framebuffer not complete!");
 
@@ -51,11 +51,12 @@ OpenGLRenderTexture::~OpenGLRenderTexture() {
 
     if (m_DepthStencilID != 0) { glDeleteRenderbuffers(1, &m_DepthStencilID); }
 
-    LOG_CORE_TRACE("Delete RenderTexture {} with width: {}, height: {}, msaa: {}", m_Id, m_Properties.width,
-                   m_Properties.height, m_Properties.msaa);
+    //LOG_CORE_TRACE("Delete RenderTexture {} with width: {}, height: {}, msaa: {}", m_Id, m_Properties.width,
+    //               m_Properties.height, m_Properties.msaa);
 }
 void OpenGLRenderTexture::Bind() const { glBindFramebuffer(GL_FRAMEBUFFER, m_Id); }
 
 void OpenGLRenderTexture::Unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+
 
 }  // namespace Blazar
