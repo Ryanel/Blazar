@@ -13,5 +13,7 @@ class Editor : public Blazar::Layer {
     void OnUpdate(Blazar::Timestep ts) override;
     virtual void OnImGUIRender() override;
     void OnEvent(Blazar::Events::Event& e) override;
+
+    bool m_showImGuiStyleEditor = false;
 };
 }  // namespace Blazar

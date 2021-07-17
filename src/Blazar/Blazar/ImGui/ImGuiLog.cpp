@@ -54,8 +54,8 @@ void ImGUILogWindowLayer::OnImGUIRender() {
         }
 
         ImGui::Separator();
-
-
+        
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(2, 2));
         if (ImGui::BeginTable("log#entry_table", 4,
                               ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_ScrollY)) {
             ZoneScopedN("Log Entry Display");
@@ -76,6 +76,7 @@ void ImGUILogWindowLayer::OnImGUIRender() {
             if (m_ScrollToBottom) { ImGui::SetScrollHereY(); }
             ImGui::EndTable();
         }
+        ImGui::PopStyleVar();
         
     }
     ImGui::End();

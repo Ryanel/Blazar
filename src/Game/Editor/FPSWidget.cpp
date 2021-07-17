@@ -13,6 +13,7 @@ void FPSWidgetWindowLayer::OnImGUIRender() {
     float delta = app.m_deltaTime;
 
     if (ImGui::BeginMainMenuBar()) {
+        float curX = ImGui::GetCursorPosX();
         ImGui::SetCursorPosX(app.GetWindow().GetWidth() - 216);
 
         ImGui::Separator();
@@ -21,6 +22,7 @@ void FPSWidgetWindowLayer::OnImGUIRender() {
         ImGui::Spacing();
         ImGui::Text("dt: %0.2fms", (float)(delta * 1000.0f));
 
+        ImGui::SetCursorPosX(curX);
         ImGui::EndMainMenuBar();
     }
 }

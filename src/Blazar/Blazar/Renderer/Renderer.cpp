@@ -14,6 +14,10 @@ RendererStats renderer_stats;
 std::deque<RenderCommand> Renderer::m_RenderQueue;
 RendererState Renderer::m_CurrentState;
 
+#ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
+std::deque<RenderCommand> Renderer::m_LastRenderQueue;
+#endif
+
 void Renderer::Init(RendererAPI::API toCreate) {
     BLAZAR_CORE_ASSERT(s_RendererAPI == nullptr, "Attempting to add another RendererAPI, not allowed!");
     switch (toCreate) {
@@ -26,10 +30,16 @@ void Renderer::Init(RendererAPI::API toCreate) {
             break;
     }
 }
+
 void Renderer::Submit(RenderCommand& command) { m_RenderQueue.push_back(command); }
 void Renderer::Submit(RenderCommand&& command) { m_RenderQueue.push_back(command); }
 void Renderer::FlushQueue() {
     bool endProcessing = false;
+
+#ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
+    m_LastRenderQueue.clear();
+#endif
+
     while (!m_RenderQueue.empty() && (!endProcessing)) {
         RenderCommand& item = m_RenderQueue.front();
 
@@ -86,18 +96,14 @@ void Renderer::FlushQueue() {
                 BLAZAR_ASSERT(m_CurrentState.m_Shader != nullptr, "No shader bound");
                 auto tex = std::get<std::pair<Ref<Texture2D>, int>>(item.data);
                 m_CurrentState.m_Texture = tex.first.get();
-                if (m_CurrentState.m_Texture != nullptr) { 
-                    m_CurrentState.m_Texture->Bind(); 
-                }
+                if (m_CurrentState.m_Texture != nullptr) { m_CurrentState.m_Texture->Bind(); }
             } break;
 
             case RenderCommandID::BIND_TEXTURE2D_RAW: {
                 BLAZAR_ASSERT(m_CurrentState.m_Shader != nullptr, "No shader bound");
                 auto tex = std::get<std::pair<Texture2D*, int>>(item.data);
                 m_CurrentState.m_Texture = tex.first;
-                if (m_CurrentState.m_Texture != nullptr) { 
-                    m_CurrentState.m_Texture->Bind(); 
-                }
+                if (m_CurrentState.m_Texture != nullptr) { m_CurrentState.m_Texture->Bind(); }
             } break;
 
             case RenderCommandID::PASS_START:
@@ -111,8 +117,11 @@ void Renderer::FlushQueue() {
                 LOG_CORE_WARN("Renderer::FlushQueue encountered unhandled item {}", RenderCommandString(item.m_id));
                 break;
         }
-
+#ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
+        m_LastRenderQueue.push_back(item);
+#endif
         m_RenderQueue.pop_front();
     }
 }
+RendererState& Renderer::CurrentState() { return m_CurrentState; }
 }  // namespace Blazar

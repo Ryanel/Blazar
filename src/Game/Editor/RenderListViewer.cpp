@@ -1,20 +1,18 @@
 #include "RenderListViewer.h"
+
+#ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Renderer.h"
 #include "DebugLayers.h"
 #include "Tracy.hpp"
-/*
-void RenderListWindowLayer::ListItemRenderItem(RenderItem* item, int index) {
+
+void RenderListWindowLayer::ListItemRenderItem(RenderCommand& item, int index) {
     std::string str;
 
-    switch (item->type) {
-        case RenderItemType::SET_VIEWPORT: {
-            RenderItem_SetViewport* vp = (RenderItem_SetViewport*)item;
-            str = fmt::format("{}: Set Viewport to {}x{} @ ({}, {})", index, vp->w, vp->h, vp->x, vp->y);
-        } break;
+    switch (item.m_id) {
         default:
-            str = fmt::format("{}: {}", index, RenderCommandString(item->type));
+            str = fmt::format("{}: {}", index, RenderCommandString(item.m_id));
             break;
     }
 
@@ -25,127 +23,97 @@ void RenderListWindowLayer::ListItemRenderItem(RenderItem* item, int index) {
 
 void RenderListWindowLayer::OnImGUIRender() {
     ZoneScoped;
-    ImGUI_MainMenu_Toggle_Simple("Windows", "Render List", "", this->show, true);
+    ImGUI_MainMenu_Toggle_Simple("[Development]", "Render List", "", this->show, true);
 
     auto& app = Application::Get();
 
     if (!this->show) { return; }
 
     if (ImGui::Begin("Render List", &this->show)) {
+        // Options bar
         if (ImGui::Button("Clear Selection")) { selected = -1; }
         ImGui::SameLine();
-        ImGui::Text("Count: %d", Renderer::m_LastFrameRenderQueue.size());
+        ImGui::Text("Count: %d", Renderer::m_LastRenderQueue.size());
 
+        // List
         if (ImGui::BeginListBox("##RenderList", ImVec2(-1, -1))) {
-            int i = 0;
-            for (auto& x : Renderer::m_LastFrameRenderQueue) {
-                if (x->type == RenderItemType::PASS_END) { ImGui::Unindent(); }
-                ListItemRenderItem(x, i);
-                if (x->type == RenderItemType::PASS_START) { ImGui::Indent(); }
-                i++;
+            int index = 0;
+            for (auto& x : Renderer::m_LastRenderQueue) {
+                if (x.m_id == RenderCommandID::PASS_END) { ImGui::Unindent(); }
+
+                ListItemRenderItem(x, index++);
+
+                if (x.m_id == RenderCommandID::PASS_START) { ImGui::Indent(); }
             }
             ImGui::EndListBox();
         }
     }
     ImGui::End();
 
-    if (ImGui::Begin("Render List Properties", &this->show)) {
+    if (ImGui::Begin("Properties (Render List)", &this->show)) {
         if (selected != -1) {
-            int i = 0;
-            for (auto& x : Renderer::m_LastFrameRenderQueue) {
-                if (i == selected) {
-                    std::string str = fmt::format("Render Item {}: {}", i, RenderCommandString(x->type));
-                    ImGui::Text(str.c_str());
-                    ImGui::Separator();
+            // Properties
+            // We go through this loop again to display the current context, which we must generate through stepping
+            // through each action
 
-                    RenderItem_SetViewport* ri_viewport = nullptr;
+            // State
+            Ref<Shader> stateShader = nullptr;
+            Ref<RenderTexture> stateRenderTex = nullptr;
+            Blazar::Rectangle stateViewport = Blazar::Rectangle();
 
-                    switch (x->type) {
-                        case RenderItemType::SET_VIEWPORT:
-                            ri_viewport = (RenderItem_SetViewport*)x;
-                            ImGui::Text("Pos: (%d, %d)", ri_viewport->x, ri_viewport->y);
-                            ImGui::Text("Size: (%d, %d)", ri_viewport->w, ri_viewport->h);
-                            break;
-                        case RenderItemType::CLEAR_COLOR: {
-                            RenderItem_ClearColor* clearColor = (RenderItem_ClearColor*)x;
-                            float* colorPtr = &clearColor->r;
-                            ImGui::ColorEdit4("Clear Color", colorPtr, ImGuiColorEditFlags_NoInputs);
-                        } break;
-                        case RenderItemType::SET_RENDERTEXTURE: {
-                            RenderItem_SetRenderTexture* rt = (RenderItem_SetRenderTexture*)x;
+            int index = 0;
 
-                            if (rt->tex) {
-                                ImGui::Text("RenderTexture <- %d", rt->tex->GetId());
-                                float aspect = rt->tex->GetWidth() / rt->tex->GetHeight();
+            for (auto& x : Renderer::m_LastRenderQueue) {
+                // Calculate state...
+                if (x.m_id == RenderCommandID::SET_SHADER) { stateShader = std::get<Ref<Shader>>(x.data); }
+                if (x.m_id == RenderCommandID::SET_VIEWPORT) { stateViewport = std::get<Blazar::Rectangle>(x.data); }
+                if (x.m_id == RenderCommandID::SET_RENDERTEXTURE) {
+                    stateRenderTex = std::get<Ref<RenderTexture>>(x.data);
+                }
 
-                                ImVec2 size = ImGui::GetContentRegionAvail();
-
-                                if (rt->tex->GetWidth() >= rt->tex->GetHeight()) {
-                                    size.y = std::min((size.x) / aspect, size.y);
-                                } else {
-                                    size.x = std::min((size.y) / aspect, size.x);
-                                }
-
-                                ImGui::Image((ImTextureID)rt->tex->m_ColorTexture->GetId(), size, ImVec2(0, 1),
-                                             ImVec2(1, 0));
-                            } else {
-                                ImGui::Text("RenderTexture <- Null");
-                            }
+                bool displaySeperator = true;
+                if (index == selected) {
+                    // Display properties
+                    switch (x.m_id) {
+                        case RenderCommandID::SET_SHADER: {
+                            ImGui::Text("Name: %s", stateShader != nullptr ? stateShader->name.c_str() : "None");
                         } break;
 
-                        case RenderItemType::BIND_TEXTURE2D: {
-                            RenderItem_BindTexture* item_bt = (RenderItem_BindTexture*)x;
+                        case RenderCommandID::SET_MAT4: {
+                            auto d = std::get<std::pair<std::string, glm::mat4>>(x.data);
+                            ImGui::Text("Uniform: %s", d.first.c_str());
 
-                            if (item_bt->texture) {
-                                ImGui::Text("ID %d", item_bt->texture->GetId());
-                                ImGui::Text("Slot %d", item_bt->slot);
-                                ImGui::Text("Size %d x %d", item_bt->texture->GetWidth(),
-                                            item_bt->texture->GetHeight());
-                                float aspect = item_bt->texture->GetWidth() / item_bt->texture->GetHeight();
-
-                                ImVec2 size = ImGui::GetContentRegionAvail();
-
-                                if (item_bt->texture->GetWidth() >= item_bt->texture->GetHeight()) {
-                                    size.y = std::min((size.x) / aspect, size.y);
-                                } else {
-                                    size.x = std::min((size.y) / aspect, size.x);
-                                }
-
-                                ImGui::Image((ImTextureID)item_bt->texture->GetId(), size, ImVec2(0, 1), ImVec2(1, 0));
-                            } else {
-                                ImGui::Text("RenderTexture <- Null");
-                            }
-                        } break;
-                        case RenderItemType::SET_SHADER: {
-                            RenderItem_SetShader* ss = (RenderItem_SetShader*)x;
-                            auto ogl_shader = std::dynamic_pointer_cast<Blazar::OpenGLShader>(ss->shader);
-                            ImGui::Text("Name: %s", ogl_shader->name.c_str());
-                            ImGui::Text("Number of Uniforms: %d", ogl_shader->m_UniformMap.size());
-                            if (ImGui::BeginTable("##RenderProps", 2,
-                                                  ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg |
-                                                      ImGuiTableFlags_SizingStretchSame)) {
-                                ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_NoResize, 1);
-                                ImGui::TableSetupColumn("Uniform Name", ImGuiTableColumnFlags_NoResize, 3);
-                                ImGui::TableHeadersRow();
-                                for (auto& uniform : ogl_shader->m_UniformMap) {
-                                    ImGui::TableNextRow();
+                            ImGui::Text("Matrix:");
+                            if (ImGui::BeginTable("Mat4", 4)) {
+                                for (size_t i = 0; i < 16; i++) {
                                     ImGui::TableNextColumn();
-                                    ImGui::Text("%d", uniform.second);
-                                    ImGui::TableNextColumn();
-                                    ImGui::Text("%s", uniform.first.c_str());
+                                    ImGui::Text("%f", d.second[i % 4][i / 4]);
                                 }
+
                                 ImGui::EndTable();
                             }
                         } break;
-
                         default:
+                            displaySeperator = false;
                             break;
                     }
+                    if (displaySeperator) { ImGui::Separator(); }
+
+                    // Display state
+                    CImGUI_Header1("State at this moment");
+                    ImGui::Spacing();
+                    ImGui::Text("Shader: %s", stateShader != nullptr ? stateShader->name.c_str() : "None");
+                    ImGui::Text("Render Texture: %d", stateRenderTex != nullptr ? stateRenderTex->GetId() : 0);
+                    ImGui::Text("Current Viewport: %d x %d @ (%d, %d)", stateViewport.width, stateViewport.height,
+                                stateViewport.x, stateViewport.y);
+                    break;
                 }
-                i++;
+
+                index++;
             }
         }
     }
     ImGui::End();
 }
-*/
+
+#endif

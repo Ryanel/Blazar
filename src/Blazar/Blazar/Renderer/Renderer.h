@@ -1,6 +1,7 @@
 #pragma once
 
 #include <deque>
+#include "Blazar/Config.h"
 #include "Blazar/Core.h"
 #include "RenderItem.h"
 #include "RendererAPI.h"
@@ -33,6 +34,10 @@ class Renderer {
 
    public:
     static std::deque<RenderCommand> m_RenderQueue;
+
+#ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
+    static std::deque<RenderCommand> m_LastRenderQueue;
+#endif
     static RendererState m_CurrentState;
 };
 }  // namespace Blazar
