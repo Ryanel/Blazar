@@ -13,6 +13,6 @@ class FPSWidgetWindowLayer : public Blazar::Layer {
    public:
     bool show = true;
     int selected = -1;
-    FPSWidgetWindowLayer() : Layer("Editor FPS Widget") { m_UpdatePath = LayerUpdatePath::Render; }
+    FPSWidgetWindowLayer() : Layer("Editor: FPS Widget") { m_UpdatePath = LayerUpdatePath::ImGui; }
     void OnImGUIRender() override;
 };

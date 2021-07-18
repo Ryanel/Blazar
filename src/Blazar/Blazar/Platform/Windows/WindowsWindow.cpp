@@ -1,14 +1,15 @@
 #include "bzpch.h"
 
-#include "Blazar/Platform/Windows/WindowsWindow.h"
-
 #include "Blazar/Events/AppEvents.h"
 #include "Blazar/Events/KeyEvents.h"
 #include "Blazar/Events/MouseEvents.h"
+#include "Blazar/Input/Input.h"
 
 // Ordering is important here, do not remove space
 #include <GLFW/glfw3.h>
+
 #include "Blazar/Platform/OpenGL/OpenGLContext.h"
+#include "Blazar/Platform/Windows/WindowsWindow.h"
 
 namespace Blazar {
 static bool s_GLFWInitialized = false;
@@ -130,6 +131,8 @@ void WindowsWindow::Init(const WindowProperties& props) {
             default:
                 break;
         }
+
+        Input::SetKeyState(key, action != GLFW_RELEASE);
     });
 
     glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* handle, int button, int action, int mods) {

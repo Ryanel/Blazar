@@ -6,6 +6,7 @@
 #include "Blazar/Assets/Resource.h"
 #include "Blazar/Assets/ResourceManager.h"
 #include "Blazar/Blazar.h"
+#include "Blazar/Log.h"
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Primitives/RenderTexture.h"
 #include "Blazar/Renderer/RenderCmd.h"
@@ -57,18 +58,21 @@ void Sandbox::OnDetached() {}
 
 void Sandbox::OnUpdate(Blazar::Timestep ts) {
     ZoneScoped;
+}
+
+void Sandbox::OnRender(Blazar::Timestep ts) {
+    ZoneScoped;
     glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {0, 0, 0});
-
     m_cameraController->SetViewport(Application::Get().m_RenderViewport);
-    m_cameraController->SetPosition({0, 0.00, 0});
 
+    
     RenderCmd::BeginPass();
     RenderCmd::PassSetCamera(m_cameraController);
     {
         RenderCmd::SetShader(m_shader);
         RenderCmd::UploadCameraProps();
         // RenderCmd::SetTranslation(sqr_pos);
-        //std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetMat4("u_Transform", sqr_pos);
+        // std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetMat4("u_Transform", sqr_pos);
         RenderCmd::SetShaderMat4("u_Transform", sqr_pos);
         RenderCmd::BindTexture(&m_texture.get());
         RenderCmd::DrawIndexed(m_squareVAO);

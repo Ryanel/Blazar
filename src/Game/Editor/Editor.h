@@ -9,8 +9,6 @@ class Editor : public Blazar::Layer {
     virtual void OnAttach() override;
     virtual void OnDetached() override;
     void Setup();
-
-    void OnUpdate(Blazar::Timestep ts) override;
     virtual void OnImGUIRender() override;
     void OnEvent(Blazar::Events::Event& e) override;
 

@@ -123,3 +123,8 @@
 #define BLAZAR_KEY_RIGHT_ALT          346
 #define BLAZAR_KEY_RIGHT_SUPER        347
 #define BLAZAR_KEY_MENU               348
+
+
+#define BLAZAR_KEY_MAX 348
+#define BLAZAR_KEY_MIN 32
+#define BLAZAR_KEYMAP_SIZE (348 - 32)

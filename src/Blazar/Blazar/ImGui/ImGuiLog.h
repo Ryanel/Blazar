@@ -12,7 +12,7 @@ namespace Blazar {
 
 class ImGUILogWindowLayer : public Blazar::Layer {
    public:
-    ImGUILogWindowLayer() : Layer("Log (ImGui)") {}
+    ImGUILogWindowLayer() : Layer("Editor: Log") { m_UpdatePath = LayerUpdatePath::ImGui; }
     void OnImGUIRender() override;
 
    private:

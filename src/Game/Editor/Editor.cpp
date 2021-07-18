@@ -14,11 +14,13 @@
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
 #include "Editor/RenderListViewer.h"
+#include "Editor/LayerViewer.h"
+#include "Editor/InputViewer.h"
 #endif
 
 namespace Blazar {
 
-Editor::Editor() : Layer("ImGUI Editor Main") { m_UpdatePath = LayerUpdatePath::Render; }
+Editor::Editor() : Layer("Editor: Main") { m_UpdatePath = LayerUpdatePath::ImGui; }
 
 void Editor::Setup() {
     // Add layers after this one here
@@ -30,14 +32,14 @@ void Editor::Setup() {
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
     app.PushLayer(new RenderListWindowLayer());
+    app.PushLayer(new LayerEditorWindow());
+    app.PushLayer(new InputEditorWindow());
 #endif
 }
 
 void Editor::OnAttach() {}
 
 void Editor::OnDetached() {}
-
-void Editor::OnUpdate(Blazar::Timestep ts) {}
 
 void Editor::OnImGUIRender() {
     ZoneScoped;

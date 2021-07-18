@@ -6,9 +6,10 @@
 
 namespace Blazar {
 
-enum class LayerUpdatePath {
-    Update,
-    Render
+enum class LayerUpdatePath : int { 
+    None = 0, Update = 1, Render = 2, ImGui = 4 ,
+    UpdateRender = 3,
+    UpdateRenderImGui = 7
 };
 
 class BLAZAR_API Layer {
@@ -19,11 +20,13 @@ class BLAZAR_API Layer {
     virtual void OnAttach() {}
     virtual void OnDetached() {}
     virtual void OnUpdate(Blazar::Timestep ts) {}
-    virtual void OnEvent(Events::Event& ev) {}
+    virtual void OnRender(Blazar::Timestep ts) {}
     virtual void OnImGUIRender() {}
+    virtual void OnEvent(Events::Event& ev) {}
     inline const std::string& GetName() const { return m_DebugName; }
 
-    LayerUpdatePath m_UpdatePath = LayerUpdatePath::Update;
+    LayerUpdatePath m_UpdatePath = LayerUpdatePath::None;
+
    protected:
     std::string m_DebugName;
 };

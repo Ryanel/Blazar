@@ -78,6 +78,7 @@ void Application::Run() {
         if (!(m_UseEditorWindow && m_RenderImGui)) {
             m_RenderViewport->Set(0, 0, GetWindow().GetViewport()->width, GetWindow().GetViewport()->height);
         }
+
         RenderTextureProperties renderProperties(m_RenderViewport->width, m_RenderViewport->height);
 
         if ((m_GameRenderTexture->GetWidth() != renderProperties.width) ||
@@ -90,14 +91,13 @@ void Application::Run() {
         {
             ZoneScopedN("Update");
 
-            if (Input::KeyPressed(BLAZAR_KEY_GRAVE_ACCENT) && (!m_ImGuiShowKeyPressedLastFrame)) {
-                m_RenderImGui = !m_RenderImGui;
-            }
-            m_ImGuiShowKeyPressedLastFrame = Input::KeyPressed(BLAZAR_KEY_GRAVE_ACCENT);
+            if (Input::KeyDown(BLAZAR_KEY_GRAVE_ACCENT)) { m_RenderImGui = !m_RenderImGui; }
 
             for (Layer* layer : m_LayerStack) {
-                if (layer->m_UpdatePath == LayerUpdatePath::Update) { layer->OnUpdate(m_deltaTime); }
+                if (((int)layer->m_UpdatePath & (int)LayerUpdatePath::Update) != 0) { layer->OnUpdate(m_deltaTime); }
             }
+
+            Input::NewFrame();
         }
 
         // Rendering Code!
@@ -113,11 +113,13 @@ void Application::Run() {
             {
                 RenderCmd::SetRenderTexture(m_GameRenderTexture);
                 RenderCmd::SetViewport(0, 0, m_GameRenderTexture->GetWidth(), m_GameRenderTexture->GetHeight());
-                RenderCmd::Clear(0.05f, 0.05f, 0.1f, 1.0f);
+                RenderCmd::Clear(0.05f, 0.1f, 0.2f, 1.0f);
 
                 // Update all layers
                 for (Layer* layer : m_LayerStack) {
-                    if (layer->m_UpdatePath == LayerUpdatePath::Render) { layer->OnUpdate(m_deltaTime); }
+                    if (((int)layer->m_UpdatePath & (int)LayerUpdatePath::Render) != 0) {
+                        layer->OnRender(m_deltaTime);
+                    }
                 }
 
                 RenderCmd::SetRenderTexture(nullptr);

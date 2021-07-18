@@ -14,7 +14,10 @@
 #include "Tracy.hpp"
 
 namespace Blazar {
-ImGuiLayer::ImGuiLayer() : Layer("ImGUI") { this->m_DebugName = "ImGUI"; }
+ImGuiLayer::ImGuiLayer() : Layer("ImGUI") {
+    this->m_DebugName = "ImGUI";
+    m_UpdatePath = LayerUpdatePath::ImGui;
+}
 
 ImGuiLayer::~ImGuiLayer() {}
 
@@ -32,6 +35,7 @@ void ImGuiLayer::OnAttach() {
 
     imgui_font_normal = io.Fonts->AddFontFromFileTTF("Contents/Fonts/Editor/Roboto-Medium.ttf", 16);
     imgui_font_big = io.Fonts->AddFontFromFileTTF("Contents/Fonts/Editor/Roboto-Medium.ttf", 18);
+    imgui_font_bigger = io.Fonts->AddFontFromFileTTF("Contents/Fonts/Editor/Roboto-Medium.ttf", 24);
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.WindowBorderSize = 0.0f;
@@ -79,7 +83,6 @@ void ImGuiLayer::OnAttach() {
 }
 
 void ImGuiLayer::OnDetached() {}
-void ImGuiLayer::OnUpdate(Blazar::Timestep ts) {}
 void ImGuiLayer::OnEvent(Events::Event& ev) {}
 
 void ImGuiLayer::Begin() {
