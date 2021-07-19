@@ -10,7 +10,6 @@ class Editor : public Blazar::Layer {
     virtual void OnDetached() override;
     void Setup();
     virtual void OnImGUIRender() override;
-    void OnEvent(Blazar::Events::Event& e) override;
 
     bool m_showImGuiStyleEditor = false;
 };

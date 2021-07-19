@@ -30,6 +30,7 @@ class Renderer {
     static void Submit(RenderCommand& command);
     static void Submit(RenderCommand&& command);
     static void FlushQueue();
+    static void ResetStats();
     static RendererState& CurrentState();
 
    public:

@@ -1,10 +1,7 @@
-#include <memory>
 #include <stdlib.h>
-#include <iostream>
-
 #include <Tracy.hpp>
 
-constexpr int depth = 30;
+constexpr int depth = 5;
 
 void* operator new(std::size_t count) {
     auto ptr = malloc(count);

@@ -1,9 +1,7 @@
 #pragma once
 
 #include <Blazar/Blazar.h>
-#include <Blazar/Events/AppEvents.h>
 #include <Blazar/Input/Keymap.h>
-#include <Blazar/Renderer/RenderItem.h>
 #include "Blazar/ImGui/CustomImGui.h"
 #include <imgui.h>
 

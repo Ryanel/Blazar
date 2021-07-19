@@ -1,11 +1,6 @@
 #pragma once
 
-#ifdef BLAZAR_IMGUI_ENABLED
 #include "Blazar/Core.h"
-#include "Blazar/Events/AppEvents.h"
-#include "Blazar/Events/Events.h"
-#include "Blazar/Events/KeyEvents.h"
-#include "Blazar/Events/MouseEvents.h"
 #include "Blazar/Layer/Layer.h"
 
 namespace Blazar {
@@ -24,4 +19,3 @@ class ImGUILogWindowLayer : public Blazar::Layer {
     int m_EntriesToShow = 200;
 };
 };  // namespace Blazar
-#endif

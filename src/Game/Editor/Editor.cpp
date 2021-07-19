@@ -82,6 +82,4 @@ void Editor::OnImGUIRender() {
     }
 }
 
-void Editor::OnEvent(Blazar::Events::Event& e) {}
-
 }  // namespace Blazar

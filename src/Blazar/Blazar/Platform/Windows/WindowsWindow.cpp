@@ -1,8 +1,6 @@
 #include "bzpch.h"
 
-#include "Blazar/Events/AppEvents.h"
-#include "Blazar/Events/KeyEvents.h"
-#include "Blazar/Events/MouseEvents.h"
+#include "Blazar/Application.h"
 #include "Blazar/Input/Input.h"
 
 // Ordering is important here, do not remove space
@@ -86,88 +84,23 @@ void WindowsWindow::Init(const WindowProperties& props) {
         m_Context = new OpenGLContext(m_Window);
         m_Context->Init();
     }
+
     glfwSetWindowUserPointer(m_Window, &m_Data);
     SetVSync(true);
 
     // GLFW Callbacks
     glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* handle, int width, int height) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(handle);
-
         data.Width = width;
         data.Height = height;
-
-        Events::WindowResizeEvent ev(width, height);
-        data.EventCallback(ev);
     });
 
     glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* handle) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(handle);
-
-        Events::WindowCloseEvent ev;
-        data.EventCallback(ev);
+        Application::Get().m_Running = false;
     });
 
     glfwSetKeyCallback(m_Window, [](GLFWwindow* handle, int key, int scancode, int action, int mods) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(handle);
-
-        switch (action) {
-            case GLFW_PRESS: {
-                Events::KeyDownEvent ev(key, false);
-                data.EventCallback(ev);
-                break;
-            }
-
-            case GLFW_RELEASE: {
-                Events::KeyUpEvent ev(key);
-                data.EventCallback(ev);
-                break;
-            }
-
-            case GLFW_REPEAT: {
-                Events::KeyDownEvent ev(key, true);
-                data.EventCallback(ev);
-                break;
-            }
-            default:
-                break;
-        }
-
         Input::SetKeyState(key, action != GLFW_RELEASE);
-    });
-
-    glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* handle, int button, int action, int mods) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(handle);
-
-        switch (action) {
-            case GLFW_PRESS: {
-                Events::MouseButtonPressedEvent ev(button);
-                data.EventCallback(ev);
-                break;
-            }
-
-            case GLFW_RELEASE: {
-                Events::MouseButtonReleasedEvent ev(button);
-                data.EventCallback(ev);
-                break;
-            }
-
-            default:
-                break;
-        }
-    });
-
-    glfwSetScrollCallback(m_Window, [](GLFWwindow* handle, double xOffset, double yOffset) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(handle);
-
-        Events::MouseScrolledEvent ev(xOffset, yOffset);
-        data.EventCallback(ev);
-    });
-
-    glfwSetCursorPosCallback(m_Window, [](GLFWwindow* handle, double xPos, double yPos) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(handle);
-
-        Events::MouseMovedEvent ev(xPos, yPos);
-        data.EventCallback(ev);
     });
 }
 

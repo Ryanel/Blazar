@@ -9,17 +9,18 @@
 
 namespace Blazar {
 
-// Loads and caches resources from disk.
+/// Loads and caches resources from disk.
 class ResourceManager {
    protected:
     ResourceManager() : m_loadedResources() {}
+    /// Loads a binary from the disk
     bool GetBinaryFromDisk(std::string_view path, std::vector<char>& outBuffer);
-    // void LoadFromArchive();
 
    public:
-    static ResourceManager* Get();
+    static ResourceManager* Get();  ///< Returns the current Resource Manager
 
    public:
+    /// Loads a resource from path. If required is true, will throw.
     template <class T>
     std::optional<Resource<T>> Load(std::string path, bool required = false) {
         ZoneScoped;
@@ -59,6 +60,7 @@ class ResourceManager {
         return std::nullopt;
     }
 
+    // Unloads a resource, if possible
     void Unload(std::string path);
 
    private:

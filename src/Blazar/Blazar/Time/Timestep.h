@@ -1,11 +1,7 @@
 #pragma once
 
-#include "Blazar/Core.h"
-#include "Blazar/Events/Events.h"
-
-
 namespace Blazar {
-class BLAZAR_API Timestep {
+class Timestep {
    public:
     Timestep(float time = 0.0f) : m_Time(time){};
 

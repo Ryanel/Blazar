@@ -31,9 +31,18 @@ void Renderer::Init(RendererAPI::API toCreate) {
     }
 }
 
-void Renderer::Submit(RenderCommand& command) { m_RenderQueue.push_back(command); }
-void Renderer::Submit(RenderCommand&& command) { m_RenderQueue.push_back(command); }
+RendererState& Renderer::CurrentState() { return m_CurrentState; }
+
+void Renderer::Submit(RenderCommand& command) { m_RenderQueue.emplace_back(command); }
+void Renderer::Submit(RenderCommand&& command) { m_RenderQueue.emplace_back(command); }
+
+void Renderer::ResetStats() {
+    renderer_stats.passesThisFrame = 0;
+    renderer_stats.drawCalls = 0;
+}
+
 void Renderer::FlushQueue() {
+    ZoneScoped;
     bool endProcessing = false;
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
@@ -41,6 +50,7 @@ void Renderer::FlushQueue() {
 #endif
 
     while (!m_RenderQueue.empty() && (!endProcessing)) {
+        ZoneScopedN("Process Render Item");
         RenderCommand& item = m_RenderQueue.front();
 
         switch (item.m_id) {
@@ -49,10 +59,12 @@ void Renderer::FlushQueue() {
                 m_CurrentState.m_Shader = shader;
                 if (m_CurrentState.m_Shader != nullptr) { shader->Bind(); }
             } break;
+
             case RenderCommandID::SET_VIEWPORT: {
                 Rectangle& rect = std::get<Rectangle>(item.data);
                 s_RendererAPI->SetViewport(rect.x, rect.y, rect.width, rect.height);
             } break;
+
             case RenderCommandID::CLEAR_COLOR: {
                 Color& c = std::get<Color>(item.data);
                 s_RendererAPI->SetClearColor(c.r, c.g, c.b, c.a);
@@ -107,6 +119,7 @@ void Renderer::FlushQueue() {
             } break;
 
             case RenderCommandID::PASS_START:
+                renderer_stats.passesThisFrame++;
                 break;
             case RenderCommandID::PASS_END:
                 break;
@@ -118,10 +131,10 @@ void Renderer::FlushQueue() {
                 break;
         }
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
-        m_LastRenderQueue.push_back(item);
+        m_LastRenderQueue.emplace_back(item);
 #endif
         m_RenderQueue.pop_front();
     }
 }
-RendererState& Renderer::CurrentState() { return m_CurrentState; }
+
 }  // namespace Blazar

@@ -28,7 +28,6 @@ class Game : public Blazar::Application {
 namespace Blazar {
 
 Application* CreateApplication() {
-    ZoneScoped;
     tracy::SetThreadName("Main Thread");
     return new Game();
 }

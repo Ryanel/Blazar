@@ -19,7 +19,6 @@ class Sandbox : public Blazar::Layer {
     void OnUpdate(Blazar::Timestep ts) override;
     void OnRender(Blazar::Timestep ts) override;
     virtual void OnImGUIRender() override;
-    void OnEvent(Blazar::Events::Event& e) override;
 
    private:
     Blazar::Ref<VertexArray> m_squareVAO;

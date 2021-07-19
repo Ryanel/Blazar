@@ -3,10 +3,6 @@
 #ifdef BLAZAR_IMGUI_ENABLED
 
 #include "Blazar/Core.h"
-#include "Blazar/Events/AppEvents.h"
-#include "Blazar/Events/Events.h"
-#include "Blazar/Events/KeyEvents.h"
-#include "Blazar/Events/MouseEvents.h"
 #include "Blazar/Layer/Layer.h"
 
 
@@ -18,7 +14,6 @@ class BLAZAR_API ImGuiLayer : public Layer {
 
     void OnAttach() override;
     void OnDetached() override;
-    void OnEvent(Events::Event& ev) override;
 
     void Begin();
     void End(bool draw = true);

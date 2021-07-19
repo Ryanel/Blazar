@@ -56,23 +56,18 @@ void Sandbox::OnAttach() {
 
 void Sandbox::OnDetached() {}
 
-void Sandbox::OnUpdate(Blazar::Timestep ts) {
-    ZoneScoped;
-}
+void Sandbox::OnUpdate(Blazar::Timestep ts) { ZoneScoped; }
 
 void Sandbox::OnRender(Blazar::Timestep ts) {
     ZoneScoped;
     glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {0, 0, 0});
     m_cameraController->SetViewport(Application::Get().m_RenderViewport);
 
-    
     RenderCmd::BeginPass();
     RenderCmd::PassSetCamera(m_cameraController);
     {
         RenderCmd::SetShader(m_shader);
         RenderCmd::UploadCameraProps();
-        // RenderCmd::SetTranslation(sqr_pos);
-        // std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetMat4("u_Transform", sqr_pos);
         RenderCmd::SetShaderMat4("u_Transform", sqr_pos);
         RenderCmd::BindTexture(&m_texture.get());
         RenderCmd::DrawIndexed(m_squareVAO);
@@ -81,7 +76,5 @@ void Sandbox::OnRender(Blazar::Timestep ts) {
 }
 
 void Sandbox::OnImGUIRender() { ZoneScoped; }
-
-void Sandbox::OnEvent(Blazar::Events::Event& e) { ZoneScoped; }
 
 }  // namespace Blazar

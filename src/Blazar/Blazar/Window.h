@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Blazar/Events/Events.h"
 #include "Blazar/Renderer/Primitives/Viewport.h"
 
 namespace Blazar {
@@ -19,13 +18,11 @@ struct WindowProperties {
 /// A Desktop Window. Produces Events, and must be updated each frame
 class BLAZAR_API Window {
    public:
-    using EventCallbackFn = std::function<void(Events::Event&)>;
 
     virtual ~Window() = 0;
     virtual void OnUpdate() = 0;
     virtual unsigned int GetHeight() const = 0;
     virtual unsigned int GetWidth() const = 0;
-    virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
     virtual void SetVSync(bool enabled) = 0;
     virtual bool IsVSync() const = 0;
 
