@@ -11,7 +11,7 @@ class OpenGLTexture2D : public Texture2D {
     OpenGLTexture2D();
     OpenGLTexture2D(const std::string& path, const TextureProperties& properties);
 
-    static OpenGLTexture2D* FromData(std::vector<char>& data, const TextureProperties& properties);
+    static OpenGLTexture2D* FromData(std::vector<std::byte>& data, const TextureProperties& properties);
     static OpenGLTexture2D* Uninitialized(int width, int height, const TextureProperties& properties);
     virtual ~OpenGLTexture2D();
 

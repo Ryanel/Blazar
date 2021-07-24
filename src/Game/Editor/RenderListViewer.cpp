@@ -8,16 +8,8 @@
 #include "Tracy.hpp"
 
 void RenderListWindowLayer::ListItemRenderItem(RenderCommand& item, int index) {
-    std::string str;
-
-    switch (item.m_id) {
-        default:
-            str = fmt::format("{}: {}", index, RenderCommandString(item.m_id));
-            break;
-    }
-
     bool isSelected = selected == index;
-
+    std::string str = fmt::format("{}: {}", index, RenderCommandString(item.m_id));
     if (ImGui::Selectable(str.c_str(), &isSelected)) { selected = index; }
 }
 

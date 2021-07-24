@@ -63,7 +63,7 @@ void Application::Run() {
     Ref<VertexArray> quad_vao = VertexArray::Create(quad_vbo, quad_ibo);
 
     // Setup the shader
-    Ref<Shader> fullscreenShader = Shader::FromFile("Contents/Shaders/ScreenTexture");
+    Ref<Shader> fullscreenShader = Shader::FromFile("Contents/Data/Shaders/ScreenTexture");
     fullscreenShader->SetName("ScreenTexture");
     fullscreenShader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(fullscreenShader)->SetInt("u_Texture", 0);

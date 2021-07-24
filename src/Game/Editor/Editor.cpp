@@ -7,15 +7,15 @@
 #include "Blazar/ImGui/ImGuiLog.h"
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Editor/AssetViewer.h"
 #include "Editor/DebugLayers.h"
 #include "Editor/FPSWidget.h"
-
 #include "Tracy.hpp"
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
-#include "Editor/RenderListViewer.h"
-#include "Editor/LayerViewer.h"
 #include "Editor/InputViewer.h"
+#include "Editor/LayerViewer.h"
+#include "Editor/RenderListViewer.h"
 #endif
 
 namespace Blazar {
@@ -28,6 +28,7 @@ void Editor::Setup() {
     // app.PushLayer(new ImGUIFPSWindowLayer());
     app.PushLayer(new ImGUIDemoWindowLayer());
     app.PushLayer(new ImGUILogWindowLayer());
+    app.PushLayer(new AssetEditorWindow());
     app.PushLayer(new FPSWidgetWindowLayer());
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION

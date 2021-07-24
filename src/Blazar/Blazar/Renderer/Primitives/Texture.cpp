@@ -22,6 +22,7 @@ Ref<Texture> Texture2D::Create(const std::string& path, const TextureProperties&
     }
 }
 
+/*
 template <>
 Texture2D* DeserializeToResource(std::string_view path, std::vector<char>& data) {
     TextureProperties properties;
@@ -37,5 +38,6 @@ Texture2D* DeserializeToResource(std::string_view path, std::vector<char>& data)
     }
     return nullptr;
 }
+*/
 
 }  // namespace Blazar

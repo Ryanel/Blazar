@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Blazar/Blazar.h"
-
+#include "Blazar/Assets/Resource.h"
 #include "Blazar/Renderer/Cameras/OrthographicCamera.h"
 #include "Blazar/Renderer/Primitives/Shader.h"
 #include "Blazar/Renderer/Primitives/Texture.h"
 #include "Blazar/Renderer/Primitives/VertexArray.h"
-
-#include "Blazar/Assets/Resource.h"
 
 namespace Blazar {
 class Sandbox : public Blazar::Layer {

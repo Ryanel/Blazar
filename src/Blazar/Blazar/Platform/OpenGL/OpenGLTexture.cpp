@@ -55,7 +55,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path, const TexturePropertie
     if (!retainTexture) { stbi_image_free(data); }
 }
 
-OpenGLTexture2D* OpenGLTexture2D::FromData(std::vector<char>& fdata, const TextureProperties& properties) {
+OpenGLTexture2D* OpenGLTexture2D::FromData(std::vector<std::byte>& fdata, const TextureProperties& properties) {
 
     OpenGLTexture2D* tex = new OpenGLTexture2D();
     // Hardcoded Parameters, TODO

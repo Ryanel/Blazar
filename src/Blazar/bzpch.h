@@ -17,6 +17,7 @@
 #include <sstream>
 #include <fstream>
 #include <tuple>
+#include <optional>
 
 // Blazar specific
 #include <Blazar/Core.h>

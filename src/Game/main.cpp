@@ -1,8 +1,9 @@
 #define BLAZAR_CREATE_APPLICATION
 
+#include "Blazar/Assets/ResourceManager.h"
 #include "Blazar/Blazar.h"
 #include "Blazar/Entry.h"
-
+#include "Blazar/VFS/VFSFilesystem.h"
 #include "Editor/Editor.h"
 #include "Sandbox/Sandbox.h"
 
@@ -15,6 +16,10 @@ class Game : public Blazar::Application {
     Game() {
         ZoneScoped;
 
+        ResourceManager::Get()->m_vfs->add_mountpoint(new VFS::FileSystem("/Data/", "Contents/Data/", true));
+        ResourceManager::Get()->m_vfs->add_mountpoint(new VFS::FileSystem("/Editor/", "Contents/Editor/", true));
+        ResourceManager::Get()->m_vfs->refresh();
+
         Editor* editor = new Editor();
         PushLayer(editor);
         PushLayer(new Sandbox());
@@ -22,7 +27,7 @@ class Game : public Blazar::Application {
         editor->Setup();
     }
 
-    ~Game() {}
+    ~Game() {}  
 };
 
 namespace Blazar {

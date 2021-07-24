@@ -1,10 +1,16 @@
 ﻿---
 BasedOnStyle: Google
+IndentWidth: '4'
+TabWidth: '4'
+---
+Language: Cpp
 AlignOperands: 'true'
 AlignTrailingComments: 'true'
 AllowShortBlocksOnASingleLine: 'true'
 ColumnLimit: '120'
-IndentWidth: '4'
-TabWidth: '4'
 UseTab: Never
 IncludeBlocks: Preserve
+PenaltyBreakTemplateDeclaration: 0
+SpaceAfterTemplateKeyword: false
+AlwaysBreakTemplateDeclarations: No
+BreakBeforeBraces: Attach

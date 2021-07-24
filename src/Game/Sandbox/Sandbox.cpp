@@ -12,6 +12,7 @@
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/RenderItem.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Blazar/VFS/VFSFilesystem.h"
 #include "Tracy.hpp"
 
 namespace Blazar {
@@ -39,13 +40,12 @@ void Sandbox::OnAttach() {
     m_squareVAO = VertexArray::Create(sqr_vbo, sqr_ibo);
     m_squareVAO->Bind();
 
-    m_shader = Shader::FromFile("Contents/Shaders/Simple");
+    m_shader = Shader::FromFile("Contents/Data/Shaders/Simple");
     m_shader->SetName("Simple");
     m_shader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetInt("u_Texture", 0);
 
-    auto tex = ResourceManager::Get()->Load<Texture2D>("Textures/SampleTrans.png", true);
-    m_texture = std::move(tex.value());
+    m_texture = Resource<Texture2D>("/Data/Textures/SampleTrans.png");
 
     // Camera
     auto& gameWindow = Application::Get().GetWindow();
@@ -69,7 +69,7 @@ void Sandbox::OnRender(Blazar::Timestep ts) {
         RenderCmd::SetShader(m_shader);
         RenderCmd::UploadCameraProps();
         RenderCmd::SetShaderMat4("u_Transform", sqr_pos);
-        RenderCmd::BindTexture(&m_texture.get());
+        RenderCmd::BindTexture(m_texture.data());
         RenderCmd::DrawIndexed(m_squareVAO);
     }
     RenderCmd::EndPass();
