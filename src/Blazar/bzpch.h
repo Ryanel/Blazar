@@ -18,6 +18,7 @@
 #include <fstream>
 #include <tuple>
 #include <optional>
+#include <deque>
 
 // Blazar specific
 #include <Blazar/Core.h>

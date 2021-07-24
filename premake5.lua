@@ -7,6 +7,7 @@ workspace "Blazar"
     architecture "x64"
     configurations { "Debug", "Release", "Distribution" }
     location "build"
+    flags { 'MultiProcessorCompile' }
 
 outputdir="%{cfg.buildcfg}-%{cfg.system}"
 

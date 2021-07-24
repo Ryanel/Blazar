@@ -1,12 +1,10 @@
 #pragma once
 
-#include <Blazar/Blazar.h>
-#include <Blazar/Input/Keymap.h>
-#include <Blazar/Renderer/RenderItem.h>
-#include "Blazar/ImGui/CustomImGui.h"
 #include <imgui.h>
 
-#include "Tracy.hpp"
+#include "Blazar/ImGui/CustomImGui.h"
+#include "Blazar/Layer/Layer.h"
+#include "Blazar/Renderer/RenderCommand.h"
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
 

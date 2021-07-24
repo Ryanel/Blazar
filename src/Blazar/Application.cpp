@@ -1,16 +1,18 @@
 #include "bzpch.h"
 
 #include "Blazar/Application.h"
+#include "Blazar/ImGui/ImGuiLayer.h"
 #include "Blazar/Input/Input.h"
 #include "Blazar/Input/Keymap.h"
+#include "Blazar/Renderer/Primitives/Buffer.h"
+#include "Blazar/Renderer/Primitives/RenderTexture.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
-
-#include "Blazar/ImGui/ImGuiLayer.h"
+#include "Blazar/Time/Timer.h"
+#include "Blazar/Window.h"
 
 #include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Tracy.hpp"
-#include "glad/glad.h"
 
 namespace Blazar {
 Application* Application::s_Instance;
@@ -27,8 +29,8 @@ Application::Application() {
     m_RenderViewport = std::make_shared<Viewport>(0, 0, 32, 32);
 
     RenderTextureProperties renderProperties;
-    renderProperties.width = m_RenderViewport->width;
-    renderProperties.height = m_RenderViewport->height;
+    renderProperties.width =(int)m_RenderViewport->width;
+    renderProperties.height = (int)m_RenderViewport->height;
     renderProperties.msaa = 1;
 
     m_GameRenderTexture = RenderTexture::Create(renderProperties);
@@ -78,7 +80,6 @@ void Application::Run() {
             ZoneScopedN("Update");
 
             if (Input::KeyDown(BLAZAR_KEY_GRAVE_ACCENT)) { m_RenderImGui = !m_RenderImGui; }
-
             {
                 ZoneScopedN("Layer Update");
                 for (Layer* layer : m_LayerStack) {
@@ -101,7 +102,7 @@ void Application::Run() {
                     m_RenderViewport->Set(0, 0, GetWindow().GetViewport()->width, GetWindow().GetViewport()->height);
                 }
 
-                RenderTextureProperties renderProperties(m_RenderViewport->width, m_RenderViewport->height);
+                RenderTextureProperties renderProperties((int)m_RenderViewport->width, (int)m_RenderViewport->height);
 
                 if ((m_GameRenderTexture->GetWidth() != renderProperties.width) ||
                     (m_GameRenderTexture->GetHeight() != renderProperties.height)) {

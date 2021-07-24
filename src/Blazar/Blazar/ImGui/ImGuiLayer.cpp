@@ -74,8 +74,7 @@ void ImGuiLayer::OnAttach() {
     colors[ImGuiCol_TableRowBg] = ImVec4(0.03f, 0.03f, 0.03f, 0.49f);
     colors[ImGuiCol_TableRowBgAlt] = ImVec4(0.47f, 0.47f, 0.47f, 0.06f);
     colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
-
-
+    
     Application& app = Application::Get();
     io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 

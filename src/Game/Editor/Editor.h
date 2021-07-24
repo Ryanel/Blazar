@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Blazar/Blazar.h"
+#include "Blazar/Layer/Layer.h"
 
 namespace Blazar {
 class Editor : public Blazar::Layer {

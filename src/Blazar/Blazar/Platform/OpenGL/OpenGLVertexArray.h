@@ -1,10 +1,12 @@
 #pragma once
 
 #include <cstdint>
-#include "Blazar/Renderer/Primitives/Buffer.h"
 #include "Blazar/Renderer/Primitives/VertexArray.h"
 
 namespace Blazar {
+
+class VertexBuffer;
+class IndexBuffer;
 
 class OpenGLVertexArray : public VertexArray {
    public:

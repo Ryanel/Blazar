@@ -1,11 +1,12 @@
 #include "bzpch.h"
 
+#include "VertexArray.h"
 #include "Buffer.h"
+
 #include "Blazar/Renderer/Renderer.h"
 
 #include "Blazar/Platform/OpenGL/OpenGLBuffer.h"
 #include "Blazar/Platform/OpenGL/OpenGLVertexArray.h"
-#include "VertexArray.h"
 
 namespace Blazar {
 

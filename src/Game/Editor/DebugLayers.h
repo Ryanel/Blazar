@@ -1,8 +1,6 @@
 #pragma once
 #include <imgui.h>
-#include "Blazar/Blazar.h"
 #include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/Input/Keymap.h"
 #include "Tracy.hpp"
 
 using namespace Blazar;

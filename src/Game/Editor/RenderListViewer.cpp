@@ -1,15 +1,16 @@
 #include "RenderListViewer.h"
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
+#include <spdlog/fmt/fmt.h>
+#include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Renderer.h"
 #include "DebugLayers.h"
 #include "Tracy.hpp"
 
 void RenderListWindowLayer::ListItemRenderItem(RenderCommand& item, int index) {
     bool isSelected = selected == index;
-    std::string str = fmt::format("{}: {}", index, RenderCommandString(item.m_id));
+    std::string str = fmt::format("{}: {}", index, RenderCommand_GetString(item.m_id));
     if (ImGui::Selectable(str.c_str(), &isSelected)) { selected = index; }
 }
 

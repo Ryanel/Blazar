@@ -1,7 +1,6 @@
 #pragma once
 
 #include <glm/glm.hpp>
-
 #include "Blazar/Renderer/Primitives/Viewport.h"
 
 namespace Blazar {

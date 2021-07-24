@@ -1,11 +1,8 @@
-#include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/Renderer/Renderer.h"
-#include "DebugLayers.h"
-
 #include "FPSWidget.h"
+
+#include "Blazar/Application.h"
+#include "Blazar/ImGui/CustomImGui.h"
 #include "Tracy.hpp"
-
-
 
 void FPSWidgetWindowLayer::OnImGUIRender() {
     ZoneScoped;

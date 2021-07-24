@@ -2,9 +2,7 @@
 
 #ifdef BLAZAR_IMGUI_ENABLED
 
-#include "Blazar/Core.h"
 #include "Blazar/Layer/Layer.h"
-
 
 namespace Blazar {
 class BLAZAR_API ImGuiLayer : public Layer {

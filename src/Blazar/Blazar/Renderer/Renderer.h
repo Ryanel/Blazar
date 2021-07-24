@@ -2,26 +2,12 @@
 
 #include <deque>
 #include "Blazar/Config.h"
-#include "Blazar/Core.h"
-#include "RenderItem.h"
 #include "RendererAPI.h"
 
 namespace Blazar {
 
-struct RendererStats {
-    int passesThisFrame;
-    int drawCalls;
-};
-
-extern RendererStats renderer_stats;
-
-class RendererState {
-   public:
-    Ref<Camera> m_Camera;
-    Ref<Shader> m_Shader;
-    Texture2D* m_Texture;
-    Ref<RenderTexture> m_RenderTexture;
-};
+class RendererState;
+class RenderCommand;
 
 class Renderer {
    public:
@@ -31,7 +17,11 @@ class Renderer {
     static void Submit(RenderCommand&& command);
     static void FlushQueue();
     static void ResetStats();
-    static RendererState& CurrentState();
+
+    struct RendererStats {
+        int passesThisFrame;
+        int drawCalls;
+    };
 
    public:
     static std::deque<RenderCommand> m_RenderQueue;
@@ -40,5 +30,7 @@ class Renderer {
     static std::deque<RenderCommand> m_LastRenderQueue;
 #endif
     static RendererState m_CurrentState;
+
+    static RendererStats m_stats;
 };
 }  // namespace Blazar

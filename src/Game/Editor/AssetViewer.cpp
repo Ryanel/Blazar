@@ -1,14 +1,15 @@
 #include "AssetViewer.h"
 
+#include <imgui.h>
 #include <cmath>
 #include <filesystem>
 #include <stack>
 #include <unordered_set>
+
+#include "Blazar/Application.h"
 #include "Blazar/Assets/ResourceManager.h"
 #include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Renderer.h"
-#include "DebugLayers.h"
 #include "Tracy.hpp"
 
 void TextCentered(std::string text, float ctx_width, float ctx_x) {
@@ -43,7 +44,7 @@ void AssetEditorWindow::RenderItem(std::string name, std::string path, bool isDi
 
     // Draw icon
     ImGui::PushID(path.c_str());
-    if (ImGui::ImageButton(id, ImVec2(this->m_size, this->m_size), ImVec2(0, 1), ImVec2(1, 0))) {
+    if (ImGui::ImageButton(id, ImVec2((float)this->m_size, (float)this->m_size), ImVec2(0, 1), ImVec2(1, 0))) {
         if (isDirectory) {
             m_path_heirarchy.push_back(std::string(name));
             dirty = true;
@@ -67,10 +68,20 @@ void AssetEditorWindow::OnImGUIRender() {
         // Breadcrumbs
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.10f, 0.10f, 0.10f, 1.00f));
 
-        if (ImGui::BeginChild("##AssetWindowTop", ImVec2(0, 64))) {
-            if (ImGui::ArrowButton("Up Directory", ImGuiDir_Up)) { NavigateUpFolder(); }
+        if (ImGui::BeginChild("##AssetWindowTop", ImVec2(0, 32))) {
+            if (ImGui::ImageButton((ImTextureID)m_texgear.data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
+                                   ImVec2(1, 0))) {
+                options_open = !options_open;
+            }
             ImGui::SameLine();
-            if (ImGui::Button("Refresh")) { dirty = true; }
+
+            if (ImGui::ImageButton((ImTextureID)m_texrefresh.data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
+                                   ImVec2(1.0f, 0.0f))) {
+                dirty = true;
+            }
+            ImGui::SameLine();
+
+            if (ImGui::ArrowButton("Up Directory", ImGuiDir_Up)) { NavigateUpFolder(); }
             ImGui::SameLine();
 
             int numback = m_path_heirarchy.size() - 1;
@@ -89,11 +100,6 @@ void AssetEditorWindow::OnImGUIRender() {
                 ImGui::SameLine();
                 numback--;
             }
-
-            // Second Line
-            ImGui::NewLine();
-
-            ImGui::SliderInt("Size", &this->m_size, 16, 256);
         }
         ImGui::EndChild();
 
@@ -105,20 +111,18 @@ void AssetEditorWindow::OnImGUIRender() {
         }
 
         // Render
-
         float ColumnSize = ImGui::GetWindowWidth() / (m_size + m_padding);
         int columns = (int)ceil(ColumnSize);
         if (columns > 64) { columns = 64; }
-        if (columns < 1) { columns = 1; }
+        if (columns < 2) { columns = 2; }
+        columns--;
 
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(8, 8));
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 
         if (ImGui::BeginChild("##AssetWindowTitle")) {
-            float tableWidth = ImGui::GetWindowWidth() - m_padding;
             ImGui::SetCursorPosX(m_padding / 2);
-            if (ImGui::BeginTable("AssetBrowserTable", columns, ImGuiTableFlags_SizingFixedSame, ImVec2(tableWidth, 0),
-                                  tableWidth)) {
+            if (ImGui::BeginTable("AssetBrowserTable", columns, ImGuiTableFlags_SizingFixedSame, ImVec2(0, 0))) {
                 for (size_t i = 0; i < columns; i++) {
                     ImGui::TableSetupColumn(nullptr, ImGuiTableColumnFlags_NoResize, m_size);
                 }
@@ -136,11 +140,19 @@ void AssetEditorWindow::OnImGUIRender() {
             }
         }
         ImGui::EndChild();
-        ImGui::PopStyleVar();
-        ImGui::PopStyleVar();
 
-        ImGui::End();
         ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
+    }
+    ImGui::End();
+    ImGui::PopStyleVar();
+
+    // Options
+    if (options_open) {
+        if (ImGui::Begin("Asset Window Options", &this->options_open)) {
+            ImGui::SliderInt("Icon Size", &this->m_size, 16, 256);
+        }
+        ImGui::End();
     }
 }
 

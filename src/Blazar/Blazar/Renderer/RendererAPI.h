@@ -1,9 +1,6 @@
 #pragma once
 
 #include <memory>
-
-#include "RendererAPI.h"
-
 #include "Primitives/VertexArray.h"
 
 namespace Blazar {

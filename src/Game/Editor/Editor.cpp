@@ -3,10 +3,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "imgui.h"
 
+#include "Blazar/Application.h"
 #include "Blazar/Config.h"
 #include "Blazar/ImGui/ImGuiLog.h"
-#include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Renderer.h"
+
 #include "Editor/AssetViewer.h"
 #include "Editor/DebugLayers.h"
 #include "Editor/FPSWidget.h"

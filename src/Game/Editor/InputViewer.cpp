@@ -1,8 +1,10 @@
 #include "InputViewer.h"
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
+#include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/Platform/OpenGL/OpenGLShader.h"
+#include "Blazar/Input/Input.h"
+#include "Blazar/Input/Keymap.h"
 #include "Blazar/Renderer/Renderer.h"
 #include "DebugLayers.h"
 #include "Tracy.hpp"
@@ -28,7 +30,6 @@ void InputEditorWindow::OnImGUIRender() {
                     ImGui::TableNextColumn();
                     ImGui::Text("%d", i);
                 }
-                
             }
             ImGui::EndTable();
         }

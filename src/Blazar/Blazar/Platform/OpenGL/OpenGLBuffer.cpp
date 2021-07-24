@@ -1,6 +1,5 @@
 #include "bzpch.h"
 
-#include "Blazar/Renderer/Primitives/Buffer.h"
 #include "Blazar/Platform/OpenGL/OpenGLBuffer.h"
 
 #include <glad/glad.h>

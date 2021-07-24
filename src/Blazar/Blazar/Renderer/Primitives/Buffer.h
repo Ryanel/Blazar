@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "Blazar/Log.h"
-#include "Blazar/Renderer/Primitives/ShaderDataType.h"
+
+#include "ShaderDataType.h"
 
 namespace Blazar {
 
@@ -49,9 +49,7 @@ struct BufferElement {
 class BufferLayout {
    public:
     BufferLayout() {}
-    BufferLayout(std::initializer_list<BufferElement> elements) : m_Elements(elements) {
-        CalculateOffsetsAndStride();
-    }
+    BufferLayout(std::initializer_list<BufferElement> elements) : m_Elements(elements) { CalculateOffsetsAndStride(); }
 
     inline const std::vector<BufferElement>& GetElements() const { return m_Elements; }
     uint32_t GetStride() const { return m_Stride; }

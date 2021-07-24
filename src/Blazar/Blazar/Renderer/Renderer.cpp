@@ -1,16 +1,32 @@
 #include "bzpch.h"
 
-#include <deque>
-
+#include "Blazar/Platform/OpenGL/OpenGLRendererAPI.h"
 #include "Renderer.h"
 
-#include "Blazar/Platform/OpenGL/OpenGLRendererAPI.h"
+#include "Blazar/Color.h"
+#include "Blazar/Memory.h"
+#include "Blazar/Rectangle.h"
+#include "Cameras/Camera.h"
+#include "Primitives/RenderTexture.h"
+#include "Primitives/Shader.h"
+#include "Primitives/Texture.h"
+#include "Primitives/VertexArray.h"
+#include "RenderCommand.h"
+
 namespace Blazar {
 
 RendererAPI* s_RendererAPI;
 
+class RendererState {
+   public:
+    Ref<Camera> m_Camera;
+    Ref<Shader> m_Shader;
+    Texture2D* m_Texture;
+    Ref<RenderTexture> m_RenderTexture;
+};
+
 // Renderer
-RendererStats renderer_stats;
+Renderer::RendererStats Renderer::m_stats;
 std::deque<RenderCommand> Renderer::m_RenderQueue;
 RendererState Renderer::m_CurrentState;
 
@@ -31,14 +47,12 @@ void Renderer::Init(RendererAPI::API toCreate) {
     }
 }
 
-RendererState& Renderer::CurrentState() { return m_CurrentState; }
-
 void Renderer::Submit(RenderCommand& command) { m_RenderQueue.emplace_back(command); }
 void Renderer::Submit(RenderCommand&& command) { m_RenderQueue.emplace_back(command); }
 
 void Renderer::ResetStats() {
-    renderer_stats.passesThisFrame = 0;
-    renderer_stats.drawCalls = 0;
+    m_stats.passesThisFrame = 0;
+    m_stats.drawCalls = 0;
 }
 
 void Renderer::FlushQueue() {
@@ -119,7 +133,7 @@ void Renderer::FlushQueue() {
             } break;
 
             case RenderCommandID::PASS_START:
-                renderer_stats.passesThisFrame++;
+                m_stats.passesThisFrame++;
                 break;
             case RenderCommandID::PASS_END:
                 break;
@@ -127,7 +141,7 @@ void Renderer::FlushQueue() {
                 endProcessing = true;
                 break;
             default:
-                LOG_CORE_WARN("Renderer::FlushQueue encountered unhandled item {}", RenderCommandString(item.m_id));
+                LOG_CORE_WARN("Renderer::FlushQueue encountered unhandled item {}", RenderCommand_GetString(item.m_id));
                 break;
         }
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION

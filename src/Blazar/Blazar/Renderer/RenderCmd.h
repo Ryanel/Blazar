@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderItem.h"
+#include "RenderCommand.h"
 #include "Renderer.h"
 #include "RendererAPI.h"
 
@@ -29,7 +29,6 @@ class RenderCmd {
     inline static void EndPass() { Renderer::Submit(RenderCommand(RenderCommandID::PASS_END)); }
     inline static void UploadCameraProps() { Renderer::Submit(RenderCommand(RenderCommandID::CAMERA_SETSHADERPROPS)); }
 
-
     inline static void PassSetCamera(Ref<Camera> camera) {
         RenderCommand cmd(RenderCommandID::PASS_SET_CAMERA, camera);
         Renderer::Submit(cmd);
@@ -41,7 +40,6 @@ class RenderCmd {
         RenderCommand cmd(RenderCommandID::BIND_TEXTURE2D, data);
         Renderer::Submit(cmd);
     }
-
 
     inline static void BindTexture(Texture2D* texture, int slot = 0) {
         std::pair<Texture2D*, int> data(texture, slot);

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Blazar/Core.h"
+#include <spdlog/spdlog.h>
 #include "Blazar/Layer/Layer.h"
+#include "Blazar/Log.h"
 
 namespace Blazar {
 

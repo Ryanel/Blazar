@@ -1,8 +1,7 @@
 #pragma once
 
-#include <memory>
 #include "Blazar/Config.h"
-
+#include "Blazar/Memory.h"
 #define BIT(x) (1 << x)
 
 #ifdef BLAZAR_PLATFORM_WINDOWS
@@ -69,11 +68,3 @@
 #endif
 
 #define BLAZAR_BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
-
-namespace Blazar {
-    template<typename T>
-    using Scope = std::unique_ptr<T>; ///< A Scoped Pointer, destroyed at end of scope via RAII
-
-    template <typename T>
-    using Ref = std::shared_ptr<T>; ///< A Reference Counted pointer, destroyed when reference count is 0
-}

@@ -3,8 +3,6 @@
 #include <cstdint>
 #include <tuple>
 
-#include "Keymap.h"
-
 namespace Blazar {
 typedef int32_t blazar_key_t;
 

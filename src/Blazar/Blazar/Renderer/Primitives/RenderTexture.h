@@ -1,11 +1,10 @@
 #pragma once
 
 #include <vector>
-#include "Blazar/Log.h"
-
-#include "Texture.h"
 
 namespace Blazar {
+
+class Texture2D;
 
 struct RenderTextureProperties {
     int width;

@@ -1,6 +1,7 @@
 #include "bzpch.h"
 
-#include "Blazar/Input/Input.h"
+#include "Input.h"
+#include "Keymap.h"
 
 namespace Blazar {
 

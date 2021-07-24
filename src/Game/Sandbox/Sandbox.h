@@ -1,13 +1,16 @@
 #pragma once
 
-#include "Blazar/Blazar.h"
+#include "Blazar/Memory.h"
+#include "Blazar/Layer/Layer.h"
 #include "Blazar/Assets/Resource.h"
-#include "Blazar/Renderer/Cameras/OrthographicCamera.h"
-#include "Blazar/Renderer/Primitives/Shader.h"
-#include "Blazar/Renderer/Primitives/Texture.h"
-#include "Blazar/Renderer/Primitives/VertexArray.h"
 
 namespace Blazar {
+
+class Texture2D;
+class VertexArray;
+class OrthographicCamera;
+class Shader;
+
 class Sandbox : public Blazar::Layer {
    public:
     Sandbox() : Blazar::Layer("Sandbox") { m_UpdatePath = LayerUpdatePath::UpdateRender; }

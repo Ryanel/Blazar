@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Blazar/Renderer/Primitives/Buffer.h"
-
 namespace Blazar {
+
+class VertexBuffer;
+class IndexBuffer;
 
 /// A vertex array, which binds layout properties with buffers.
 class VertexArray {
@@ -17,6 +18,7 @@ class VertexArray {
 
     virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
     virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
+
     // Factory method
     static Ref<VertexArray> Create();
     static Ref<VertexArray> Create(const Ref<VertexBuffer> vertBuffer, Ref<IndexBuffer> indexBuffer);

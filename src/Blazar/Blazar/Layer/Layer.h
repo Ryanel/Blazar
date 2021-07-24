@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "Blazar/Core.h"
 #include "Blazar/Time/Timestep.h"
 
 namespace Blazar {

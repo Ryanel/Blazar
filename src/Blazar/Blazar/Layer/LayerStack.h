@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Blazar/Core.h"
-#include "Blazar/Layer/Layer.h"
-
 #include <vector>
+
+#include "Blazar/Layer/Layer.h"
 
 namespace Blazar {
 class BLAZAR_API LayerStack {
@@ -27,6 +26,7 @@ class BLAZAR_API LayerStack {
     std::vector<Layer*>::const_reverse_iterator rend() const { return m_Layers.rend(); }
 
     std::vector<Layer*> m_Layers;
+
    private:
     unsigned int m_LayerInsertIndex = 0;
 };

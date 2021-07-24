@@ -1,5 +1,6 @@
 #define BLAZAR_CREATE_APPLICATION
 
+#include "Blazar/Application.h"
 #include "Blazar/Assets/ResourceManager.h"
 #include "Blazar/Blazar.h"
 #include "Blazar/Entry.h"
@@ -27,7 +28,7 @@ class Game : public Blazar::Application {
         editor->Setup();
     }
 
-    ~Game() {}  
+    ~Game() {}
 };
 
 namespace Blazar {

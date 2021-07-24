@@ -1,10 +1,8 @@
 #include "LayerViewer.h"
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
+#include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/Platform/OpenGL/OpenGLShader.h"
-#include "Blazar/Renderer/Renderer.h"
-#include "DebugLayers.h"
 #include "Tracy.hpp"
 
 void LayerEditorWindow::RenderTable(LayerUpdatePath path) {
