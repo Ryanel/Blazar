@@ -13,7 +13,7 @@ class InputEditorWindow : public Blazar::Layer {
     void OnImGUIRender() override;
 
    private:
-    bool show = true;
+    bool show = false;
 };
 
 #endif

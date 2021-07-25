@@ -45,7 +45,7 @@ void ImGuiLayer::OnAttach() {
     style.FrameRounding = 4;
     style.FramePadding.x = 4;
     style.FramePadding.y = 4;
-    style.WindowTitleAlign.x = 0.50f;
+    style.WindowTitleAlign.x = 0.00f;
     style.CellPadding.x = 2;
     style.CellPadding.y = 4;
     style.ItemSpacing.y = 4;
@@ -56,7 +56,7 @@ void ImGuiLayer::OnAttach() {
 
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_Border] = ImVec4(0.22f, 0.22f, 0.22f, 0.50f);
-    colors[ImGuiCol_TitleBgActive] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    colors[ImGuiCol_TitleBgActive] = ImVec4(0.21f, 0.46f, 0.65f, 1.00f);
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.10f, 0.10f, 0.10f, 0.51f);
     colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
     colors[ImGuiCol_FrameBg] = ImVec4(0.04f, 0.04f, 0.04f, 0.54f);

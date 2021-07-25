@@ -8,6 +8,7 @@
 #include "Blazar/Renderer/Primitives/RenderTexture.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Blazar/Simulation/Simulation.h"
 #include "Blazar/Time/Timer.h"
 #include "Blazar/Window.h"
 
@@ -78,6 +79,8 @@ void Application::Run() {
         // Update Code. No rendering here
         {
             ZoneScopedN("Update");
+
+            m_Simulation->Tick(m_deltaTime);
 
             if (Input::KeyDown(BLAZAR_KEY_GRAVE_ACCENT)) { m_RenderImGui = !m_RenderImGui; }
             {

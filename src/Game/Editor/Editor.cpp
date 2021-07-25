@@ -7,12 +7,12 @@
 #include "Blazar/Config.h"
 #include "Blazar/ImGui/ImGuiLog.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Blazar/Renderer/Primitives/RenderTexture.h"
 
 #include "Editor/AssetViewer.h"
 #include "Editor/DebugLayers.h"
 #include "Editor/FPSWidget.h"
 #include "Tracy.hpp"
-
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
 #include "Editor/InputViewer.h"
 #include "Editor/LayerViewer.h"

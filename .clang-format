@@ -14,3 +14,7 @@ PenaltyBreakTemplateDeclaration: 0
 SpaceAfterTemplateKeyword: false
 AlwaysBreakTemplateDeclarations: No
 BreakBeforeBraces: Attach
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveBitFields: Consecutive
+AlignConsecutiveDeclarations: Consecutive
+AlignConsecutiveMacros: Consecutive

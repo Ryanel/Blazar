@@ -8,6 +8,7 @@ workspace "Blazar"
     configurations { "Debug", "Release", "Distribution" }
     location "build"
     flags { 'MultiProcessorCompile' }
+    defines("_ITERATOR_DEBUG_LEVEL=0")
 
 outputdir="%{cfg.buildcfg}-%{cfg.system}"
 
@@ -19,6 +20,7 @@ IncludeDir["spdlog"]   = "src/Vendor/spdlog/include/"
 IncludeDir["GLFW"]     = "src/Vendor/glfw/include/"
 IncludeDir["GLM"]      = "src/Vendor/glm/"
 IncludeDir["Tracy"]      = "src/Vendor/tracy/"
+IncludeDir["entt"]      = "src/Vendor/entt/src/"
 
 include "src/Vendor/GLAD"
 include "src/Vendor/vendor.lua"
@@ -58,7 +60,8 @@ project "Blazar"
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.GLM}",
-        "%{IncludeDir.Tracy}"
+        "%{IncludeDir.Tracy}",
+        "%{IncludeDir.entt}"
     }
 
     filter "configurations:Debug"
@@ -86,7 +89,7 @@ project "Blazar"
         {
             "BLAZAR_PLATFORM_WINDOWS",
             "BLAZAR_BUILD_STATIC",
-            "GLFW_INCLUDE_NONE"
+            "GLFW_INCLUDE_NONE",
         }
 
         disablewarnings({"26812", "26495", "26451", "26498", "6201"})
@@ -128,7 +131,8 @@ project "Game"
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.STB}",
-        "%{IncludeDir.Tracy}"
+        "%{IncludeDir.Tracy}",
+        "%{IncludeDir.entt}"
     }
 
     links

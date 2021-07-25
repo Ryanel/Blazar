@@ -11,13 +11,14 @@
 
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/ImGui/ImGuiLog.h"
 #include "Blazar/ImGui/ImGuiLayer.h"
+#include "Blazar/ImGui/ImGuiLog.h"
 #include "Blazar/Layer/Layer.h"
 
 #include "Tracy.hpp"
 
 namespace Blazar {
+static const char* const spdlog_level_names[] = {"Trace", "Debug", "Info", "Warn", "Error", "Critical", "Off"};
 
 void ImGUILogWindowLayer::OnImGUIRender() {
     ZoneScoped;
@@ -25,20 +26,34 @@ void ImGUILogWindowLayer::OnImGUIRender() {
 
     if (!m_Show) { return; }
 
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     if (ImGui::Begin("Log", &this->m_Show)) {
-        ImGui::Checkbox("Show options", &this->m_Options);
+        focused = ImGui::IsWindowFocused();
 
-        ImGui::SameLine();
-
-        if (ImGui::BeginCombo("Filter Level", spdlog::level::to_string_view(m_filterSeverity).data())) {
-            for (size_t i = 0; i < spdlog::level::n_levels; i++) {
-                if (ImGui::Selectable(spdlog::level::to_string_view((spdlog::level::level_enum)i).data())) {
-                    m_filterSeverity = (spdlog::level::level_enum)i;
-                }
-            }
-
-            ImGui::EndCombo();
+        if (focused || childFocused) {
+            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_TitleBgActive));
+        } else {
+            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_TitleBg));
         }
+
+        if (ImGui::BeginChild("##LogTop", ImVec2(0, 28))) {
+            childFocused = ImGui::IsWindowFocused();
+            ImGui::Checkbox("Show options", &this->m_Options);
+
+            ImGui::SameLine();
+
+            if (ImGui::BeginCombo("Filter Level", spdlog_level_names[m_filterSeverity])) {
+                for (size_t i = 0; i < spdlog::level::n_levels; i++) {
+                    if (ImGui::Selectable(spdlog_level_names[i])) {
+                        m_filterSeverity = (spdlog::level::level_enum)i;
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+        }
+        ImGui::EndChild();
+        ImGui::PopStyleColor();
 
         if (m_Options) {
             ImGui::Checkbox("Scroll Log to Bottom", &this->m_ScrollToBottom);
@@ -49,12 +64,10 @@ void ImGUILogWindowLayer::OnImGUIRender() {
             if (ImGui::Button("Clear Log")) { Log::s_LogEntries.clear(); }
 
             if (m_EntriesToShow > Log::s_MaxLogEntries) { m_EntriesToShow = Log::s_MaxLogEntries; }
-
-
         }
 
         ImGui::Separator();
-        
+
         ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(2, 2));
         if (ImGui::BeginTable("log#entry_table", 4,
                               ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp | ImGuiTableFlags_ScrollY)) {
@@ -62,8 +75,8 @@ void ImGUILogWindowLayer::OnImGUIRender() {
             ImGui::TableSetupScrollFreeze(0, 1);
             ImGui::TableSetupColumn("Source", ImGuiTableColumnFlags_NoResize, 1.0);
             ImGui::TableSetupColumn("Severity", ImGuiTableColumnFlags_None, 1.0);
-            ImGui::TableSetupColumn("Time", ImGuiTableColumnFlags_None, 2.0);
-            ImGui::TableSetupColumn("Message", ImGuiTableColumnFlags_None, 8.0);
+            ImGui::TableSetupColumn("Time", ImGuiTableColumnFlags_None, 1.5);
+            ImGui::TableSetupColumn("Message", ImGuiTableColumnFlags_None, 9.0);
             ImGui::TableHeadersRow();
 
             size_t i = Log::s_LogEntries.size() > m_EntriesToShow ? (Log::s_LogEntries.size() - m_EntriesToShow) : 0;
@@ -72,17 +85,20 @@ void ImGUILogWindowLayer::OnImGUIRender() {
 
                 if (entry.details.level >= m_filterSeverity) { DisplayEntry(entry); }
             }
-            
+
             if (m_ScrollToBottom) { ImGui::SetScrollHereY(); }
             ImGui::EndTable();
         }
         ImGui::PopStyleVar();
-        
     }
     ImGui::End();
+
+    ImGui::PopStyleVar();
 }
 
 void ImGUILogWindowLayer::DisplayEntry(log_entry& entry) {
+
+
     switch (entry.details.level) {
         case spdlog::level::err:
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(255, 0, 0)));
@@ -109,7 +125,7 @@ void ImGUILogWindowLayer::DisplayEntry(log_entry& entry) {
 
     ImGui::TableNextColumn();  // Severity
 
-    ImGui::Text(spdlog::level::to_string_view(entry.details.level).data());
+    ImGui::Text(spdlog_level_names[entry.details.level]);
 
     ImGui::TableNextColumn();  // Time
     ImGui::Text("%s", entry.time_fmt.c_str());

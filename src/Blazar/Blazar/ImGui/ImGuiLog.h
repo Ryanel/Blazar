@@ -16,6 +16,8 @@ class ImGUILogWindowLayer : public Blazar::Layer {
     bool m_Show = true;
     bool m_ScrollToBottom = true;
     bool m_Options = false;
+    bool focused = false;
+    bool childFocused = false;
     spdlog::level::level_enum m_filterSeverity = spdlog::level::trace;
     int m_EntriesToShow = 200;
 };

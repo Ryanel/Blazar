@@ -27,8 +27,8 @@ class AssetEditorWindow : public Blazar::Layer {
     bool isFocused = true;
     bool isChildFocused = false;
 
-    int m_size = 96;
-    int m_padding = 16;
+    float m_size = 96;
+    float m_padding = 16;
 
     std::vector<std::string> m_path_heirarchy;
     std::unordered_map<std::string, std::string> m_current_directories;

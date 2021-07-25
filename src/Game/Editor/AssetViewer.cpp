@@ -73,7 +73,7 @@ void AssetEditorWindow::RenderItem(std::string name, std::string path, bool isDi
 
     // Draw icon
     ImGui::PushID(path.c_str());
-    if (ImGui::ImageButton(id, ImVec2((float)this->m_size, (float)this->m_size), ImVec2(0, 1), ImVec2(1, 0))) {
+    if (ImGui::ImageButton(id, ImVec2(this->m_size, this->m_size), ImVec2(0, 1), ImVec2(1, 0))) {
         if (isDirectory) {
             m_path_heirarchy.push_back(std::string(name));
             dirty = true;
@@ -125,13 +125,13 @@ void AssetEditorWindow::OnImGUIRender() {
             if (ImGui::ArrowButton("Up Directory", ImGuiDir_Up)) { NavigateUpFolder(); }
             ImGui::SameLine();
 
-            int numback = m_path_heirarchy.size() - 1;
+            size_t numback = m_path_heirarchy.size() - 1;
             for (size_t i = 0; i < m_path_heirarchy.size(); i++) {
                 std::string name = m_path_heirarchy[i];
                 if (i == 0) { name = "Root"; }
 
                 if (ImGui::Button(name.c_str())) {
-                    for (int numbacks = numback - 1; numbacks >= 0; numbacks--) {
+                    for (size_t numbacks = numback - 1; numbacks >= 0; numbacks--) {
                         m_path_heirarchy.pop_back();
                         dirty = true;
                     }
@@ -197,7 +197,7 @@ void AssetEditorWindow::OnImGUIRender() {
 
             CImGUI_Header2("Thumbnails");
 
-            ImGui::SliderInt("Icon Size", &this->m_size, 64, 512);
+            ImGui::SliderFloat("Icon Size", &this->m_size, 64, 512);
             ImGui::Checkbox("Enable Thumbnails", &this->m_optionEnableThumbnails);
             ImGui::SliderInt("Thumbnails to load per frame", &this->m_optionThumbsCanLoad, 0, 3);
             CImGUI_Header2("Development");
@@ -211,7 +211,7 @@ void AssetEditorWindow::Refresh() {
     ZoneScoped;
     auto& vfs = ResourceManager::Get()->m_vfs;
     auto list = vfs->filelist();
-    int levels = m_path_heirarchy.size();
+    size_t levels = m_path_heirarchy.size();
 
     m_current_directories.clear();
     m_current_files.clear();

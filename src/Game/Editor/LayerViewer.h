@@ -12,7 +12,7 @@ using namespace Blazar;
 
 class LayerEditorWindow : public Blazar::Layer {
    public:
-    bool show = true;
+    bool show = false;
     int selected = -1;
     LayerEditorWindow() : Layer("Editor: Layer Window") { m_UpdatePath = LayerUpdatePath::ImGui; }
     void RenderTable(LayerUpdatePath path);
