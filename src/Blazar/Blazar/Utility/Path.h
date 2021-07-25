@@ -5,8 +5,11 @@
 namespace Blazar {
 
 namespace Utility {
+
+/// Collection of utility functions for handling paths
 class Paths {
    public:
+    /// Returns the extension component of a path as std::string_view
     static std::string_view GetExtension(std::string& path) {
         size_t period_index = path.find(".", 0);
 

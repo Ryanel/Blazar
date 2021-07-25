@@ -56,12 +56,9 @@ void ImGuiLayer::OnAttach() {
 
     ImVec4* colors = ImGui::GetStyle().Colors;
     colors[ImGuiCol_Border] = ImVec4(0.22f, 0.22f, 0.22f, 0.50f);
-    colors[ImGuiCol_FrameBg] = ImVec4(0.12f, 0.12f, 0.12f, 0.54f);
-    colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
     colors[ImGuiCol_TitleBgActive] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
     colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.10f, 0.10f, 0.10f, 0.51f);
     colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
-    colors[ImGuiCol_Button] = ImVec4(0.58f, 0.58f, 0.58f, 0.40f);
     colors[ImGuiCol_FrameBg] = ImVec4(0.04f, 0.04f, 0.04f, 0.54f);
     colors[ImGuiCol_Separator] = ImVec4(0.16f, 0.16f, 0.16f, 0.50f);
     colors[ImGuiCol_Tab] = ImVec4(0.12f, 0.34f, 0.63f, 0.86f);
@@ -71,10 +68,14 @@ void ImGuiLayer::OnAttach() {
     colors[ImGuiCol_TableHeaderBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
     colors[ImGuiCol_TableBorderStrong] = ImVec4(0.26f, 0.26f, 0.29f, 1.00f);
     colors[ImGuiCol_TableBorderLight] = ImVec4(0.28f, 0.28f, 0.32f, 1.00f);
-    colors[ImGuiCol_TableRowBg] = ImVec4(0.03f, 0.03f, 0.03f, 0.49f);
     colors[ImGuiCol_TableRowBgAlt] = ImVec4(0.47f, 0.47f, 0.47f, 0.06f);
-    colors[ImGuiCol_WindowBg] = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
-    
+    colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
+    colors[ImGuiCol_FrameBg] = ImVec4(0.39f, 0.39f, 0.39f, 0.27f);
+    colors[ImGuiCol_TitleBg] = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
+    colors[ImGuiCol_Button] = ImVec4(0.42f, 0.42f, 0.42f, 0.37f);
+    colors[ImGuiCol_ButtonHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.71f);
+    colors[ImGuiCol_TableRowBg] = ImVec4(0.09f, 0.09f, 0.09f, 0.49f);
+
     Application& app = Application::Get();
     io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 

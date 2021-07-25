@@ -24,6 +24,8 @@ class AssetEditorWindow : public Blazar::Layer {
     bool show = true;
     bool options_open = false;
     bool dirty = true;
+    bool isFocused = true;
+    bool isChildFocused = false;
 
     int m_size = 96;
     int m_padding = 16;
@@ -38,6 +40,7 @@ class AssetEditorWindow : public Blazar::Layer {
     Ref<Resource<Texture2D>> m_texgear;
 
     bool m_optionEnableThumbnails = true;
-    int m_numthumbsCanLoad = 2;
-    int m_optionThumbsCanLoad = 2;
+    int m_numthumbsCanLoad = 1;
+    int m_optionThumbsCanLoad = 1;
+
 };

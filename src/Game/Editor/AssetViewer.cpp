@@ -16,7 +16,7 @@
 
 void TextCentered(std::string text, float ctx_width, float ctx_x) {
     auto windowWidth = ctx_width;
-    auto textWidth   = ImGui::CalcTextSize(text.c_str()).x;
+    auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
 
     ImGui::SetCursorPosX(ctx_x + ((windowWidth - textWidth) * 0.5f));
     ImGui::Text(text.c_str());
@@ -35,10 +35,10 @@ AssetEditorWindow::AssetEditorWindow() : Layer("Editor: Asset Window") {
     m_path_heirarchy.push_back("Data");
     m_path_heirarchy.push_back("Shaders");
 
-    m_texfolder  = Texture2D::Load("/Editor/Textures/folder.png");
-    m_texfile    = Texture2D::Load("/Editor/Textures/file.png");
+    m_texfolder = Texture2D::Load("/Editor/Textures/folder.png");
+    m_texfile = Texture2D::Load("/Editor/Textures/file.png");
     m_texrefresh = Texture2D::Load("/Editor/Textures/refresh.png");
-    m_texgear    = Texture2D::Load("/Editor/Textures/gear.png");
+    m_texgear = Texture2D::Load("/Editor/Textures/gear.png");
 
     m_numthumbsCanLoad = 1;
 }
@@ -97,9 +97,17 @@ void AssetEditorWindow::OnImGUIRender() {
 
     if (ImGui::Begin("Assets", &this->show)) {
         // Breadcrumbs
-        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.10f, 0.10f, 0.10f, 1.00f));
+        isFocused = ImGui::IsWindowFocused();
+
+        if (isFocused || isChildFocused) {
+            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_TitleBgActive));
+        } else {
+            if (m_numthumbsCanLoad > 1) { m_numthumbsCanLoad = 1; }
+            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_TitleBg));
+        }
 
         if (ImGui::BeginChild("##AssetWindowTop", ImVec2(0, 28))) {
+            isChildFocused = ImGui::IsWindowFocused();
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4.0f);
             if (ImGui::ImageButton((ImTextureID)m_texgear->data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
@@ -145,7 +153,7 @@ void AssetEditorWindow::OnImGUIRender() {
 
         // Render
         float ColumnSize = ImGui::GetWindowWidth() / (m_size + m_padding);
-        int   columns    = (int)ceil(ColumnSize);
+        int columns = (int)ceil(ColumnSize);
 
         if (columns > 64) { columns = 64; }
         if (columns < 2) { columns = 2; }
@@ -155,6 +163,7 @@ void AssetEditorWindow::OnImGUIRender() {
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 
         if (ImGui::BeginChild("##AssetWindowTitle")) {
+            isChildFocused |= ImGui::IsWindowFocused();
             ImGui::SetCursorPosX(m_padding / 2);
             if (ImGui::BeginTable("AssetBrowserTable", columns, ImGuiTableFlags_SizingFixedSame, ImVec2(0, 0))) {
                 for (size_t i = 0; i < columns; i++) {
@@ -200,9 +209,9 @@ void AssetEditorWindow::OnImGUIRender() {
 
 void AssetEditorWindow::Refresh() {
     ZoneScoped;
-    auto& vfs    = ResourceManager::Get()->m_vfs;
-    auto  list   = vfs->filelist();
-    int   levels = m_path_heirarchy.size();
+    auto& vfs = ResourceManager::Get()->m_vfs;
+    auto list = vfs->filelist();
+    int levels = m_path_heirarchy.size();
 
     m_current_directories.clear();
     m_current_files.clear();
@@ -210,8 +219,8 @@ void AssetEditorWindow::Refresh() {
     // Discovery
     for (auto item : list) {
         std::string currentString = item;
-        std::string originalPath  = item;
-        bool        matched       = false;
+        std::string originalPath = item;
+        bool matched = false;
         for (size_t i = 0; i < levels; i++) {
             size_t index = currentString.find('/', 0);
 
@@ -233,8 +242,8 @@ void AssetEditorWindow::Refresh() {
         }
 
         if (matched) {
-            size_t index  = currentString.find('/', 0);
-            bool   isFile = index == std::string::npos;
+            size_t index = currentString.find('/', 0);
+            bool isFile = index == std::string::npos;
             if (!isFile) {
                 currentString.erase(currentString.begin() + index, currentString.end());
 

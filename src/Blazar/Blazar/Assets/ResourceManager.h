@@ -20,6 +20,7 @@ class ResourceManager {
     ResourceManager();  ///< Constructor
 
    public:
+    /// Attempts to get a resource that has already been loaded. If it hasn't been loaded, this causes an error.
     template<class T> Ref<Resource<T>> Load(std::string path) {
         auto& it = m_entries.find(path);
         if (it != m_entries.end()) {
@@ -36,20 +37,22 @@ class ResourceManager {
         throw;
     }
 
+    /// Add a resource to the Resource Manager to be cached
     template<class T> bool Add(std::string path, Ref<Resource<T>> res) {
         m_entries.emplace(path, std::static_pointer_cast<IResource>(res));
         return true;
     }
 
-    bool Exists(std::string path);
-    void Unload(std::string path);
-    void Clean();
+    bool Exists(std::string path);  ///< Checks if path exists as a Resource, not if it exists on the filesystem
+    void Unload(std::string path);  ///< Attempts to unload the resource. Note: Does not destroy any other references,
+                                    ///< so the object may live past this.
+    void Clean();                   ///< Attempts to garbage collect any items with no references.
+    static ResourceManager* Get();  ///< Gets the resource manager instance
+
+    /// Reads a file's data from the VFS. Returns true if successful.
     bool ReadFromVFS(std::string_view path, std::vector<std::byte>& outBuffer);
 
-    static ResourceManager* Get();
-
-    VFS::VFS* m_vfs;
-
+    VFS::VFS* m_vfs;  ///< The virtual filesystem that the resource manager uses to load resources.
    private:
     std::unordered_map<std::string, Ref<IResource>> m_entries;
 };

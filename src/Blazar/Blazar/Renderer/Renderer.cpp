@@ -17,12 +17,13 @@ namespace Blazar {
 
 RendererAPI* s_RendererAPI;
 
+/// The current state of the renderer.
 class RendererState {
    public:
-    Ref<Camera> m_Camera;
-    Ref<Shader> m_Shader;
-    Texture2D* m_Texture;
-    Ref<RenderTexture> m_RenderTexture;
+    Ref<Camera> m_Camera;                ///< The bound Camera
+    Ref<Shader> m_Shader;                ///< The bound Shader
+    Texture2D* m_Texture;                ///< The bound Texture2D
+    Ref<RenderTexture> m_RenderTexture;  ///< The bound RenderTexture
 };
 
 // Renderer

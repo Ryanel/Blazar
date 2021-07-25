@@ -11,7 +11,7 @@ namespace VFS {
 class File;
 class VFS;
 
-/// A mounted directory in the file tree.
+/// A mounted directory in the VFS tree.
 class MountPoint {
    public:
     MountPoint(const std::string vpath, const std::string rpath) : m_path(vpath), m_rPath(rpath) {}
@@ -29,7 +29,7 @@ class MountPoint {
     friend class File;
 };
 
-/// A file
+/// A file in the VFS
 class File {
    public:
     File(const std::string path, MountPoint* mountpoint) : m_path(path), m_mountpoint(mountpoint) {}
@@ -47,6 +47,7 @@ class File {
    friend class VFS;
 };
 
+/// Represents a virtual filesystem constructed from several mountpoints. Usually only need one.
 class VFS {
    public:
     void add_mountpoint(MountPoint* mp);
