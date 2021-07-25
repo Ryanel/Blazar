@@ -6,10 +6,13 @@
 #include "Blazar/Platform/OpenGL/OpenGLTexture.h"
 #include "Blazar/Renderer/Primitives/Texture.h"
 
+#include "Tracy.hpp"
+
 namespace Blazar {
 OpenGLTexture2D::OpenGLTexture2D() {}
 OpenGLTexture2D::OpenGLTexture2D(const std::string& path, const TextureProperties& properties)
     : m_Properties(properties) {
+    ZoneScoped;
     // Hardcoded Parameters, TODO
     bool retainTexture = false;
     int mipmaps = 1;
@@ -56,7 +59,7 @@ OpenGLTexture2D::OpenGLTexture2D(const std::string& path, const TexturePropertie
 }
 
 OpenGLTexture2D* OpenGLTexture2D::FromData(std::vector<std::byte>& fdata, const TextureProperties& properties) {
-
+    ZoneScoped;
     OpenGLTexture2D* tex = new OpenGLTexture2D();
     // Hardcoded Parameters, TODO
     bool retainTexture = false;

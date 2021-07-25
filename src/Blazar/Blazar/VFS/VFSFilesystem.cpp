@@ -8,6 +8,7 @@ namespace Blazar {
 namespace VFS {
 
 std::vector<std::string> FileSystem::files() {
+    ZoneScoped;
     std::vector<std::string> list_of_files;
 
     for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(m_rPath)) {
@@ -32,6 +33,7 @@ std::vector<std::string> FileSystem::files() {
 }
 
 std::vector<std::byte> FileSystem::file_read(File* file) {
+    ZoneScoped;
     auto ptr = get_file_info(file->path());
     if (ptr) {
         auto& val = ptr.value();
@@ -42,6 +44,7 @@ std::vector<std::byte> FileSystem::file_read(File* file) {
 }
 
 bool FileSystem::file_write(File* file, std::vector<std::byte> data) {
+    ZoneScoped;
     auto ptr = get_file_info(file->path());
     throw;  // Not implemented
     if (ptr) {
@@ -59,6 +62,7 @@ std::optional<std::shared_ptr<FileSystem::FileInfo>> FileSystem::get_file_info(s
 }
 
 void FileSystem::cache_file(std::string path) {
+    ZoneScoped;
     auto ptr = get_file_info(path);
     if (!ptr) { throw; }
 

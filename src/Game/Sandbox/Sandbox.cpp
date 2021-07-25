@@ -50,7 +50,9 @@ void Sandbox::OnAttach() {
     m_shader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetInt("u_Texture", 0);
 
-    m_texture = Resource<Texture2D>("/Data/Textures/SampleTrans.png");
+    Blazar::TextureProperties texprops;
+    texprops.filtering = TextureFilterMode::None;
+    m_texture = ResourceManager::Get()->LoadTexture("/Data/Textures/SampleTrans.png", texprops);
 
     // Camera
     auto& gameWindow = Application::Get().GetWindow();
@@ -74,7 +76,7 @@ void Sandbox::OnRender(Blazar::Timestep ts) {
         RenderCmd::SetShader(m_shader);
         RenderCmd::UploadCameraProps();
         RenderCmd::SetShaderMat4("u_Transform", sqr_pos);
-        RenderCmd::BindTexture(m_texture.data());
+        RenderCmd::BindTexture(m_texture->data());
         RenderCmd::DrawIndexed(m_squareVAO);
     }
     RenderCmd::EndPass();

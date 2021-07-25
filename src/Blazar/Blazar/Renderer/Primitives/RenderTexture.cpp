@@ -2,9 +2,7 @@
 
 #include "Blazar/Renderer/Primitives/RenderTexture.h"
 #include "Blazar/Renderer/Renderer.h"
-
 #include "Blazar/Platform/OpenGL/OpenGLRenderTexture.h"
-
 #include "Blazar/Assets/Resource.h"
 
 namespace Blazar {

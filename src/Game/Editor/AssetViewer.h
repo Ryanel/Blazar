@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "Blazar/Assets/Resource.h"
 #include "Blazar/Layer/Layer.h"
 
@@ -11,21 +13,7 @@ namespace Blazar {
 
 class AssetEditorWindow : public Blazar::Layer {
    public:
-    AssetEditorWindow() : Layer("Editor: Asset Window") {
-        m_UpdatePath = LayerUpdatePath::ImGui;
-
-        m_path_heirarchy.push_back("");
-        m_path_heirarchy.push_back("Data");
-        m_path_heirarchy.push_back("Shaders");
-
-        m_texfolder = Resource<Texture2D>("/Editor/Textures/folder.png");
-        m_texfile = Resource<Texture2D>("/Editor/Textures/file.png");
-        m_texrefresh = Resource<Texture2D>("/Editor/Textures/refresh.png");
-        m_texgear = Resource<Texture2D>("/Editor/Textures/gear.png");
-
-        m_texfile.Load();
-        m_texfolder.Load();
-    }
+    AssetEditorWindow();
     void RenderItem(std::string name, std::string path, bool isDirectory);
     void OnImGUIRender() override;
 
@@ -43,5 +31,12 @@ class AssetEditorWindow : public Blazar::Layer {
     std::unordered_map<std::string, std::string> m_current_directories;
     std::unordered_map<std::string, std::string> m_current_files;
 
-    Resource<Texture2D> m_texfolder, m_texfile, m_texrefresh, m_texgear;
+    Ref<Resource<Texture2D>> m_texfolder;
+    Ref<Resource<Texture2D>> m_texfile;
+    Ref<Resource<Texture2D>> m_texrefresh;
+    Ref<Resource<Texture2D>> m_texgear;
+
+    bool m_optionEnableThumbnails;
+    int m_numthumbsCanLoad = 2;
+    int m_optionThumbsCanLoad = 2;
 };

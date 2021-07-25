@@ -7,6 +7,7 @@
 #include "Blazar/VFS/VFSFilesystem.h"
 #include "Editor/Editor.h"
 #include "Sandbox/Sandbox.h"
+#include "Blazar/Utility/Path.h"
 
 #include "Tracy.hpp"
 
@@ -15,8 +16,8 @@ using namespace Blazar;
 class Game : public Blazar::Application {
    public:
     Game() {
-        ZoneScoped;
-
+        ZoneScoped; 
+         
         ResourceManager::Get()->m_vfs->add_mountpoint(new VFS::FileSystem("/Data/", "Contents/Data/", true));
         ResourceManager::Get()->m_vfs->add_mountpoint(new VFS::FileSystem("/Editor/", "Contents/Editor/", true));
         ResourceManager::Get()->m_vfs->refresh();

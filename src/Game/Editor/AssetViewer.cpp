@@ -9,7 +9,9 @@
 #include "Blazar/Application.h"
 #include "Blazar/Assets/ResourceManager.h"
 #include "Blazar/ImGui/CustomImGui.h"
+#include "Blazar/Renderer/Primitives/Texture.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Blazar/Utility/Path.h"
 #include "Tracy.hpp"
 
 void TextCentered(std::string text, float ctx_width, float ctx_x) {
@@ -25,21 +27,48 @@ void AssetEditorWindow::NavigateUpFolder() {
     dirty = true;
 }
 
+AssetEditorWindow::AssetEditorWindow() : Layer("Editor: Asset Window") {
+    ZoneScoped;
+    m_UpdatePath = LayerUpdatePath::ImGui;
+
+    m_path_heirarchy.push_back("");
+    m_path_heirarchy.push_back("Data");
+    m_path_heirarchy.push_back("Shaders");
+
+    m_texfolder = ResourceManager::Get()->LoadTexture("/Editor/Textures/folder.png");
+    m_texfile = ResourceManager::Get()->LoadTexture("/Editor/Textures/file.png");
+    m_texrefresh = ResourceManager::Get()->LoadTexture("/Editor/Textures/refresh.png");
+    m_texgear = ResourceManager::Get()->LoadTexture("/Editor/Textures/gear.png");
+
+    m_numthumbsCanLoad = 1;
+}
+
 void AssetEditorWindow::RenderItem(std::string name, std::string path, bool isDirectory) {
     ImTextureID id;  // Texture to show
 
     // Determine icon to show
     if (!isDirectory) {
-        id = (ImTextureID)m_texfile.data()->GetId();
+        id = (ImTextureID)m_texfile->data()->GetId();
 
-        size_t period_index = path.find_last_of(".", 0);
+        std::string_view extension = Blazar::Utility::Paths::GetExtension(path);
+        if (extension.size() > 0) {
+            if (extension.compare("png") == 0) {
+                auto* rm = ResourceManager::Get();
 
-        if (period_index != std::string_view::npos) {
-            std::string_view extension(path);
-            extension = extension.substr(period_index, extension.size() - period_index);
+                if (m_optionEnableThumbnails) {
+                    if (rm->Loaded(path)) {
+                        id = (ImTextureID)ResourceManager::Get()->LoadTexture(path)->data()->GetId();
+                    } else {
+                        if (m_numthumbsCanLoad > 0) {
+                            m_numthumbsCanLoad--;
+                            id = (ImTextureID)ResourceManager::Get()->LoadTexture(path)->data()->GetId();
+                        }
+                    }
+                }
+            }
         }
     } else {
-        id = (ImTextureID)m_texfolder.data()->GetId();
+        id = (ImTextureID)m_texfolder->data()->GetId();
     }
 
     // Draw icon
@@ -64,18 +93,22 @@ void AssetEditorWindow::OnImGUIRender() {
     if (!this->show) { return; }
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
+    m_numthumbsCanLoad = m_optionThumbsCanLoad;
+
     if (ImGui::Begin("Assets", &this->show)) {
         // Breadcrumbs
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.10f, 0.10f, 0.10f, 1.00f));
 
-        if (ImGui::BeginChild("##AssetWindowTop", ImVec2(0, 32))) {
-            if (ImGui::ImageButton((ImTextureID)m_texgear.data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
+        if (ImGui::BeginChild("##AssetWindowTop", ImVec2(0, 28))) {
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4.0f);
+            if (ImGui::ImageButton((ImTextureID)m_texgear->data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
                                    ImVec2(1, 0))) {
                 options_open = !options_open;
             }
             ImGui::SameLine();
 
-            if (ImGui::ImageButton((ImTextureID)m_texrefresh.data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
+            if (ImGui::ImageButton((ImTextureID)m_texrefresh->data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
                                    ImVec2(1.0f, 0.0f))) {
                 dirty = true;
             }
@@ -150,7 +183,15 @@ void AssetEditorWindow::OnImGUIRender() {
     // Options
     if (options_open) {
         if (ImGui::Begin("Asset Window Options", &this->options_open)) {
-            ImGui::SliderInt("Icon Size", &this->m_size, 16, 256);
+            CImGUI_Header1("Options");
+
+            CImGUI_Header2("Thumbnails");
+
+            ImGui::SliderInt("Icon Size", &this->m_size, 64, 512);
+            ImGui::Checkbox("Enable Thumbnails", &this->m_optionEnableThumbnails);
+            ImGui::SliderInt("Thumbnails to load per frame", &this->m_optionThumbsCanLoad, 0, 3);
+            CImGUI_Header2("Development");
+            if (ImGui::Button("Clean")) { ResourceManager::Get()->Clean(); }
         }
         ImGui::End();
     }

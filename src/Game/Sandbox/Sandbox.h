@@ -24,7 +24,7 @@ class Sandbox : public Blazar::Layer {
    private:
     Blazar::Ref<VertexArray> m_squareVAO;
     Blazar::Ref<Shader> m_shader;
-    Blazar::Resource<Texture2D> m_texture;
+    Ref<Blazar::Resource<Texture2D>> m_texture;
     Blazar::Ref<OrthographicCamera> m_cameraController;
 };
 }  // namespace Blazar

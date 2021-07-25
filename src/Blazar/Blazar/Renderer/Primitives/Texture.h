@@ -10,10 +10,13 @@ enum class TextureWrappingMode { Clamp, Repeat };
 /// The texture filtering mode, how smooth or pixilated the texture is
 enum class TextureFilterMode { None, Bilinear };
 
+enum class TextureSourceType { RAW_32BIT_RGBA, PNG };
+
 struct TextureProperties {
     TextureWrappingMode wrap_x = TextureWrappingMode::Clamp;
     TextureWrappingMode wrap_y = TextureWrappingMode::Clamp;
-    TextureFilterMode filtering = TextureFilterMode::None;
+    TextureFilterMode filtering = TextureFilterMode::Bilinear;
+    TextureSourceType source_type = TextureSourceType::PNG;
 };
 
 class Texture {

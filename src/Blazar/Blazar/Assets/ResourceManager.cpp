@@ -9,7 +9,7 @@ ResourceManager* g_resourceManager;
 
 ResourceManager::ResourceManager() { m_vfs = new VFS::VFS(); }
 
-bool ResourceManager::ReadFileFromPath(std::string_view path, std::vector<std::byte>& outBuffer) {
+bool ResourceManager::ReadFromVFS(std::string_view path, std::vector<std::byte>& outBuffer) {
     ZoneScoped;
 
     if (m_vfs->exists(std::string(path))) {
