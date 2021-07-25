@@ -8,10 +8,11 @@
 
 namespace Blazar {
 
+    /*
 Texture2D* LoadResource(Resource<Texture2D>& resource, TextureProperties properties) {
     ZoneScopedN("Load Resource (Specific)");
     std::vector<std::byte> data;
-    if (ResourceManager::Get()->ReadFromVFS(resource.GetPath(), data)) {
+    if (ResourceManager::Get()->ReadFromVFS(resource.path(), data)) {
         switch (Renderer::GetAPI()) {
             case RendererAPI::API::OpenGL:
                 return OpenGLTexture2D::FromData(data, properties);
@@ -24,10 +25,10 @@ Texture2D* LoadResource(Resource<Texture2D>& resource, TextureProperties propert
         }
         return nullptr;
     } else {
-        LOG_CORE_INFO("Failed to load Texture {}!", resource.GetPath());
+        LOG_CORE_INFO("Failed to load Texture {}!", resource.path());
     }
 
     return nullptr;
 }
-
+*/
 }  // namespace Blazar

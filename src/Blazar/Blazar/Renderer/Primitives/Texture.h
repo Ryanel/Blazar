@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include "Blazar/Memory.h"
+#include "Blazar/Assets/Resource.h"
 
 namespace Blazar {
 
@@ -33,6 +35,7 @@ class Texture2D : public Texture {
    public:
     // Factory method
     static Ref<Texture> Create(const std::string& path, const TextureProperties& properties = TextureProperties());
+    static Ref<Resource<Texture2D>> Load(const std::string& path, TextureProperties props = TextureProperties());
 };
 
 };  // namespace Blazar

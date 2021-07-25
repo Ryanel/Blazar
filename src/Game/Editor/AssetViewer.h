@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 
+#include "Blazar/Renderer/Primitives/Texture.h"
 #include "Blazar/Assets/Resource.h"
 #include "Blazar/Layer/Layer.h"
 
@@ -36,7 +37,7 @@ class AssetEditorWindow : public Blazar::Layer {
     Ref<Resource<Texture2D>> m_texrefresh;
     Ref<Resource<Texture2D>> m_texgear;
 
-    bool m_optionEnableThumbnails;
+    bool m_optionEnableThumbnails = true;
     int m_numthumbsCanLoad = 2;
     int m_optionThumbsCanLoad = 2;
 };

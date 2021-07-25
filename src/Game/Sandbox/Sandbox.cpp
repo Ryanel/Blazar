@@ -40,7 +40,7 @@ void Sandbox::OnAttach() {
     uint32_t sqr_indicies[6] = {0, 1, 2, 2, 3, 0};
 
     Ref<VertexBuffer> sqr_vbo = VertexBuffer::Create(sqr_verts, sizeof(sqr_verts), sqr_layout);
-    Ref<IndexBuffer> sqr_ibo = IndexBuffer::Create(sqr_indicies, sizeof(sqr_indicies));
+    Ref<IndexBuffer> sqr_ibo  = IndexBuffer::Create(sqr_indicies, sizeof(sqr_indicies));
 
     m_squareVAO = VertexArray::Create(sqr_vbo, sqr_ibo);
     m_squareVAO->Bind();
@@ -52,7 +52,7 @@ void Sandbox::OnAttach() {
 
     Blazar::TextureProperties texprops;
     texprops.filtering = TextureFilterMode::None;
-    m_texture = ResourceManager::Get()->LoadTexture("/Data/Textures/SampleTrans.png", texprops);
+    m_texture          = Texture2D::Load("/Data/Textures/SampleTrans.png", texprops);
 
     // Camera
     auto& gameWindow = Application::Get().GetWindow();
