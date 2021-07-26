@@ -1,7 +1,10 @@
 #pragma once
 
 #include <deque>
+#include <mutex>
 #include "Blazar/Config.h"
+#include "Blazar/Memory.h"
+#include "Blazar/Renderer/Primitives/Shader.h"
 #include "RendererAPI.h"
 
 namespace Blazar {
@@ -23,6 +26,10 @@ class Renderer {
 
     static void Submit(RenderCommand& command);   ///< Submits a renderer command
     static void Submit(RenderCommand&& command);  ///< Submits a renderer command
+
+    /// Submits a list of render commands. The commands vector is copied into the render queue. This function locks the
+    /// queue, so all commands are guarenteed to be next to eachother.
+    static void SubmitList(std::vector<RenderCommand>& commands);
 
     /// Flushes the Render Queue, processing commands, and calling the Graphics card
     static void FlushQueue();
@@ -46,5 +53,10 @@ class Renderer {
     static RendererState m_CurrentState;
 
     static RendererStats m_stats;
+
+    static Ref<Shader> m_fullscreenShader;
+    static std::mutex  m_QueueLock;
+
+   private:
 };
 }  // namespace Blazar

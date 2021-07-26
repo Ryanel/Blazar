@@ -11,7 +11,7 @@ using namespace Blazar;
 
 class RenderListWindowLayer : public Blazar::Layer {
    public:
-    bool show = false;
+    bool show = true;
     int selected = -1;
     RenderListWindowLayer() : Layer("Editor: Render Lists") { m_UpdatePath = LayerUpdatePath::ImGui; }
     void ListItemRenderItem(RenderCommand& item, int index);

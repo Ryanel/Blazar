@@ -94,7 +94,7 @@ void FileSystem::cache_file(std::string path) {
             if (!ifs.read((char*)val->data.data(), val->data.size()))
                 throw std::runtime_error(fpath.string() + ": " + std::strerror(errno));
 
-            LOG_CORE_TRACE("FileSystem: CACHE {} (at real path {}). Size={}", path, val->realPath, val->size);
+            LOG_CORE_TRACE("FileSystem: CACHE {} ({} kb)", path, val->size / 1024);
         }
     } else {
         throw;  // Should not happen!

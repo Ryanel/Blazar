@@ -10,6 +10,7 @@
 #include "Blazar/Renderer/Primitives/RenderTexture.h"
 
 #include "Editor/AssetViewer.h"
+#include "Blazar/Simulation/SimulationStatsWindow.h"
 #include "Editor/DebugLayers.h"
 #include "Editor/FPSWidget.h"
 #include "Tracy.hpp"
@@ -31,7 +32,7 @@ void Editor::Setup() {
     app.PushLayer(new ImGUILogWindowLayer());
     app.PushLayer(new AssetEditorWindow());
     app.PushLayer(new FPSWidgetWindowLayer());
-
+    app.PushLayer(new SimulationStatsWindow());
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
     app.PushLayer(new RenderListWindowLayer());
     app.PushLayer(new LayerEditorWindow());

@@ -17,9 +17,10 @@ class Game : public Blazar::Application {
     Game() {
         ZoneScoped;
 
-        ResourceManager::Get()->m_vfs->add_mountpoint(new VFS::FileSystem("/Data/", "Contents/Data/", true));
-        ResourceManager::Get()->m_vfs->add_mountpoint(new VFS::FileSystem("/Editor/", "Contents/Editor/", true));
-        ResourceManager::Get()->m_vfs->refresh();
+        auto* rm = ResourceManager::Get();
+        rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Data/", "Contents/Data/", true));
+        rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Editor/", "Contents/Editor/", true));
+        rm->m_vfs->refresh();
 
         Editor* editor = new Editor();
         PushLayer(editor);

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Blazar/Memory.h"
-#include "Blazar/Layer/Layer.h"
 #include "Blazar/Assets/Resource.h"
+#include "Blazar/Layer/Layer.h"
+#include "Blazar/Memory.h"
+#include "Blazar/Renderer/Primitives/Quad.h"
 
 namespace Blazar {
 
@@ -16,15 +17,14 @@ class Sandbox : public Blazar::Layer {
     Sandbox() : Blazar::Layer("Sandbox") { m_UpdatePath = LayerUpdatePath::UpdateRender; }
     virtual void OnAttach() override;
     virtual void OnDetached() override;
-
-    void OnUpdate(Blazar::Timestep ts) override;
-    void OnRender(Blazar::Timestep ts) override;
+    void         OnUpdate(Blazar::Timestep ts) override;
+    void         OnRender(Blazar::Timestep ts) override;
     virtual void OnImGUIRender() override;
 
    private:
-    Blazar::Ref<VertexArray> m_squareVAO;
-    Blazar::Ref<Shader> m_shader;
+    Blazar::Ref<Shader>              m_shader;
     Ref<Blazar::Resource<Texture2D>> m_texture;
-    Blazar::Ref<OrthographicCamera> m_cameraController;
+    Blazar::Ref<Quad>                m_quad = nullptr;
+    Blazar::Ref<OrthographicCamera>  m_cameraController;
 };
 }  // namespace Blazar

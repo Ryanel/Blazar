@@ -131,7 +131,7 @@ void AssetEditorWindow::OnImGUIRender() {
                 if (i == 0) { name = "Root"; }
 
                 if (ImGui::Button(name.c_str())) {
-                    for (size_t numbacks = numback - 1; numbacks >= 0; numbacks--) {
+                    for (int numbacks = numback - 1; numbacks >= 0; numbacks--) {
                         m_path_heirarchy.pop_back();
                         dirty = true;
                     }

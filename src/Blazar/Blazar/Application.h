@@ -1,5 +1,7 @@
 #pragma once
 
+#include <condition_variable>
+#include <mutex>
 #include "Blazar/Core.h"
 #include "Blazar/Layer/LayerStack.h"
 #include "Blazar/Time/Timestep.h"
@@ -20,6 +22,7 @@ class Application {
     void Run();                      ///< Main run loop
     void PushLayer(Layer* layer);    ///< Pushes a layer to the application
     void PushOverlay(Layer* layer);  ///< Pushes an overlay layer to the application
+    void UpdateThread();
 
     /// Gets the main window
     inline Window& GetWindow() { return *m_Window; }
@@ -41,6 +44,9 @@ class Application {
    private:
     static Application* s_Instance;
     ImGuiLayer* m_ImGui;
+    std::condition_variable m_updateThreadSignal;
+    std::mutex m_updateThreadLock;
+    bool m_updateThreadCanWork = false;
 };
 
 }  // namespace Blazar

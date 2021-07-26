@@ -17,33 +17,38 @@
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/RenderCommand.h"
 #include "Blazar/Renderer/Renderer.h"
+#include "Blazar/Simulation/Simulation.h"
 #include "Blazar/VFS/VFSFilesystem.h"
 #include "Tracy.hpp"
+
+#include "Blazar/Component/MeshComponent.h"
+#include "Blazar/Component/RenderTransform.h"
+#include "Components/Transform.h"
 
 namespace Blazar {
 
 void Sandbox::OnAttach() {
     ZoneScoped;
     // Square
-    BufferLayout sqr_layout = {
-        {ShaderDataType::Float3, "a_Position"},  // 00: Position
-        {ShaderDataType::Float2, "a_TexCoord"},  // 12: Color
-    };
 
-    float sqr_verts[5 * 4] = {
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,  // v0
-        0.5f,  -0.5f, 0.0f, 1.0f, 0.0f,  // v1
-        0.5f,  0.5f,  0.0f, 1.0f, 1.0f,  // v2,
-        -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,  // v3,
-    };
+    Application& app = Application::Get();
+    auto&        sim = app.m_Simulation;
+    sim->world.prepare<Transform>();
+    sim->world.prepare<Blazar::MeshComponent>();
+    sim->world.prepare<Blazar::RenderTransform>();
+    m_quad = std::make_shared<Quad>();
 
-    uint32_t sqr_indicies[6] = {0, 1, 2, 2, 3, 0};
+    entt::entity entity = sim->world.create();
 
-    Ref<VertexBuffer> sqr_vbo = VertexBuffer::Create(sqr_verts, sizeof(sqr_verts), sqr_layout);
-    Ref<IndexBuffer> sqr_ibo  = IndexBuffer::Create(sqr_indicies, sizeof(sqr_indicies));
+    sim->world.emplace<Transform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
+    sim->world.emplace<Blazar::MeshComponent>(entity, m_quad->vao);
+    sim->world.emplace<Blazar::RenderTransform>(entity , glm::vec3(-0.75f, 0.0f, 0.0f));
 
-    m_squareVAO = VertexArray::Create(sqr_vbo, sqr_ibo);
-    m_squareVAO->Bind();
+    entt::entity entity2 = sim->world.create();
+
+    sim->world.emplace<Transform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
+    sim->world.emplace<Blazar::MeshComponent>(entity2, m_quad->vao);
+    sim->world.emplace<Blazar::RenderTransform>(entity2 , glm::vec3(0.75f, 0.0f, 0.0f));
 
     m_shader = Shader::FromFile("Contents/Data/Shaders/Simple");
     m_shader->SetName("Simple");
@@ -62,26 +67,29 @@ void Sandbox::OnAttach() {
 }
 
 void Sandbox::OnDetached() {}
-
-void Sandbox::OnUpdate(Blazar::Timestep ts) { ZoneScoped; }
-
+void Sandbox::OnUpdate(Blazar::Timestep ts) {}
 void Sandbox::OnRender(Blazar::Timestep ts) {
-    ZoneScoped;
-    glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), {0, 0, 0});
-    m_cameraController->SetViewport(Application::Get().m_RenderViewport);
+    Application& app  = Application::Get();
+    auto&        sim  = app.m_Simulation;
+    auto         view = sim->world.view<Blazar::RenderTransform, Blazar::MeshComponent>();
+    m_cameraController->SetViewport(app.m_RenderViewport);
 
-    RenderCmd::BeginPass();
-    RenderCmd::PassSetCamera(m_cameraController);
-    {
-        RenderCmd::SetShader(m_shader);
-        RenderCmd::UploadCameraProps();
-        RenderCmd::SetShaderMat4("u_Transform", sqr_pos);
-        RenderCmd::BindTexture(m_texture->data());
-        RenderCmd::DrawIndexed(m_squareVAO);
+
+
+    for (auto e : view) {
+        auto [transform, mesh] = view.get(e);
+        glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), transform.position);
+
+        RENDER_SUBMIT(RenderCmd::BeginPass());
+        RENDER_SUBMIT(RenderCmd::PassSetCamera(m_cameraController));
+        RENDER_SUBMIT(RenderCmd::SetShader(m_shader));
+        RENDER_SUBMIT(RenderCmd::UploadCameraProps());
+        RENDER_SUBMIT(RenderCmd::SetShaderMat4("u_Transform", sqr_pos));
+        RENDER_SUBMIT(RenderCmd::BindTexture(m_texture->data()));
+        RENDER_SUBMIT(RenderCmd::DrawIndexed(mesh.mesh));
+        RENDER_SUBMIT(RenderCmd::EndPass());
     }
-    RenderCmd::EndPass();
 }
-
 void Sandbox::OnImGUIRender() { ZoneScoped; }
 
 }  // namespace Blazar
