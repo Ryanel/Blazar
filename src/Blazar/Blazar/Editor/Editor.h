@@ -1,19 +1,18 @@
 #pragma once
 #include <vector>
 
-#include "Blazar/Layer/Layer.h"
 #include "EditorWindow.h"
 
 namespace Blazar {
 namespace Editor {
 
-class Editor : public Blazar::Layer {
+class Editor {
    public:
     Editor();
-    virtual void OnAttach() override;
-    virtual void OnDetached() override;
-    virtual void OnImGUIRender() override;
-    void         Setup();
+    void OnAttach();
+    void OnDetached();
+    void OnImGUIRender();
+    void Setup();
 
     std::vector<EditorWindow*> m_windows;
 

@@ -3,9 +3,8 @@
 #include <unordered_map>
 
 #include "Blazar/Assets/Resource.h"
-#include "Blazar/Layer/Layer.h"
-#include "Blazar/Renderer/Primitives/Texture.h"
 #include "Blazar/Editor/EditorWindow.h"
+#include "Blazar/Renderer/Primitives/Texture.h"
 
 namespace Blazar {
 class Texture2D;

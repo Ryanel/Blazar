@@ -11,11 +11,17 @@ namespace Blazar {
 void Simulation::Init() { quad = new Quad(); }
 void Simulation::Tick(float timestep) {
     ZoneScoped;
+    Application& app = Application::Get();
     // NOTE: This is run on the Update Thread, not the Main Thread!
 
     int ticks = UpdateTime(timestep);
     m_ticks += ticks;
     // Tick each system
+
+    if (ticks > 0) {
+        //
+        app.OnUpdate();
+    }
 }
 
 void Simulation::Render(float timestep) {
@@ -25,8 +31,6 @@ void Simulation::Render(float timestep) {
 
     Application& app = Application::Get();
     // Preparation
-
-    // Render Game
 
     // Clear the screen
     Renderer::ResetStats();
@@ -42,13 +46,8 @@ void Simulation::Render(float timestep) {
 
     cmds.clear();
 
-    // Update all layers
-    {
-        ZoneScopedN("Layer Render");
-        for (Layer* layer : app.m_LayerStack) {
-            if (((int)layer->m_UpdatePath & (int)LayerUpdatePath::Render) != 0) { layer->OnRender(app.m_deltaTime); }
-        }
-    }
+    // Render Game
+    app.OnRender();
 
     cmds.emplace_back(RenderCmd::SetRenderTexture(nullptr));
 

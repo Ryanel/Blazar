@@ -5,7 +5,6 @@
 #include "Blazar/Config.h"
 #include "Blazar/Core.h"
 #include "Blazar/Input/Input.h"
-#include "Blazar/Layer/Layer.h"
 #include "Blazar/Log.h"
 
 // External libraries

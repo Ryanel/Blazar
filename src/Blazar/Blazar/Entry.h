@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Blazar/Application.h"
+
 namespace Blazar {
 extern Application* CreateApplication();
 }

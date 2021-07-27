@@ -1,13 +1,15 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include "Blazar/Renderer/Primitives/VertexArray.h"
 #include "Blazar/Memory.h"
+#include "Blazar/Renderer/Primitives/VertexArray.h"
 
 namespace Blazar {
+namespace Components {
 
+/// Reference to a mesh
 struct MeshComponent {
-	Ref<VertexArray> mesh;
+    Ref<VertexArray> mesh;
 };
 
+}  // namespace Components
 }  // namespace Blazar

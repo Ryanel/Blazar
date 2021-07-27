@@ -1,22 +1,17 @@
 #pragma once
 
 #ifdef BLAZAR_IMGUI_ENABLED
-
-#include "Blazar/Layer/Layer.h"
-
 namespace Blazar {
-class BLAZAR_API ImGuiLayer : public Layer {
+class ImGuiLayer {
    public:
     ImGuiLayer();
     virtual ~ImGuiLayer();
 
-    void OnAttach() override;
-    void OnDetached() override;
+    void OnAttach();
+    void OnDetached();
 
     void Begin();
     void End(bool draw = true);
-
-    inline const std::string& GetName() const { return m_DebugName; }
 
    private:
     float m_Time = 0;

@@ -1,6 +1,7 @@
 #include "bzpch.h"
 
 #include "Blazar/Application.h"
+#include "Blazar/Editor/Editor.h"
 #include "Blazar/ImGui/ImGuiLayer.h"
 #include "Blazar/Input/Input.h"
 #include "Blazar/Input/Keymap.h"
@@ -30,7 +31,8 @@ Application::Application() {
     m_Simulation = std::make_shared<Simulation>();
     Renderer::Init(RendererAPI::API::OpenGL);
 
-    m_ImGui          = new ImGuiLayer();
+    m_ImGui = new ImGuiLayer();
+    m_ImGui->OnAttach();
     m_RenderViewport = std::make_shared<Viewport>(0, 0, 32, 32);
 
     RenderTextureProperties renderProperties;
@@ -40,14 +42,9 @@ Application::Application() {
 
     m_GameRenderTexture = RenderTexture::Create(renderProperties);
     m_Simulation->Init();
-
-    PushOverlay(m_ImGui);
 }
 
 Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
-
-void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
-void Application::PushOverlay(Layer* layer) { m_LayerStack.PushOverlay(layer); }
 
 void Application::UpdateThread() {
     tracy::SetThreadName("Update Thread");
@@ -61,14 +58,6 @@ void Application::UpdateThread() {
             ZoneScopedN("Update");
 
             if (Input::KeyDown(BLAZAR_KEY_GRAVE_ACCENT)) { m_RenderImGui = !m_RenderImGui; }
-            {
-                ZoneScopedN("Layer Update");
-                for (Layer* layer : m_LayerStack) {
-                    if (((int)layer->m_UpdatePath & (int)LayerUpdatePath::Update) != 0) {
-                        layer->OnUpdate(m_deltaTime);
-                    }
-                }
-            }
 
             m_Simulation->Tick(m_deltaTime);
             m_Simulation->Render(m_deltaTime);
@@ -119,7 +108,7 @@ void Application::Run() {
                 {
                     ZoneScopedN("ImGUI");
                     m_ImGui->Begin();
-                    for (Layer* layer : m_LayerStack) { layer->OnImGUIRender(); }
+                    m_editor->OnImGUIRender();
                     m_ImGui->End(m_RenderImGui);
                 }
             }
@@ -134,9 +123,7 @@ void Application::Run() {
         FrameMark;
 
         // Wait for the update thread to finish (not letting it cross frames!)
-        while (m_updateThreadCanWork != false) {
-            std::this_thread::yield();
-        }
+        while (m_updateThreadCanWork != false) { std::this_thread::yield(); }
         m_updateThreadCanWork = true;
         m_deltaTime           = frameTimer.Elapsed();
     }

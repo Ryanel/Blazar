@@ -9,15 +9,11 @@
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/ImGui/ImGuiLayer.h"
-#include "Blazar/Layer/Layer.h"
 
 #include "Tracy.hpp"
 
 namespace Blazar {
-ImGuiLayer::ImGuiLayer() : Layer("ImGUI") {
-    this->m_DebugName = "ImGUI";
-    m_UpdatePath = LayerUpdatePath::ImGui;
-}
+ImGuiLayer::ImGuiLayer() {}
 
 ImGuiLayer::~ImGuiLayer() {}
 

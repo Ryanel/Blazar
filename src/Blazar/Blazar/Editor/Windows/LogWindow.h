@@ -1,7 +1,6 @@
 #pragma once
 
 #include <spdlog/spdlog.h>
-#include "Blazar/Layer/Layer.h"
 #include "Blazar/Log.h"
 #include "Blazar/Editor/EditorWindow.h"
 

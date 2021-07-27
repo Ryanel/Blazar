@@ -14,8 +14,6 @@
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/ImGui/ImGuiLayer.h"
-#include "Blazar/Layer/Layer.h"
-
 #include "Tracy.hpp"
 
 namespace Blazar {

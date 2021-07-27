@@ -6,19 +6,19 @@
 
 // Standard library
 #include <cstdint>
+#include <deque>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <memory>
+#include <optional>
+#include <sstream>
 #include <string>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
-#include <sstream>
-#include <fstream>
-#include <tuple>
-#include <optional>
-#include <deque>
 
 // Blazar specific
 #include <Blazar/Core.h>
