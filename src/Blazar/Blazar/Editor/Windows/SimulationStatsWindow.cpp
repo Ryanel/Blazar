@@ -1,13 +1,14 @@
 #include "bzpch.h"
 
+#include "Blazar/Editor/Windows/SimulationStatsWindow.h"
+
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/Simulation/Simulation.h"
-#include "Blazar/Simulation/SimulationStatsWindow.h"
 #include "Tracy.hpp"
 
 namespace Blazar {
-
+    namespace Editor {
 void SimulationStatsWindow::OnImGUIRender() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("[Development]", "Simulation Stats", "", this->show, true);
@@ -31,4 +32,6 @@ void SimulationStatsWindow::OnImGUIRender() {
     }
     ImGui::End();
 }
+
+    }
 }  // namespace Blazar

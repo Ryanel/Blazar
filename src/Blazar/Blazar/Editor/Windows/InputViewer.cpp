@@ -1,3 +1,5 @@
+#include "bzpch.h"
+
 #include "InputViewer.h"
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
@@ -6,8 +8,10 @@
 #include "Blazar/Input/Input.h"
 #include "Blazar/Input/Keymap.h"
 #include "Blazar/Renderer/Renderer.h"
-#include "DebugLayers.h"
 #include "Tracy.hpp"
+
+namespace Blazar {
+namespace Editor {
 
 void InputEditorWindow::OnImGUIRender() {
     ZoneScoped;
@@ -36,5 +40,8 @@ void InputEditorWindow::OnImGUIRender() {
     }
     ImGui::End();
 }
+
+}  // namespace Editor
+}  // namespace Blazar
 
 #endif

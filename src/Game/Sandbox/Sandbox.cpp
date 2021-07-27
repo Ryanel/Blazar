@@ -42,13 +42,13 @@ void Sandbox::OnAttach() {
 
     sim->world.emplace<Transform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
     sim->world.emplace<Blazar::MeshComponent>(entity, m_quad->vao);
-    sim->world.emplace<Blazar::RenderTransform>(entity , glm::vec3(-0.75f, 0.0f, 0.0f));
+    sim->world.emplace<Blazar::RenderTransform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
 
     entt::entity entity2 = sim->world.create();
 
     sim->world.emplace<Transform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
     sim->world.emplace<Blazar::MeshComponent>(entity2, m_quad->vao);
-    sim->world.emplace<Blazar::RenderTransform>(entity2 , glm::vec3(0.75f, 0.0f, 0.0f));
+    sim->world.emplace<Blazar::RenderTransform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
 
     m_shader = Shader::FromFile("Contents/Data/Shaders/Simple");
     m_shader->SetName("Simple");
@@ -74,11 +74,9 @@ void Sandbox::OnRender(Blazar::Timestep ts) {
     auto         view = sim->world.view<Blazar::RenderTransform, Blazar::MeshComponent>();
     m_cameraController->SetViewport(app.m_RenderViewport);
 
-
-
     for (auto e : view) {
         auto [transform, mesh] = view.get(e);
-        glm::mat4 sqr_pos = glm::translate(glm::mat4(1.0f), transform.position);
+        glm::mat4 sqr_pos      = glm::translate(glm::mat4(1.0f), transform.position);
 
         RENDER_SUBMIT(RenderCmd::BeginPass());
         RENDER_SUBMIT(RenderCmd::PassSetCamera(m_cameraController));

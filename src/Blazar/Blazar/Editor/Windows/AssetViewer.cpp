@@ -1,3 +1,7 @@
+#include "bzpch.h"
+
+#include <imgui.h>
+
 #include "AssetViewer.h"
 
 #include <imgui.h>
@@ -14,9 +18,12 @@
 #include "Blazar/Utility/Path.h"
 #include "Tracy.hpp"
 
+namespace Blazar {
+namespace Editor {
+
 void TextCentered(std::string text, float ctx_width, float ctx_x) {
     auto windowWidth = ctx_width;
-    auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+    auto textWidth   = ImGui::CalcTextSize(text.c_str()).x;
 
     ImGui::SetCursorPosX(ctx_x + ((windowWidth - textWidth) * 0.5f));
     ImGui::Text(text.c_str());
@@ -27,18 +34,17 @@ void AssetEditorWindow::NavigateUpFolder() {
     dirty = true;
 }
 
-AssetEditorWindow::AssetEditorWindow() : Layer("Editor: Asset Window") {
+AssetEditorWindow::AssetEditorWindow() : EditorWindow("Editor: Asset Window") {
     ZoneScoped;
-    m_UpdatePath = LayerUpdatePath::ImGui;
 
     m_path_heirarchy.push_back("");
     m_path_heirarchy.push_back("Data");
     m_path_heirarchy.push_back("Shaders");
 
-    m_texfolder = Texture2D::Load("/Editor/Textures/folder.png");
-    m_texfile = Texture2D::Load("/Editor/Textures/file.png");
+    m_texfolder  = Texture2D::Load("/Editor/Textures/folder.png");
+    m_texfile    = Texture2D::Load("/Editor/Textures/file.png");
     m_texrefresh = Texture2D::Load("/Editor/Textures/refresh.png");
-    m_texgear = Texture2D::Load("/Editor/Textures/gear.png");
+    m_texgear    = Texture2D::Load("/Editor/Textures/gear.png");
 
     m_numthumbsCanLoad = 1;
 }
@@ -153,7 +159,7 @@ void AssetEditorWindow::OnImGUIRender() {
 
         // Render
         float ColumnSize = ImGui::GetWindowWidth() / (m_size + m_padding);
-        int columns = (int)ceil(ColumnSize);
+        int   columns    = (int)ceil(ColumnSize);
 
         if (columns > 64) { columns = 64; }
         if (columns < 2) { columns = 2; }
@@ -209,8 +215,8 @@ void AssetEditorWindow::OnImGUIRender() {
 
 void AssetEditorWindow::Refresh() {
     ZoneScoped;
-    auto& vfs = ResourceManager::Get()->m_vfs;
-    auto list = vfs->filelist();
+    auto&  vfs    = ResourceManager::Get()->m_vfs;
+    auto   list   = vfs->filelist();
     size_t levels = m_path_heirarchy.size();
 
     m_current_directories.clear();
@@ -219,8 +225,8 @@ void AssetEditorWindow::Refresh() {
     // Discovery
     for (auto item : list) {
         std::string currentString = item;
-        std::string originalPath = item;
-        bool matched = false;
+        std::string originalPath  = item;
+        bool        matched       = false;
         for (size_t i = 0; i < levels; i++) {
             size_t index = currentString.find('/', 0);
 
@@ -242,8 +248,8 @@ void AssetEditorWindow::Refresh() {
         }
 
         if (matched) {
-            size_t index = currentString.find('/', 0);
-            bool isFile = index == std::string::npos;
+            size_t index  = currentString.find('/', 0);
+            bool   isFile = index == std::string::npos;
             if (!isFile) {
                 currentString.erase(currentString.begin() + index, currentString.end());
 
@@ -257,3 +263,6 @@ void AssetEditorWindow::Refresh() {
         }
     }
 }
+
+}  // namespace Editor
+}  // namespace Blazar

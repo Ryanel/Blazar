@@ -6,7 +6,7 @@
 #include "Blazar/Entry.h"
 #include "Blazar/Utility/Path.h"
 #include "Blazar/VFS/VFSFilesystem.h"
-#include "Editor/Editor.h"
+#include "Blazar/Editor/Editor.h"
 #include "Sandbox/Sandbox.h"
 #include "Tracy.hpp"
 
@@ -22,7 +22,7 @@ class Game : public Blazar::Application {
         rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Editor/", "Contents/Editor/", true));
         rm->m_vfs->refresh();
 
-        Editor* editor = new Editor();
+        Editor::Editor* editor = new Editor::Editor();
         PushLayer(editor);
         PushLayer(new Sandbox());
 

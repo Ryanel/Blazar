@@ -1,3 +1,5 @@
+#include "bzpch.h"
+
 #include "RenderListViewer.h"
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
@@ -5,12 +7,13 @@
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/Renderer/Renderer.h"
-#include "DebugLayers.h"
 #include "Tracy.hpp"
 
+namespace Blazar {
+namespace Editor {
 void RenderListWindowLayer::ListItemRenderItem(RenderCommand& item, int index) {
-    bool isSelected = selected == index;
-    std::string str = fmt::format("{}: {}", index, RenderCommand_GetString(item.m_id));
+    bool        isSelected = selected == index;
+    std::string str        = fmt::format("{}: {}", index, RenderCommand_GetString(item.m_id));
     if (ImGui::Selectable(str.c_str(), &isSelected)) { selected = index; }
 }
 
@@ -50,9 +53,9 @@ void RenderListWindowLayer::OnImGUIRender() {
             // through each action
 
             // State
-            Ref<Shader> stateShader = nullptr;
+            Ref<Shader>        stateShader    = nullptr;
             Ref<RenderTexture> stateRenderTex = nullptr;
-            Blazar::Rectangle stateViewport = Blazar::Rectangle();
+            Blazar::Rectangle  stateViewport  = Blazar::Rectangle();
 
             int index = 0;
 
@@ -108,5 +111,7 @@ void RenderListWindowLayer::OnImGUIRender() {
     }
     ImGui::End();
 }
+}  // namespace Editor
+}  // namespace Blazar
 
 #endif

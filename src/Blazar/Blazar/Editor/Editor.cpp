@@ -1,3 +1,5 @@
+#include "bzpch.h"
+
 #include "Editor.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -5,38 +7,38 @@
 
 #include "Blazar/Application.h"
 #include "Blazar/Config.h"
-#include "Blazar/ImGui/ImGuiLog.h"
-#include "Blazar/Renderer/Renderer.h"
 #include "Blazar/Renderer/Primitives/RenderTexture.h"
+#include "Blazar/Renderer/Renderer.h"
 
-#include "Editor/AssetViewer.h"
-#include "Blazar/Simulation/SimulationStatsWindow.h"
-#include "Editor/DebugLayers.h"
-#include "Editor/FPSWidget.h"
-#include "Tracy.hpp"
+// Windows
+#include "Blazar/Editor/Windows/AssetViewer.h"
+#include "Blazar/Editor/Windows/FPSWidget.h"
+#include "Blazar/Editor/Windows/LogWindow.h"
+#include "Blazar/Editor/Windows/SimulationStatsWindow.h"
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
-#include "Editor/InputViewer.h"
-#include "Editor/LayerViewer.h"
-#include "Editor/RenderListViewer.h"
+#include "Blazar/Editor/Windows/InputViewer.h"
+#include "Blazar/Editor/Windows/LayerViewer.h"
+#include "Blazar/Editor/Windows/RenderListViewer.h"
 #endif
 
-namespace Blazar {
+#include "Tracy.hpp"
 
+namespace Blazar {
+namespace Editor {
 Editor::Editor() : Layer("Editor: Main") { m_UpdatePath = LayerUpdatePath::ImGui; }
 
 void Editor::Setup() {
     // Add layers after this one here
     auto& app = Application::Get();
-    // app.PushLayer(new ImGUIFPSWindowLayer());
-    app.PushLayer(new ImGUIDemoWindowLayer());
-    app.PushLayer(new ImGUILogWindowLayer());
-    app.PushLayer(new AssetEditorWindow());
-    app.PushLayer(new FPSWidgetWindowLayer());
-    app.PushLayer(new SimulationStatsWindow());
+
+    m_windows.push_back(new LogWindow());
+    m_windows.push_back(new AssetEditorWindow());
+    m_windows.push_back(new FPSWidgetWindowLayer());
+    m_windows.push_back(new SimulationStatsWindow());
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
-    app.PushLayer(new RenderListWindowLayer());
-    app.PushLayer(new LayerEditorWindow());
-    app.PushLayer(new InputEditorWindow());
+    m_windows.push_back(new RenderListWindowLayer());
+    m_windows.push_back(new LayerEditorWindow());
+    m_windows.push_back(new InputEditorWindow());
 #endif
 }
 
@@ -64,12 +66,12 @@ void Editor::OnImGUIRender() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     if (app.m_UseEditorWindow) {
         if (ImGui::Begin("Game", &app.m_UseEditorWindow, ImGuiWindowFlags_NoBackground)) {
-            auto gameSize = ImGui::GetContentRegionAvail();
-            auto gamePos = ImGui::GetWindowPos();
+            auto gameSize           = ImGui::GetContentRegionAvail();
+            auto gamePos            = ImGui::GetWindowPos();
             app.m_RenderViewport->x = gamePos.x;
             app.m_RenderViewport->y = gamePos.y;
 
-            app.m_RenderViewport->width = gameSize.x;
+            app.m_RenderViewport->width  = gameSize.x;
             app.m_RenderViewport->height = gameSize.y;
 
             ImGui::Image((ImTextureID)app.m_GameRenderTexture->m_ColorTexture->GetId(), gameSize, ImVec2(0, 1),
@@ -83,6 +85,9 @@ void Editor::OnImGUIRender() {
         if (ImGui::Begin("Style Editor", &m_showImGuiStyleEditor)) { ImGui::ShowStyleEditor(); }
         ImGui::End();
     }
+
+    for (auto* x : m_windows) { x->OnImGUIRender(); }
 }
 
+}  // namespace Editor
 }  // namespace Blazar

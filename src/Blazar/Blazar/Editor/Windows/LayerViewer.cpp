@@ -1,10 +1,16 @@
+#include "bzpch.h"
+
 #include "LayerViewer.h"
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
+#include "Blazar/Layer/Layer.h"
 #include "Tracy.hpp"
 
+namespace Blazar {
+
+namespace Editor {
 void LayerEditorWindow::RenderTable(LayerUpdatePath path) {
     if (ImGui::BeginTable("##LayerList", 2, ImGuiTableFlags_SizingStretchSame)) {
         ImGui::TableSetupColumn("Layer Order", 0, 1.0f);
@@ -44,5 +50,7 @@ void LayerEditorWindow::OnImGUIRender() {
     }
     ImGui::End();
 }
+}  // namespace Editor
+}  // namespace Blazar
 
 #endif

@@ -2,17 +2,17 @@
 
 #include <unordered_map>
 
-#include "Blazar/Renderer/Primitives/Texture.h"
 #include "Blazar/Assets/Resource.h"
 #include "Blazar/Layer/Layer.h"
-
-using namespace Blazar;
+#include "Blazar/Renderer/Primitives/Texture.h"
+#include "Blazar/Editor/EditorWindow.h"
 
 namespace Blazar {
-    class Texture2D;
-}
+class Texture2D;
 
-class AssetEditorWindow : public Blazar::Layer {
+namespace Editor {
+
+class AssetEditorWindow : public EditorWindow {
    public:
     AssetEditorWindow();
     void RenderItem(std::string name, std::string path, bool isDirectory);
@@ -21,16 +21,16 @@ class AssetEditorWindow : public Blazar::Layer {
     void NavigateUpFolder();
     void Refresh();
 
-    bool show = true;
-    bool options_open = false;
-    bool dirty = true;
-    bool isFocused = true;
+    bool show           = true;
+    bool options_open   = false;
+    bool dirty          = true;
+    bool isFocused      = true;
     bool isChildFocused = false;
 
-    float m_size = 96;
+    float m_size    = 96;
     float m_padding = 16;
 
-    std::vector<std::string> m_path_heirarchy;
+    std::vector<std::string>                     m_path_heirarchy;
     std::unordered_map<std::string, std::string> m_current_directories;
     std::unordered_map<std::string, std::string> m_current_files;
 
@@ -40,7 +40,9 @@ class AssetEditorWindow : public Blazar::Layer {
     Ref<Resource<Texture2D>> m_texgear;
 
     bool m_optionEnableThumbnails = true;
-    int m_numthumbsCanLoad = 1;
-    int m_optionThumbsCanLoad = 1;
-
+    int  m_numthumbsCanLoad       = 1;
+    int  m_optionThumbsCanLoad    = 1;
 };
+
+}  // namespace Editor
+}  // namespace Blazar

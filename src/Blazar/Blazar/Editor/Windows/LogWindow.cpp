@@ -2,6 +2,8 @@
 
 #ifdef BLAZAR_IMGUI_ENABLED
 
+#include "LogWindow.h"
+
 #include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -12,15 +14,15 @@
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/ImGui/ImGuiLayer.h"
-#include "Blazar/ImGui/ImGuiLog.h"
 #include "Blazar/Layer/Layer.h"
 
 #include "Tracy.hpp"
 
 namespace Blazar {
+namespace Editor {
 static const char* const spdlog_level_names[] = {"Trace", "Debug", "Info", "Warn", "Error", "Critical", "Off"};
 
-void ImGUILogWindowLayer::OnImGUIRender() {
+void LogWindow::OnImGUIRender() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("Windows", "Log", "", this->m_Show, true);
 
@@ -44,9 +46,7 @@ void ImGUILogWindowLayer::OnImGUIRender() {
 
             if (ImGui::BeginCombo("Filter Level", spdlog_level_names[m_filterSeverity])) {
                 for (size_t i = 0; i < spdlog::level::n_levels; i++) {
-                    if (ImGui::Selectable(spdlog_level_names[i])) {
-                        m_filterSeverity = (spdlog::level::level_enum)i;
-                    }
+                    if (ImGui::Selectable(spdlog_level_names[i])) { m_filterSeverity = (spdlog::level::level_enum)i; }
                 }
 
                 ImGui::EndCombo();
@@ -96,9 +96,7 @@ void ImGUILogWindowLayer::OnImGUIRender() {
     ImGui::PopStyleVar();
 }
 
-void ImGUILogWindowLayer::DisplayEntry(log_entry& entry) {
-
-
+void LogWindow::DisplayEntry(log_entry& entry) {
     switch (entry.details.level) {
         case spdlog::level::err:
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(255, 0, 0)));
@@ -136,6 +134,7 @@ void ImGUILogWindowLayer::DisplayEntry(log_entry& entry) {
     ImGui::PopStyleColor(1);
 }
 
+}  // namespace Editor
 }  // namespace Blazar
 
 #endif

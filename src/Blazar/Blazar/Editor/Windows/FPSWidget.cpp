@@ -1,12 +1,17 @@
+#include "bzpch.h"
+
 #include "FPSWidget.h"
 
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Tracy.hpp"
 
+namespace Blazar {
+namespace Editor {
+
 void FPSWidgetWindowLayer::OnImGUIRender() {
     ZoneScoped;
-    auto& app = Application::Get();
+    auto& app   = Blazar::Application::Get();
     float delta = app.m_deltaTime;
 
     if (ImGui::BeginMainMenuBar()) {
@@ -23,3 +28,6 @@ void FPSWidgetWindowLayer::OnImGUIRender() {
         ImGui::EndMainMenuBar();
     }
 }
+
+}  // namespace Editor
+}  // namespace Blazar

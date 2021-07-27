@@ -4,8 +4,13 @@
 
 namespace Blazar {
 
-class SimulationStatsWindow;
+
 class Quad;
+
+namespace Editor {
+    class SimulationStatsWindow;
+}
+
 /// The simulation system of the game
 class Simulation {
    public:
@@ -23,7 +28,8 @@ class Simulation {
     float m_tickrate       = 60.0f;    ///< The tickrate
     float m_tickDelta      = 0.0f;     ///< The time a tick takes
     long  m_ticks          = 0.0f;     ///< Number of ticks that have happened
-    friend class SimulationStatsWindow;
+
+    friend class ::Blazar::Editor::SimulationStatsWindow;
 
     // Rendering
 private:
