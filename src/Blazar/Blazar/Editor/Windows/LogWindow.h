@@ -10,7 +10,7 @@ namespace Editor {
 class LogWindow : public EditorWindow {
    public:
     LogWindow() : EditorWindow("Log") { ; }
-    void OnImGUIRender() override;
+    void RenderWindow() override;
 
    private:
     void                      DisplayEntry(log_entry& e);

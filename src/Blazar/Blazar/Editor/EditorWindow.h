@@ -5,14 +5,20 @@
 namespace Blazar {
 namespace Editor {
 
+/// A Window that runs in the editor
 class EditorWindow {
    public:
-    std::string m_name;
-    bool        m_active;
+    std::string m_name;    ///< The name of this Window
+    bool        m_active;  ///< Is this Window open?
 
+    /// Constructor
     EditorWindow(std::string name) : m_active(true), m_name(name) {}
+
+    /// Destructor
     virtual ~EditorWindow() {}
-    virtual void OnImGUIRender() = 0;
+
+    /// Renders the Window
+    virtual void RenderWindow() = 0;
 };
 
 }  // namespace Editor

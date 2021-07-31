@@ -9,7 +9,7 @@ class FPSWidgetWindowLayer : public EditorWindow {
    public:
     bool show = true;  ///< Show this
     FPSWidgetWindowLayer() : EditorWindow("FPS Widget") {}
-    void OnImGUIRender() override;
+    void RenderWindow() override;
 };
 
 }  // namespace Editor

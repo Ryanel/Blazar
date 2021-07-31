@@ -31,6 +31,7 @@ void WindowsWindow::Shutdown() {
 }
 
 void WindowsWindow::OnUpdate() {
+    ZoneScopedN("Window Flip");
     {
         ZoneScopedN("Poll Events");
         glfwPollEvents();

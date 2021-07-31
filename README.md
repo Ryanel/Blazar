@@ -29,11 +29,10 @@ Additionally, I plan on making games that are 2.5D, though I want the engine to 
 * Robust VFS supporting different archive formats (including bare files).
 
 ## Building
-Currently, Blazar only supports Windows. This is because this is at an early stage. Support should be easy to add.
+Currently, Blazar supports Windows and Linux.
 
 ### Requirements:
 * Premake
-* Conan
 * Visual Studio 2019
 
 ### Instructions

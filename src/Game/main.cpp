@@ -10,7 +10,6 @@
 #include "Blazar/Blazar.h"
 #include "Blazar/Editor/Editor.h"
 #include "Blazar/Log.h"
-#include "Blazar/Platform/OpenGL/OpenGLShader.h"
 #include "Blazar/Renderer/Cameras/OrthographicCamera.h"
 #include "Blazar/Renderer/Primitives/Buffer.h"
 #include "Blazar/Renderer/Primitives/Quad.h"
@@ -20,29 +19,105 @@
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/RenderCommand.h"
 #include "Blazar/Renderer/Renderer.h"
-#include "Blazar/Simulation/Simulation.h"
+#include "Blazar/Simulation/Scene.h"
+#include "Blazar/Simulation/SceneManager.h"
 #include "Blazar/Utility/Path.h"
 #include "Blazar/VFS/VFSFilesystem.h"
 #include "Tracy.hpp"
 
 #include "Blazar/Component/MeshComponent.h"
 #include "Blazar/Component/RenderTransform.h"
+#include "Blazar/Component/TextureComponent.h"
 #include "Components/Transform.h"
 
 #include "Blazar/Entry.h"
 
 using namespace Blazar;
+using namespace Blazar::Components;
+
+class TestScene : public Blazar::Scenes::Scene {
+   public:
+    TestScene() : Scene("Test Scene") {
+        auto& world = registry();
+
+        m_quad = std::make_shared<Quad>();
+
+        Blazar::TextureProperties texprops;
+        texprops.filtering = TextureFilterMode::None;
+        m_texture          = Texture2D::Load("/Data/Textures/SampleTrans.png", texprops);
+        m_texture2         = Texture2D::Load("/Data/Textures/dante.png", texprops);
+
+        /// Prepare the world for components we know it'll need.
+        world.prepare<Transform>();
+        world.prepare<MeshComponent>();
+        world.prepare<RenderTransform>();
+        world.prepare<TextureComponent>();
+
+        entt::entity entity  = world.create();
+        entt::entity entity2 = world.create();
+
+        // Entity 1
+        world.emplace<Transform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
+        world.emplace<MeshComponent>(entity, m_quad->vao);
+        world.emplace<TextureComponent>(entity, m_texture->data());
+        world.emplace<RenderTransform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
+
+        // Entity 2
+        world.emplace<Transform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
+        world.emplace<MeshComponent>(entity2, m_quad->vao);
+        world.emplace<TextureComponent>(entity2, m_texture2->data());
+        world.emplace<RenderTransform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
+
+        m_shader = Shader::Load("/Data/Shaders/Simple");
+        m_shader->SetName("Simple");
+        m_shader->Bind();
+        m_shader->SetInt("u_Texture", 0);
+
+        // Camera
+        auto& gameWindow = Application::Get().GetWindow();
+        m_cameraController.reset(new OrthographicCamera(2.0f, gameWindow.GetAspect()));
+        m_cameraController->SetPosition({0, 0, 0});
+        m_cameraController->SetViewport(gameWindow.GetViewport());
+    }
+    virtual ~TestScene() {}
+
+    virtual void OnUpdate(Timestep& ts) {}
+
+    virtual void OnRender(Timestep& ts) {
+        Application& app  = Application::Get();
+        auto         view = registry().view<RenderTransform, MeshComponent, TextureComponent>();
+        m_cameraController->SetViewport(app.m_RenderViewport);
+
+        std::vector<RenderCommand> cmds;
+        cmds.emplace_back(RenderCmd::BeginPass());
+        cmds.emplace_back(RenderCmd::PassSetCamera(m_cameraController));
+        cmds.emplace_back(RenderCmd::SetShader(m_shader));
+
+        for (auto ent : view) {
+            auto [transform, mesh, tex] = view.get(ent);
+            glm::mat4 transform_mat     = glm::translate(glm::mat4(1.0f), transform.position);
+            cmds.emplace_back(RenderCmd::UploadCameraProps());
+            cmds.emplace_back(RenderCmd::SetShaderMat4("u_Transform", transform_mat));
+            cmds.emplace_back(RenderCmd::BindTexture(tex.tex));
+            cmds.emplace_back(RenderCmd::DrawIndexed(mesh.mesh));
+        }
+
+        cmds.emplace_back(RenderCmd::EndPass());
+        Renderer::SubmitList(cmds);
+    }
+
+    Ref<Resource<Texture2D>> m_texture;
+    Ref<Resource<Texture2D>> m_texture2;
+    Ref<Shader>              m_shader;
+    Ref<Quad>                m_quad = nullptr;
+    Ref<OrthographicCamera>  m_cameraController;
+};
 
 class Game : public Blazar::Application {
    public:
     Game() {
         ZoneScoped;
         m_name = "Blazar";
-
-        auto* rm = ResourceManager::Get();
-        rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Data/", "Contents/Data/", true));
-        rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Editor/", "Contents/Editor/", true));
-        rm->m_vfs->refresh();
 
         m_editor = new Editor::Editor();
         m_editor->Setup();
@@ -53,76 +128,21 @@ class Game : public Blazar::Application {
     ~Game() {}
 
     // Game Lifecycle methods
-    void Setup() {
-        auto& sim = this->m_Simulation;
-        sim->world.prepare<Transform>();
-        sim->world.prepare<Blazar::MeshComponent>();
-        sim->world.prepare<Blazar::RenderTransform>();
-        m_quad = std::make_shared<Quad>();
-
-        entt::entity entity = sim->world.create();
-
-        sim->world.emplace<Transform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
-        sim->world.emplace<Blazar::MeshComponent>(entity, m_quad->vao);
-        sim->world.emplace<Blazar::RenderTransform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
-
-        entt::entity entity2 = sim->world.create();
-
-        sim->world.emplace<Transform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
-        sim->world.emplace<Blazar::MeshComponent>(entity2, m_quad->vao);
-        sim->world.emplace<Blazar::RenderTransform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
-
-        m_shader = Shader::FromFile("Contents/Data/Shaders/Simple");
-        m_shader->SetName("Simple");
-        m_shader->Bind();
-        std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_shader)->SetInt("u_Texture", 0);
-
-        Blazar::TextureProperties texprops;
-        texprops.filtering = TextureFilterMode::None;
-        m_texture          = Texture2D::Load("/Data/Textures/SampleTrans.png", texprops);
-
-        // Camera
-        auto& gameWindow = Application::Get().GetWindow();
-        m_cameraController.reset(new OrthographicCamera(2.0f, gameWindow.GetAspect()));
-        m_cameraController->SetPosition({0, 0, 0});
-        m_cameraController->SetViewport(gameWindow.GetViewport());
-    }
-
-    // void Destroy() override {}
+    void Setup() { this->m_SceneManager->SetMainScene(new TestScene()); }
     void OnUpdate() override {}
-    void OnRender() override {
-        Application& app  = Application::Get();
-        auto&        sim  = app.m_Simulation;
-        auto         view = sim->world.view<Blazar::RenderTransform, Blazar::MeshComponent>();
-        m_cameraController->SetViewport(app.m_RenderViewport);
-
-        for (auto e : view) {
-            auto [transform, mesh] = view.get(e);
-            glm::mat4 sqr_pos      = glm::translate(glm::mat4(1.0f), transform.position);
-
-            RENDER_SUBMIT(RenderCmd::BeginPass());
-            RENDER_SUBMIT(RenderCmd::PassSetCamera(m_cameraController));
-            RENDER_SUBMIT(RenderCmd::SetShader(m_shader));
-            RENDER_SUBMIT(RenderCmd::UploadCameraProps());
-            RENDER_SUBMIT(RenderCmd::SetShaderMat4("u_Transform", sqr_pos));
-            RENDER_SUBMIT(RenderCmd::BindTexture(m_texture->data()));
-            RENDER_SUBMIT(RenderCmd::DrawIndexed(mesh.mesh));
-            RENDER_SUBMIT(RenderCmd::EndPass());
-        }
-    }
-    // void OnImGuiRender() override {}
-
-   private:
-    Blazar::Ref<Shader>              m_shader;
-    Ref<Blazar::Resource<Texture2D>> m_texture;
-    Blazar::Ref<Quad>                m_quad = nullptr;
-    Blazar::Ref<OrthographicCamera>  m_cameraController;
+    void OnRender() override {}
 };
 
 namespace Blazar {
 
 Application* CreateApplication() {
     tracy::SetThreadName("Main Thread");
+
+    auto* rm = ResourceManager::Get();
+    rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Data/", "Contents/Data/", true));
+    rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Editor/", "Contents/Editor/", true));
+    rm->m_vfs->refresh();
+
     return new Game();
 }
 

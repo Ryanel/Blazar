@@ -9,7 +9,7 @@
 #include "Blazar/Renderer/Primitives/RenderTexture.h"
 #include "Blazar/Renderer/RenderCmd.h"
 #include "Blazar/Renderer/Renderer.h"
-#include "Blazar/Simulation/Simulation.h"
+#include "Blazar/Simulation/SceneManager.h"
 #include "Blazar/Time/Timer.h"
 #include "Blazar/Window.h"
 
@@ -28,7 +28,6 @@ Application::Application() {
     m_Window.reset(Window::Create());
     m_Window->SetVSync(true);
 
-    m_Simulation = std::make_shared<Simulation>();
     Renderer::Init(RendererAPI::API::OpenGL);
 
     m_ImGui = new ImGuiLayer();
@@ -41,7 +40,8 @@ Application::Application() {
     renderProperties.msaa   = 1;
 
     m_GameRenderTexture = RenderTexture::Create(renderProperties);
-    m_Simulation->Init();
+
+    m_SceneManager = new Scenes::SceneManager();
 }
 
 Application::~Application() { LOG_CORE_TRACE("Destroying Application"); }
@@ -58,9 +58,8 @@ void Application::UpdateThread() {
             ZoneScopedN("Update");
 
             if (Input::KeyDown(BLAZAR_KEY_GRAVE_ACCENT)) { m_RenderImGui = !m_RenderImGui; }
-
-            m_Simulation->Tick(m_deltaTime);
-            m_Simulation->Render(m_deltaTime);
+            m_SceneManager->OnUpdate(m_deltaTime);
+            m_SceneManager->OnRender(m_deltaTime);
 
             Input::NewFrame();
             m_updateThreadCanWork = false;
@@ -84,6 +83,7 @@ void Application::Run() {
         // Rendering Code
         {
             ZoneScopedN("Render");
+            Renderer::ResetStats();
             {
                 ZoneScopedN("Resize Render Texture");
                 // Check if the renderbuffer needs to be changed.
@@ -105,20 +105,14 @@ void Application::Run() {
 
             if (m_RenderImGui) {
                 // ImGUI
-                {
-                    ZoneScopedN("ImGUI");
-                    m_ImGui->Begin();
-                    m_editor->OnImGUIRender();
-                    m_ImGui->End(m_RenderImGui);
-                }
+                ZoneScopedN("ImGUI");
+                m_ImGui->Begin();
+                m_editor->RenderWindow();
+                m_ImGui->End(m_RenderImGui);
             }
         }
-
         // Flip Windows
-        {
-            ZoneScopedN("Window Flip");
-            m_Window->OnUpdate();
-        }
+        m_Window->OnUpdate();
 
         FrameMark;
 

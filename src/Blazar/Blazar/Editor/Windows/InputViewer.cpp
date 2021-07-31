@@ -13,7 +13,7 @@
 namespace Blazar {
 namespace Editor {
 
-void InputEditorWindow::OnImGUIRender() {
+void InputEditorWindow::RenderWindow() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("[Development]", "Inputs", "", this->show, true);
 

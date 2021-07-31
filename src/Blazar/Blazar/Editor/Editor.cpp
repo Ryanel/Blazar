@@ -15,7 +15,7 @@
 #include "Blazar/Editor/Windows/FPSWidget.h"
 #include "Blazar/Editor/Windows/GameWindow.h"
 #include "Blazar/Editor/Windows/LogWindow.h"
-#include "Blazar/Editor/Windows/SimulationStatsWindow.h"
+#include "Blazar/Editor/Windows/WorldViewer.h"
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
 #include "Blazar/Editor/Windows/InputViewer.h"
 #include "Blazar/Editor/Windows/RenderListViewer.h"
@@ -35,18 +35,14 @@ void Editor::Setup() {
     m_windows.push_back(new LogWindow());
     m_windows.push_back(new AssetEditorWindow());
     m_windows.push_back(new FPSWidgetWindowLayer());
-    m_windows.push_back(new SimulationStatsWindow());
+    m_windows.push_back(new WorldViewer());
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
     m_windows.push_back(new RenderListWindowLayer());
     m_windows.push_back(new InputEditorWindow());
 #endif
 }
 
-void Editor::OnAttach() {}
-
-void Editor::OnDetached() {}
-
-void Editor::OnImGUIRender() {
+void Editor::RenderWindow() {
     ZoneScoped;
     auto& app = Application::Get();
     
@@ -60,7 +56,7 @@ void Editor::OnImGUIRender() {
     }
 
     ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
-    for (auto* x : m_windows) { x->OnImGUIRender(); }
+    for (auto* x : m_windows) { x->RenderWindow(); }
 }
 
 }  // namespace Editor

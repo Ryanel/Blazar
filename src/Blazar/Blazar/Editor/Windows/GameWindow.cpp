@@ -6,13 +6,12 @@
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/Renderer/Primitives/RenderTexture.h"
 #include "Blazar/Renderer/Primitives/Texture.h"
-#include "Blazar/Simulation/Simulation.h"
 #include "Tracy.hpp"
 
 namespace Blazar {
 namespace Editor {
 
-void GameWindow::OnImGUIRender() {
+void GameWindow::RenderWindow() {
     ZoneScoped;
 
     auto& app = Application::Get();

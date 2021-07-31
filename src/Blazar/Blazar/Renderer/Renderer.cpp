@@ -51,7 +51,7 @@ void Renderer::Init(RendererAPI::API toCreate) {
     }
 
     // Now, initialize the fullscreen shader...
-    m_fullscreenShader = Shader::FromFile("Contents/Data/Shaders/ScreenTexture");
+    m_fullscreenShader = Shader::Load("/Data/Shaders/ScreenTexture");
     m_fullscreenShader->SetName("ScreenTexture");
     m_fullscreenShader->Bind();
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_fullscreenShader)->SetInt("u_Texture", 0);

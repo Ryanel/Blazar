@@ -57,22 +57,4 @@ Ref<Resource<Texture2D>> Texture2D::Load(const std::string& path, TexturePropert
     return ptr;
 }
 
-/*
-template <>
-Texture2D* DeserializeToResource(std::string_view path, std::vector<char>& data) {
-    TextureProperties properties;
-    switch (Renderer::GetAPI()) {
-        case RendererAPI::API::OpenGL:
-            return OpenGLTexture2D::FromData(data, properties);
-        case RendererAPI::API::None:
-            BLAZAR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
-            return nullptr;
-        default:
-            BLAZAR_CORE_ASSERT(false, "Unknown RendererAPI");
-            return nullptr;
-    }
-    return nullptr;
-}
-*/
-
 }  // namespace Blazar

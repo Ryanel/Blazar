@@ -20,7 +20,7 @@ namespace Blazar {
 namespace Editor {
 static const char* const spdlog_level_names[] = {"Trace", "Debug", "Info", "Warn", "Error", "Critical", "Off"};
 
-void LogWindow::OnImGUIRender() {
+void LogWindow::RenderWindow() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("Windows", "Log", "", this->m_Show, true);
 

@@ -6,17 +6,14 @@
 namespace Blazar {
 namespace Editor {
 
+/// The Game's Integrated Editor.
 class Editor {
    public:
-    Editor();
-    void OnAttach();
-    void OnDetached();
-    void OnImGUIRender();
-    void Setup();
+    Editor();              ///< Constructor
+    void RenderWindow();  ///< Called when ImGUIRender is rendering
+    void Setup();          ///< Sets up the editor for usage.
 
-    std::vector<EditorWindow*> m_windows;
-
-    bool m_showImGuiStyleEditor = false;
+    std::vector<EditorWindow*> m_windows;  ///< List of all open Windows
 };
 
 }  // namespace Editor

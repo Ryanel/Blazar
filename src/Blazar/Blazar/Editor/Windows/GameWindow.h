@@ -8,7 +8,7 @@ namespace Editor {
 class GameWindow : public EditorWindow {
    public:
     GameWindow() : EditorWindow("Game") {}
-    void OnImGUIRender() override;
+    void RenderWindow() override;
 
    private:
     bool show = true;

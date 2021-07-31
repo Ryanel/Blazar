@@ -9,7 +9,6 @@
 #include "Blazar/Renderer/Primitives/Texture.h"
 #include "Blazar/VFS/VFS.h"
 #include "Resource.h"
-
 #include "Tracy.hpp"
 
 namespace Blazar {
@@ -22,6 +21,7 @@ class ResourceManager {
    public:
     /// Attempts to get a resource that has already been loaded. If it hasn't been loaded, this causes an error.
     template<class T> Ref<Resource<T>> Load(std::string path) {
+        ZoneScoped;
         auto& it = m_entries.find(path);
         if (it != m_entries.end()) {
             if (!it->second->Loaded()) {
@@ -43,11 +43,11 @@ class ResourceManager {
         return true;
     }
 
-    bool Exists(std::string path);  ///< Checks if path exists as a Resource, not if it exists on the filesystem
-    void Unload(std::string path);  ///< Attempts to unload the resource. Note: Does not destroy any other references,
-                                    ///< so the object may live past this.
-    void Clean();                   ///< Attempts to garbage collect any items with no references.
-    static ResourceManager* Get();  ///< Gets the resource manager instance
+    bool Exists(std::string path);    ///< Checks if path exists as a Resource, not if it exists on the filesystem
+    void Unload(std::string path);    ///< Attempts to unload the resource. Note: Does not destroy any other references,
+                                      ///< so the object may live past this.
+    void                    Clean();  ///< Attempts to garbage collect any items with no references.
+    static ResourceManager* Get();    ///< Gets the resource manager instance
 
     /// Reads a file's data from the VFS. Returns true if successful.
     bool ReadFromVFS(std::string_view path, std::vector<std::byte>& outBuffer);

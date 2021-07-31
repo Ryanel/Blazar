@@ -90,7 +90,7 @@ void AssetEditorWindow::RenderItem(std::string name, std::string path, bool isDi
     TextCentered(name.c_str(), m_size, ImGui::GetCursorPosX());
 }
 
-void AssetEditorWindow::OnImGUIRender() {
+void AssetEditorWindow::RenderWindow() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("Windows", "Assets", "", this->show, true);
 
