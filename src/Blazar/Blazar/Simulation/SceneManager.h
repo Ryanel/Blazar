@@ -8,7 +8,7 @@
 
 namespace Blazar {
 
-    class Quad;
+class Quad;
 
 namespace Scenes {
 
@@ -26,14 +26,15 @@ class SceneManager {
     /// Renders the active scene, using ts as the deltatime.
     void OnRender(Timestep& ts);
 
-    void SetMainScene(Scene* scene) {
-        m_currentScene.reset(scene);
-    }
+    /// Sets the "main" scene
+    void SetMainScene(Scene* scene) { m_currentScene.reset(scene); }
+
+    /// Returns the current scene
+    Ref<Scene> GetCurrentScene() { return m_currentScene; }
 
    private:
     Ref<Scene> m_currentScene;
-
-    Quad * m_quad;
+    Quad*      m_quad;
 };
 }  // namespace Scenes
 }  // namespace Blazar

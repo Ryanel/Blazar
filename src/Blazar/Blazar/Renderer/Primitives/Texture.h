@@ -1,9 +1,10 @@
 #pragma once
 
 #include <vector>
+#include "imgui.h"
+
 #include "Blazar/Memory.h"
 #include "Blazar/Assets/Resource.h"
-
 namespace Blazar {
 
 /// Determines whether a texture's U or V axis will repeat or clamp
@@ -29,6 +30,7 @@ class Texture {
 
     virtual void Bind(uint32_t slot = 0) const = 0;
     virtual uint32_t GetId() const = 0;
+    virtual ImTextureID imgui_id() const = 0;
 };
 
 class Texture2D : public Texture {

@@ -27,7 +27,7 @@ void InputEditorWindow::RenderWindow() {
             ImGui::TableSetupColumn("Input Name");
             ImGui::TableSetupColumn("Input Keycode");
             ImGui::TableHeadersRow();
-            for (size_t i = BLAZAR_KEY_MIN; i < BLAZAR_KEY_MAX; i++) {
+            for (unsigned int i = BLAZAR_KEY_MIN; i < BLAZAR_KEY_MAX; i++) {
                 if (Input::Key(i)) {
                     ImGui::TableNextColumn();
                     ImGui::Text("%c", i);

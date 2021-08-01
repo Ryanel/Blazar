@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Blazar/Simulation/Entity.h"
 #include "Blazar/Time/Timestep.h"
 #include "entt/entt.hpp"
 
@@ -11,9 +12,9 @@ namespace Scenes {
 /// More then one scene can be active at any one time.
 class Scene {
    public:
-    Scene(std::string name);      ///< Scene Constructor
-    virtual ~Scene();             ///< Scene Destructor
-    entt::entity CreateEntity();  ///< Creates an entity within the scene
+    Scene(std::string name);  ///< Scene Constructor
+    virtual ~Scene();         ///< Scene Destructor
+    Entity CreateEntity();    ///< Creates an entity within the scene
 
     /// Updates the scene by ts time.
     virtual void OnUpdate(Timestep& ts);
@@ -27,8 +28,6 @@ class Scene {
     /// Returns the Scene's Registry of Entities
     const entt::registry& registry() const { return m_registry; }
 
-    // entt::handle CreateHandle(entt::entity ent); /// Creates an ease-of-use handle to use for this registry.
-
     size_t ticks() const;  ///< Returns the number of ticks that have been processed.
 
     std::string& name() { return m_name; }
@@ -40,7 +39,7 @@ class Scene {
    private:
     float          m_time     = 0.0f;
     float          m_tickTime = 0.0f;
-    float          m_tickRate = 20.0f;
+    float          m_tickRate = 10.0f;
     std::string    m_name;
     entt::registry m_registry;
 };

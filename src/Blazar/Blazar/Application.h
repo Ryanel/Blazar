@@ -2,6 +2,7 @@
 
 #include <condition_variable>
 #include <mutex>
+#include "Blazar/Config.h"
 #include "Blazar/Core.h"
 #include "Blazar/Time/Timestep.h"
 #include "Blazar/Window.h"
@@ -32,6 +33,7 @@ class Application {
 
     /// Returns this application
     inline static Application& Get() { return *s_Instance; }
+    Scenes::SceneManager*      SceneManager() { return m_SceneManager; }
 
    public:
     std::unique_ptr<Window> m_Window;  ///< This Window

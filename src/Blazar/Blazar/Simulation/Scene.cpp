@@ -11,12 +11,8 @@ Scene::~Scene() {}
 void Scene::OnUpdate(Timestep& ts) { m_ticks += CalculateTicksThisFrame(ts); }
 void Scene::OnRender(Timestep& ts) {}
 
-entt::entity Scene::CreateEntity() { return m_registry.create(); }
-
-size_t Scene::ticks() const
-{
-    return m_ticks;
-}
+Entity Scene::CreateEntity() { return Entity(&registry()); }
+size_t Scene::ticks() const { return m_ticks; }
 
 size_t Scene::CalculateTicksThisFrame(Timestep& ts) {
     float tickDelta = 1.0f / m_tickRate;

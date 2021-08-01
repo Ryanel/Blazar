@@ -30,8 +30,14 @@ Application::Application() {
 
     Renderer::Init(RendererAPI::API::OpenGL);
 
+#ifdef BLAZAR_ENABLE_EDITOR
     m_ImGui = new ImGuiLayer();
     m_ImGui->OnAttach();
+#else
+    m_RenderImGui     = false;
+    m_UseEditorWindow = false;
+#endif
+
     m_RenderViewport = std::make_shared<Viewport>(0, 0, 32, 32);
 
     RenderTextureProperties renderProperties;
@@ -57,7 +63,10 @@ void Application::UpdateThread() {
         {
             ZoneScopedN("Update");
 
+#ifdef BLAZAR_ENABLE_EDITOR
             if (Input::KeyDown(BLAZAR_KEY_GRAVE_ACCENT)) { m_RenderImGui = !m_RenderImGui; }
+#endif
+
             m_SceneManager->OnUpdate(m_deltaTime);
             m_SceneManager->OnRender(m_deltaTime);
 
@@ -70,8 +79,9 @@ void Application::UpdateThread() {
 void Application::Run() {
     ZoneScoped;
 
-    // Setup the shader
+    // Start running the update thread...
     std::thread updateThread([&] { this->UpdateThread(); });
+
     // Run Loop
     while (m_Running) {
         ZoneScopedN("Run loop");
@@ -103,6 +113,7 @@ void Application::Run() {
             // Processes the queue until we get to the FRAME_SYNC. Then ImGUI code runs
             Renderer::FlushQueue();
 
+#ifdef BLAZAR_ENABLE_EDITOR
             if (m_RenderImGui) {
                 // ImGUI
                 ZoneScopedN("ImGUI");
@@ -110,7 +121,9 @@ void Application::Run() {
                 m_editor->RenderWindow();
                 m_ImGui->End(m_RenderImGui);
             }
+#endif
         }
+
         // Flip Windows
         m_Window->OnUpdate();
 

@@ -26,7 +26,7 @@ void GameWindow::RenderWindow() {
             auto gamePos  = ImGui::GetWindowPos();
             app.m_RenderViewport->Set(gamePos.x, gamePos.y, gameSize.x, gameSize.y);
 
-            ImGui::Image((ImTextureID)app.m_GameRenderTexture->m_ColorTexture->GetId(), gameSize, ImVec2(0, 1),
+            ImGui::Image(app.m_GameRenderTexture->m_ColorTexture->imgui_id(), gameSize, ImVec2(0, 1),
                          ImVec2(1, 0));
         }
         ImGui::End();

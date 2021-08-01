@@ -54,7 +54,7 @@ void AssetEditorWindow::RenderItem(std::string name, std::string path, bool isDi
 
     // Determine icon to show
     if (!isDirectory) {
-        id = (ImTextureID)m_texfile->data()->GetId();
+        id = m_texfile->data()->imgui_id();
 
         std::string_view extension = Blazar::Utility::Paths::GetExtension(path);
         if (extension.size() > 0) {
@@ -63,18 +63,18 @@ void AssetEditorWindow::RenderItem(std::string name, std::string path, bool isDi
 
                 if (m_optionEnableThumbnails) {
                     if (rm->Exists(path)) {
-                        id = (ImTextureID)Texture2D::Load(path)->data()->GetId();
+                        id = Texture2D::Load(path)->data()->imgui_id();
                     } else {
                         if (m_numthumbsCanLoad > 0) {
                             m_numthumbsCanLoad--;
-                            id = (ImTextureID)Texture2D::Load(path)->data()->GetId();
+                            id = Texture2D::Load(path)->data()->imgui_id();
                         }
                     }
                 }
             }
         }
     } else {
-        id = (ImTextureID)m_texfolder->data()->GetId();
+        id = m_texfolder->data()->imgui_id();
     }
 
     // Draw icon
@@ -116,13 +116,13 @@ void AssetEditorWindow::RenderWindow() {
             isChildFocused = ImGui::IsWindowFocused();
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4.0f);
-            if (ImGui::ImageButton((ImTextureID)m_texgear->data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
+            if (ImGui::ImageButton(m_texgear->data()->imgui_id(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
                                    ImVec2(1, 0))) {
                 options_open = !options_open;
             }
             ImGui::SameLine();
 
-            if (ImGui::ImageButton((ImTextureID)m_texrefresh->data()->GetId(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
+            if (ImGui::ImageButton(m_texrefresh->data()->imgui_id(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
                                    ImVec2(1.0f, 0.0f))) {
                 dirty = true;
             }
@@ -131,7 +131,7 @@ void AssetEditorWindow::RenderWindow() {
             if (ImGui::ArrowButton("Up Directory", ImGuiDir_Up)) { NavigateUpFolder(); }
             ImGui::SameLine();
 
-            size_t numback = m_path_heirarchy.size() - 1;
+            int numback = (int)m_path_heirarchy.size() - 1;
             for (size_t i = 0; i < m_path_heirarchy.size(); i++) {
                 std::string name = m_path_heirarchy[i];
                 if (i == 0) { name = "Root"; }

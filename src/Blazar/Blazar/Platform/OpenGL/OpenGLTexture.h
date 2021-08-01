@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "Blazar/Renderer/Primitives/Texture.h"
+#include "imgui.h"
 
 namespace Blazar {
 
@@ -20,7 +21,11 @@ class OpenGLTexture2D : public Texture2D {
 
     virtual void Bind(uint32_t slot = 0) const override;
 
-    virtual uint32_t GetId() const { return m_Id; }
+    virtual uint32_t     GetId() const { return m_Id; }
+    virtual ImTextureID imgui_id() const {
+        uint64_t id = m_Id;
+        return (ImTextureID)id;
+    }
     // virtual void Unbind() const override;
 
    private:

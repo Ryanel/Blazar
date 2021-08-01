@@ -81,7 +81,7 @@ void RenderListWindowLayer::RenderWindow() {
 
                             ImGui::Text("Matrix:");
                             if (ImGui::BeginTable("Mat4", 4)) {
-                                for (size_t i = 0; i < 16; i++) {
+                                for (unsigned int i = 0; i < 16; i++) {
                                     ImGui::TableNextColumn();
                                     ImGui::Text("%f", d.second[i % 4][i / 4]);
                                 }

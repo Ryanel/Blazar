@@ -28,6 +28,7 @@
 #include "Blazar/Component/MeshComponent.h"
 #include "Blazar/Component/RenderTransform.h"
 #include "Blazar/Component/TextureComponent.h"
+#include "Blazar/Component/NameComponent.h"
 #include "Components/Transform.h"
 
 #include "Blazar/Entry.h"
@@ -47,27 +48,23 @@ class TestScene : public Blazar::Scenes::Scene {
         m_texture          = Texture2D::Load("/Data/Textures/SampleTrans.png", texprops);
         m_texture2         = Texture2D::Load("/Data/Textures/dante.png", texprops);
 
-        /// Prepare the world for components we know it'll need.
-        world.prepare<Transform>();
-        world.prepare<MeshComponent>();
-        world.prepare<RenderTransform>();
-        world.prepare<TextureComponent>();
-
-        entt::entity entity  = world.create();
-        entt::entity entity2 = world.create();
-
         // Entity 1
-        world.emplace<Transform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
-        world.emplace<MeshComponent>(entity, m_quad->vao);
-        world.emplace<TextureComponent>(entity, m_texture->data());
-        world.emplace<RenderTransform>(entity, glm::vec3(-0.75f, 0.0f, 0.0f));
+        Entity entity = CreateEntity();
+        entity.emplace<NameComponent>("Test Entity 1");
+        entity.emplace<Transform>(glm::vec3(-0.75f, 0.0f, 0.0f));
+        entity.emplace<MeshComponent>(m_quad->vao);
+        entity.emplace<TextureComponent>(m_texture->data());
+        entity.emplace<RenderTransform>(glm::vec3(-0.75f, 0.0f, 0.0f));
 
         // Entity 2
-        world.emplace<Transform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
-        world.emplace<MeshComponent>(entity2, m_quad->vao);
-        world.emplace<TextureComponent>(entity2, m_texture2->data());
-        world.emplace<RenderTransform>(entity2, glm::vec3(0.75f, 0.0f, 0.0f));
+        Entity entity2 = CreateEntity();
+        entity2.emplace<NameComponent>("Test Entity 2");
+        //entity2.emplace<Transform>(glm::vec3(0.75f, 0.0f, 0.0f));
+        entity2.emplace<MeshComponent>(m_quad->vao);
+        entity2.emplace<TextureComponent>(m_texture2->data());
+        entity2.emplace<RenderTransform>(glm::vec3(0.75f, 0.0f, 0.0f));
 
+        // Bind the shader
         m_shader = Shader::Load("/Data/Shaders/Simple");
         m_shader->SetName("Simple");
         m_shader->Bind();
@@ -119,8 +116,10 @@ class Game : public Blazar::Application {
         ZoneScoped;
         m_name = "Blazar";
 
+#ifdef BLAZAR_ENABLE_EDITOR
         m_editor = new Editor::Editor();
         m_editor->Setup();
+#endif
 
         Setup();
     }

@@ -16,7 +16,7 @@ void FPSWidgetWindowLayer::RenderWindow() {
 
     if (ImGui::BeginMainMenuBar()) {
         float curX = ImGui::GetCursorPosX();
-        ImGui::SetCursorPosX(app.GetWindow().GetWidth() - 216);
+        ImGui::SetCursorPosX((float)app.GetWindow().GetWidth() - 216.0f);
 
         ImGui::Separator();
 
