@@ -97,11 +97,11 @@ void WindowsWindow::Init(const WindowProperties& props) {
     });
 
     glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* handle) {
-        Application::Get().m_Running = false;
+        Application::get().m_Running = false;
     });
 
     glfwSetKeyCallback(m_Window, [](GLFWwindow* handle, int key, int scancode, int action, int mods) {
-        Input::SetKeyState(key, action != GLFW_RELEASE);
+        Input::set_key_state(key, action != GLFW_RELEASE);
     });
 }
 

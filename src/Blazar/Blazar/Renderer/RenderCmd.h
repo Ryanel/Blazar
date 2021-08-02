@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "RendererAPI.h"
 
-#define RENDER_SUBMIT(x) Renderer::Submit(x)
+#define RENDER_SUBMIT(x) Renderer::submit(x)
 
 namespace Blazar {
 

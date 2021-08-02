@@ -9,9 +9,9 @@ namespace Editor {
 /// The Game's Integrated Editor.
 class Editor {
    public:
-    Editor();              ///< Constructor
-    void RenderWindow();  ///< Called when ImGUIRender is rendering
-    void Setup();          ///< Sets up the editor for usage.
+    Editor();       ///< Constructor
+    void render();  ///< Called when ImGUIRender is rendering
+    void setup();   ///< Sets up the editor for usage.
 
     std::vector<EditorWindow*> m_windows;  ///< List of all open Windows
 };

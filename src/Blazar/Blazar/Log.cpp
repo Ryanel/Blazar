@@ -8,10 +8,10 @@ namespace Blazar {
 
 std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
 std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
-std::vector<log_entry> Log::s_LogEntries;
-int Log::s_MaxLogEntries = 200;
+std::vector<log_entry>          Log::s_LogEntries;
+int                             Log::s_MaxLogEntries = 200;
 
-void Log::Init() {
+void Log::init() {
     ZoneScoped;
     spdlog::set_pattern("%^[%T] %n: %v%$");
 
@@ -22,10 +22,10 @@ void Log::Init() {
     core_sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
     core_sinks.push_back(memlogger);
 
-    auto core_compied_logger = std::make_shared<spdlog::logger>("Blazar", begin(core_sinks), end(core_sinks));
+    auto core_compied_logger   = std::make_shared<spdlog::logger>("Blazar", begin(core_sinks), end(core_sinks));
     auto client_compied_logger = std::make_shared<spdlog::logger>("Game", begin(core_sinks), end(core_sinks));
 
-    s_CoreLogger = core_compied_logger;
+    s_CoreLogger   = core_compied_logger;
     s_ClientLogger = client_compied_logger;
 
     s_CoreLogger->set_level(spdlog::level::trace);
@@ -33,7 +33,6 @@ void Log::Init() {
 
     s_CoreLogger->trace("Logging enabled");
     s_ClientLogger->trace("Logging enabled");
-
 }
 
 void Log::PushLog(log_entry& entry) {

@@ -8,7 +8,7 @@
 namespace Blazar {
 
 Ref<RenderTexture> RenderTexture::Create(const RenderTextureProperties& properties) {
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             return std::make_shared<OpenGLRenderTexture>(properties);
         case RendererAPI::API::None:

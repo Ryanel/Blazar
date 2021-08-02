@@ -9,9 +9,9 @@
 namespace Blazar {
 namespace Editor {
 
-void FPSWidgetWindowLayer::RenderWindow() {
+void FPSWidgetWindowLayer::render() {
     ZoneScoped;
-    auto& app   = Blazar::Application::Get();
+    auto& app   = Blazar::Application::get();
     float delta = app.m_deltaTime;
 
     if (ImGui::BeginMainMenuBar()) {

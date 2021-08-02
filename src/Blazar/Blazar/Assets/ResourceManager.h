@@ -24,7 +24,7 @@ class ResourceManager {
         ZoneScoped;
         auto& it = m_entries.find(path);
         if (it != m_entries.end()) {
-            if (!it->second->Loaded()) {
+            if (!it->second->loaded()) {
                 LOG_CORE_ERROR("Resource {} was not loaded, even though it exists.", path);
                 throw;
             }
@@ -43,14 +43,14 @@ class ResourceManager {
         return true;
     }
 
-    bool Exists(std::string path);    ///< Checks if path exists as a Resource, not if it exists on the filesystem
-    void Unload(std::string path);    ///< Attempts to unload the resource. Note: Does not destroy any other references,
+    bool exists(std::string path);    ///< Checks if path exists as a Resource, not if it exists on the filesystem
+    void unload(std::string path);    ///< Attempts to unload the resource. Note: Does not destroy any other references,
                                       ///< so the object may live past this.
-    void                    Clean();  ///< Attempts to garbage collect any items with no references.
-    static ResourceManager* Get();    ///< Gets the resource manager instance
+    void                    clean();  ///< Attempts to garbage collect any items with no references.
+    static ResourceManager* get();    ///< Gets the resource manager instance
 
     /// Reads a file's data from the VFS. Returns true if successful.
-    bool ReadFromVFS(std::string_view path, std::vector<std::byte>& outBuffer);
+    bool vfs_read(std::string_view path, std::vector<std::byte>& outBuffer);
 
     VFS::VFS* m_vfs;  ///< The virtual filesystem that the resource manager uses to load resources.
    private:

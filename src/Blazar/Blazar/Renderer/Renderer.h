@@ -14,28 +14,28 @@ class RenderCommand;
 
 /// The main renderer class in Blazar.
 /// Every frame, during the render phase, RenderCommands are submitted to the Renderer. RenderCommands are
-/// Platform-Agnostic. After all commands have been submitted, the queue of commands is proceesed in FlushQueue() by the
+/// Platform-Agnostic. After all commands have been submitted, the queue of commands is proceesed in process_frame() by the
 /// Application. This is when OpenGL or DirectX calls are processed.
 class Renderer {
    public:
     /// Initializes the Renderer to use a certain RendererAPI
-    static void Init(RendererAPI::API toCreate);
+    static void init(RendererAPI::API toCreate);
 
     /// Returns the current RendererAPI
-    static RendererAPI::API GetAPI() { return s_RendererAPI->GetAPI(); }
+    static RendererAPI::API api() { return s_RendererAPI->api(); }
 
-    static void Submit(RenderCommand& command);   ///< Submits a renderer command
-    static void Submit(RenderCommand&& command);  ///< Submits a renderer command
+    static void submit(RenderCommand& command);   ///< Submits a renderer command
+    static void submit(RenderCommand&& command);  ///< Submits a renderer command
 
     /// Submits a list of render commands. The commands vector is copied into the render queue. This function locks the
     /// queue, so all commands are guarenteed to be next to eachother.
-    static void SubmitList(std::vector<RenderCommand>& commands);
+    static void submit(std::vector<RenderCommand>& commands);
 
     /// Flushes the Render Queue, processing commands, and calling the Graphics card
-    static void FlushQueue();
+    static void process_frame();
 
     /// Resets statistics
-    static void ResetStats();
+    static void reset_stats();
 
     /// Renderer Statistics
     struct RendererStats {

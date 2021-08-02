@@ -7,7 +7,7 @@
 namespace Blazar {
 
 Ref<VertexBuffer> VertexBuffer::Create(float* verticies, size_t size) {
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             return Ref<VertexBuffer>(new OpenGLVertexBuffer(verticies, size));
         case RendererAPI::API::None:
@@ -21,7 +21,7 @@ Ref<VertexBuffer> VertexBuffer::Create(float* verticies, size_t size) {
 
 Ref<VertexBuffer> VertexBuffer::Create(float* verticies, size_t size, BufferLayout& layout) {
     Ref<VertexBuffer> ref = nullptr;
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             ref = Ref<VertexBuffer>(new OpenGLVertexBuffer(verticies, size));
             ref->SetLayout(layout);
@@ -36,7 +36,7 @@ Ref<VertexBuffer> VertexBuffer::Create(float* verticies, size_t size, BufferLayo
 }
 
 Ref<IndexBuffer> IndexBuffer::Create(uint32_t* verticies, size_t size) {
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             return Ref<IndexBuffer>(new OpenGLIndexBuffer(verticies, size));
         case RendererAPI::API::None:

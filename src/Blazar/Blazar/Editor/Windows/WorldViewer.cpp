@@ -15,11 +15,11 @@
 namespace Blazar {
 namespace Editor {
 WorldViewer::WorldViewer() : EditorWindow("World Viewer") { m_texgear = Texture2D::Load("/Editor/Textures/gear.png"); }
-void WorldViewer::RenderWindow() {
+void WorldViewer::render() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("Windows", "World Viewer", "", this->m_active, true);
 
-    auto& app = Application::Get();
+    auto& app = Application::get();
 
     if (!this->m_active) { return; }
 
@@ -27,9 +27,9 @@ void WorldViewer::RenderWindow() {
     if (ImGui::Begin("World Viewer", &this->m_active)) {
         isFocused = ImGui::IsWindowFocused();
 
-        ImGui::PushStyleColor(
-            ImGuiCol_ChildBg,
-            ImGui::GetStyleColorVec4((isFocused || isTitleFocused) ? ImGuiCol_TitleBgActive : ImGuiCol_TitleBg));
+        ImGuiCol titleBg = (isFocused || isTitleFocused) ? ImGuiCol_TitleBgActive : ImGuiCol_TitleBg;
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(titleBg));
+
         if (ImGui::BeginChild("##WorldViewerTop", ImVec2(0, 30))) {
             isTitleFocused = ImGui::IsWindowFocused();
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
@@ -46,7 +46,7 @@ void WorldViewer::RenderWindow() {
         ImGui::EndChild();
         ImGui::PopStyleColor();
 
-        auto currentScene = app.SceneManager()->GetCurrentScene();
+        auto currentScene = app.scenemanager()->current();
 
         if (currentScene != nullptr) {
             auto& registry = currentScene->registry();
@@ -82,7 +82,7 @@ void WorldViewer::RenderWindow() {
         bool should_stay_open = true;
         if (ImGui::Begin("Entity Properties", &should_stay_open)) {
             if (m_selected_entity != entt::null) {
-                Entity      e(&app.SceneManager()->GetCurrentScene()->registry(), m_selected_entity);
+                Entity      e(&app.scenemanager()->current()->registry(), m_selected_entity);
                 std::string entityName;
                 if (e.has<Components::NameComponent>()) {
                     auto name  = e.get<Components::NameComponent>();

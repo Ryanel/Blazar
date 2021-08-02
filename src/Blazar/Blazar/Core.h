@@ -21,9 +21,8 @@
 #define DEBUGBREAK() __debugbreak()
 
 #else
-#define BLAZAR_API 
+#define BLAZAR_API
 //#error Blazar only supports windows.
-
 
 #define DEBUGBREAK()
 #endif
@@ -33,14 +32,14 @@
     {                                                             \
         if (!(x)) {                                               \
             LOG_GAME_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-            DEBUGBREAK();                                       \
+            DEBUGBREAK();                                         \
         }                                                         \
     }
 #define BLAZAR_CORE_ASSERT(x, ...)                                \
     {                                                             \
         if (!(x)) {                                               \
             LOG_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); \
-            DEBUGBREAK();                                       \
+            DEBUGBREAK();                                         \
         }                                                         \
     }
 
@@ -48,14 +47,14 @@
     {                                                                     \
         if (!(x)) {                                                       \
             LOG_GAME_ERROR("Runtime Assertion Failed: {0}", __VA_ARGS__); \
-            DEBUGBREAK();                                               \
+            DEBUGBREAK();                                                 \
         }                                                                 \
     }
 #define BLAZAR_CORE_VERIFY(x, ...)                                        \
     {                                                                     \
         if (!(x)) {                                                       \
             LOG_CORE_ERROR("Runtime Assertion Failed: {0}", __VA_ARGS__); \
-            DEBUGBREAK();                                               \
+            DEBUGBREAK();                                                 \
         }                                                                 \
     }
 #else

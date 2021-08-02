@@ -18,7 +18,7 @@ class EditorWindow {
     virtual ~EditorWindow() {}
 
     /// Renders the Window
-    virtual void RenderWindow() = 0;
+    virtual void render() = 0;
 };
 
 }  // namespace Editor

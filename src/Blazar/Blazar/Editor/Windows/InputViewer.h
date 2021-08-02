@@ -11,7 +11,7 @@ namespace Editor {
 class InputEditorWindow : public EditorWindow {
    public:
     InputEditorWindow() : EditorWindow("Input") {}
-    void RenderWindow() override;
+    void render() override;
 
    private:
     bool show = false;

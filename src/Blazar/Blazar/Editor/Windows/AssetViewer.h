@@ -15,7 +15,7 @@ class AssetEditorWindow : public EditorWindow {
    public:
     AssetEditorWindow();
     void RenderItem(std::string name, std::string path, bool isDirectory);
-    void RenderWindow() override;
+    void render() override;
 
     void NavigateUpFolder();
     void Refresh();

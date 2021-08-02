@@ -21,16 +21,16 @@ class SceneManager {
     ~SceneManager();  ///< SceneManager Destructor
 
     /// Updates the active scene by ts time.
-    void OnUpdate(Timestep& ts);
+    void update(Timestep& ts);
 
     /// Renders the active scene, using ts as the deltatime.
-    void OnRender(Timestep& ts);
+    void render(Timestep& ts);
 
     /// Sets the "main" scene
-    void SetMainScene(Scene* scene) { m_currentScene.reset(scene); }
+    void set_main_scene(Scene* scene) { m_currentScene.reset(scene); }
 
     /// Returns the current scene
-    Ref<Scene> GetCurrentScene() { return m_currentScene; }
+    Ref<Scene> current() { return m_currentScene; }
 
    private:
     Ref<Scene> m_currentScene;

@@ -8,10 +8,10 @@ namespace Scenes {
 Scene::Scene(std::string name) : m_name(name) {}
 Scene::~Scene() {}
 
-void Scene::OnUpdate(Timestep& ts) { m_ticks += CalculateTicksThisFrame(ts); }
-void Scene::OnRender(Timestep& ts) {}
+void Scene::update(Timestep& ts) { m_ticks += CalculateTicksThisFrame(ts); }
+void Scene::render(Timestep& ts) {}
 
-Entity Scene::CreateEntity() { return Entity(&registry()); }
+Entity Scene::entity_create() { return Entity(&registry()); }
 size_t Scene::ticks() const { return m_ticks; }
 
 size_t Scene::CalculateTicksThisFrame(Timestep& ts) {

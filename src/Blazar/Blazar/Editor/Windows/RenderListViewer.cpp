@@ -17,11 +17,11 @@ void RenderListWindowLayer::ListItemRenderItem(RenderCommand& item, int index) {
     if (ImGui::Selectable(str.c_str(), &isSelected)) { selected = index; }
 }
 
-void RenderListWindowLayer::RenderWindow() {
+void RenderListWindowLayer::render() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("[Development]", "Render List", "", this->show, true);
 
-    auto& app = Application::Get();
+    auto& app = Application::get();
 
     if (!this->show) { return; }
 

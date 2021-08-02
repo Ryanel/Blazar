@@ -9,7 +9,7 @@ class RendererAPI {
     // API Functions
    public:
     enum class API { None = 0, OpenGL = 1 };
-    virtual inline API GetAPI() { return API::None; }
+    virtual inline API api() { return API::None; }
 
     // Methods
    public:

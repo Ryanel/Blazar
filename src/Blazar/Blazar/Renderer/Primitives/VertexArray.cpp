@@ -11,7 +11,7 @@
 namespace Blazar {
 
 Ref<VertexArray> VertexArray::Create() {
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             return Ref<VertexArray>(new OpenGLVertexArray());
         case RendererAPI::API::None:
@@ -25,7 +25,7 @@ Ref<VertexArray> VertexArray::Create() {
 
 Ref<VertexArray> VertexArray::Create(const Ref<VertexBuffer> vertBuffer, Ref<IndexBuffer> indexBuffer) {
     auto vtxArray = Ref<VertexArray>();
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             vtxArray.reset(new OpenGLVertexArray());
             vtxArray->AddVertexBuffer(vertBuffer);

@@ -9,7 +9,7 @@
 namespace Blazar {
 
 Ref<Texture> Texture2D::Create(const std::string& path, const TextureProperties& properties) {
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             return std::make_shared<OpenGLTexture2D>(path, properties);
         case RendererAPI::API::None:
@@ -22,24 +22,24 @@ Ref<Texture> Texture2D::Create(const std::string& path, const TextureProperties&
 }
 
 Ref<Resource<Texture2D>> Texture2D::Load(const std::string& path, TextureProperties props) {
-    auto* rm = ResourceManager::Get();
+    auto* rm = ResourceManager::get();
 
     // Check if the resource already exists. If so, load it
-    if (rm->Exists(path)) { return rm->Load<Texture2D>(path); }
+    if (rm->exists(path)) { return rm->Load<Texture2D>(path); }
 
     // Check if the filesystem has such a path. If not, throw.
     if (!rm->m_vfs->exists(path)) { throw; }
 
     // Attempt to load the data.
     std::vector<std::byte> data;
-    if (!rm->ReadFromVFS(path, data)) {
+    if (!rm->vfs_read(path, data)) {
         LOG_CORE_ERROR("Reading from VFS failed");
         throw;
     }
 
     Ref<Resource<Texture2D>> ptr = std::make_shared<Resource<Texture2D>>();
     Texture2D* tex_ptr = nullptr;
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             tex_ptr = OpenGLTexture2D::FromData(data, props);
             break;

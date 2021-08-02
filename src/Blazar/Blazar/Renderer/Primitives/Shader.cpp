@@ -18,7 +18,7 @@ Ref<Shader> Shader::Load(std::string path) {
     vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try {
-        auto& vfs = ResourceManager::Get()->m_vfs;
+        auto& vfs = ResourceManager::get()->m_vfs;
 
         std::vector<std::byte> vsOutBuffer;
         std::vector<std::byte> fsOutBuffer;
@@ -26,11 +26,11 @@ Ref<Shader> Shader::Load(std::string path) {
         vsOutBuffer.reserve(512);
         fsOutBuffer.reserve(512);
 
-        if (!ResourceManager::Get()->ReadFromVFS(path + ".vs", vsOutBuffer)) {
+        if (!ResourceManager::get()->vfs_read(path + ".vs", vsOutBuffer)) {
             LOG_CORE_ERROR("Shader: Failed to read fragment shader");
         }
 
-        if (!ResourceManager::Get()->ReadFromVFS(path + ".fs", fsOutBuffer)) {
+        if (!ResourceManager::get()->vfs_read(path + ".fs", fsOutBuffer)) {
             LOG_CORE_ERROR("Shader: Failed to read vertex shader");
         }
 
@@ -57,7 +57,7 @@ Ref<Shader> Shader::Load(std::string path) {
 }
 
 Ref<Shader> Shader::FromText(std::string vertex, std::string fragment) {
-    switch (Renderer::GetAPI()) {
+    switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             return OpenGLShader::FromText(vertex, fragment);
         case RendererAPI::API::None:

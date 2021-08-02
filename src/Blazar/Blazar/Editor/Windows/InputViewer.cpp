@@ -13,11 +13,9 @@
 namespace Blazar {
 namespace Editor {
 
-void InputEditorWindow::RenderWindow() {
+void InputEditorWindow::render() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("[Development]", "Inputs", "", this->show, true);
-
-    auto& app = Application::Get();
 
     if (!this->show) { return; }
 
@@ -28,7 +26,7 @@ void InputEditorWindow::RenderWindow() {
             ImGui::TableSetupColumn("Input Keycode");
             ImGui::TableHeadersRow();
             for (unsigned int i = BLAZAR_KEY_MIN; i < BLAZAR_KEY_MAX; i++) {
-                if (Input::Key(i)) {
+                if (Input::key(i)) {
                     ImGui::TableNextColumn();
                     ImGui::Text("%c", i);
                     ImGui::TableNextColumn();

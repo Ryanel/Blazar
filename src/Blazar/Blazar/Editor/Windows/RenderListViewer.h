@@ -13,7 +13,7 @@ class RenderListWindowLayer : public EditorWindow {
     int  selected = -1;
     RenderListWindowLayer() : EditorWindow("Render Lists") {}
     void ListItemRenderItem(RenderCommand& item, int index);
-    void RenderWindow() override;
+    void render() override;
 };
 
 }  // namespace Editor

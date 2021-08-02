@@ -13,14 +13,13 @@
 
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
-#include "Blazar/ImGui/ImGuiLayer.h"
 #include "Tracy.hpp"
 
 namespace Blazar {
 namespace Editor {
 static const char* const spdlog_level_names[] = {"Trace", "Debug", "Info", "Warn", "Error", "Critical", "Off"};
 
-void LogWindow::RenderWindow() {
+void LogWindow::render() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("Windows", "Log", "", this->m_Show, true);
 

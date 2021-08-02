@@ -8,9 +8,9 @@ namespace Blazar {
 ResourceManager* g_resourceManager;
 
 ResourceManager::ResourceManager() { m_vfs = new VFS::VFS(); }
-bool ResourceManager::Exists(std::string path) { return m_entries.find(path) != m_entries.end(); }
-void ResourceManager::Unload(std::string path) { 
-    if (Exists(path)) {
+bool ResourceManager::exists(std::string path) { return m_entries.find(path) != m_entries.end(); }
+void ResourceManager::unload(std::string path) { 
+    if (exists(path)) {
         m_entries.erase(path);
     } else {
         LOG_CORE_ERROR("Resource Manager: Attempted to clear a path that doesn't exist ({})", path);
@@ -18,7 +18,7 @@ void ResourceManager::Unload(std::string path) {
     m_entries.erase(path);
 
 }
-void ResourceManager::Clean() {
+void ResourceManager::clean() {
     // Unload any resources that have use_count = 1
     std::list<std::string> toClean;
     int clean_stats = 0;
@@ -28,7 +28,7 @@ void ResourceManager::Clean() {
 
     for (auto& it : toClean) { m_entries.erase(it); }
 }
-bool ResourceManager::ReadFromVFS(std::string_view path, std::vector<std::byte>& outBuffer) {
+bool ResourceManager::vfs_read(std::string_view path, std::vector<std::byte>& outBuffer) {
     ZoneScoped;
     if (m_vfs->exists(std::string(path))) {
         std::vector<std::byte>& out = m_vfs->read(std::string(path));
@@ -38,7 +38,7 @@ bool ResourceManager::ReadFromVFS(std::string_view path, std::vector<std::byte>&
     return false;
 }
 
-ResourceManager* ResourceManager::Get() {
+ResourceManager* ResourceManager::get() {
     if (g_resourceManager == nullptr) { g_resourceManager = new ResourceManager(); }
     return g_resourceManager;
 }

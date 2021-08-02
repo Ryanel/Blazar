@@ -10,22 +10,22 @@ typedef int32_t blazar_key_t;
 class Input {
    public:
     /// Returns true if the key is being held down this frame
-    static bool Key(blazar_key_t key);
+    static bool key(blazar_key_t key);
     /// Returns true if the key is pressed this frame
-    static bool KeyDown(blazar_key_t key);
+    static bool key_down(blazar_key_t key);
     /// Returns true if the mouse button is being held down this frame
-    static bool MouseButton(int mouseButton);
+    static bool mouse_down(int mouseButton);
     /// Returns the (x,y) mouse position, relative to the desktop.
-    static std::pair<int, int> MousePosition();
+    static std::pair<int, int> mouse_pos();
     /// Returns the mouse X position
-    static int GetMouseX();
+    static int mouse_x();
     /// Returns the mouse Y position
-    static int GetMouseY();
+    static int mouse_y();
     /// Call on a new frame
-    static void NewFrame();
+    static void new_frame();
 
     /// Called by the platform to set the state of a key
-    static void SetKeyState(blazar_key_t key, bool pressed);
+    static void set_key_state(blazar_key_t key, bool pressed);
    private:
     // Implementation specific functions, implemented in platform files
     static bool PlatformGetKeyPressed(blazar_key_t key);

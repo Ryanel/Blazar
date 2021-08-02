@@ -26,9 +26,9 @@
 #include "Tracy.hpp"
 
 #include "Blazar/Component/MeshComponent.h"
+#include "Blazar/Component/NameComponent.h"
 #include "Blazar/Component/RenderTransform.h"
 #include "Blazar/Component/TextureComponent.h"
-#include "Blazar/Component/NameComponent.h"
 #include "Components/Transform.h"
 
 #include "Blazar/Entry.h"
@@ -49,7 +49,7 @@ class TestScene : public Blazar::Scenes::Scene {
         m_texture2         = Texture2D::Load("/Data/Textures/dante.png", texprops);
 
         // Entity 1
-        Entity entity = CreateEntity();
+        Entity entity = entity_create();
         entity.emplace<NameComponent>("Test Entity 1");
         entity.emplace<Transform>(glm::vec3(-0.75f, 0.0f, 0.0f));
         entity.emplace<MeshComponent>(m_quad->vao);
@@ -57,9 +57,9 @@ class TestScene : public Blazar::Scenes::Scene {
         entity.emplace<RenderTransform>(glm::vec3(-0.75f, 0.0f, 0.0f));
 
         // Entity 2
-        Entity entity2 = CreateEntity();
+        Entity entity2 = entity_create();
         entity2.emplace<NameComponent>("Test Entity 2");
-        //entity2.emplace<Transform>(glm::vec3(0.75f, 0.0f, 0.0f));
+        entity2.emplace<Transform>(glm::vec3(0.75f, 0.0f, 0.0f));
         entity2.emplace<MeshComponent>(m_quad->vao);
         entity2.emplace<TextureComponent>(m_texture2->data());
         entity2.emplace<RenderTransform>(glm::vec3(0.75f, 0.0f, 0.0f));
@@ -71,17 +71,17 @@ class TestScene : public Blazar::Scenes::Scene {
         m_shader->SetInt("u_Texture", 0);
 
         // Camera
-        auto& gameWindow = Application::Get().GetWindow();
-        m_cameraController.reset(new OrthographicCamera(2.0f, gameWindow.GetAspect()));
+        auto& gameWindow = Application::get().GetWindow();
+        m_cameraController.reset(new OrthographicCamera(3.0f, gameWindow.GetAspect()));
         m_cameraController->SetPosition({0, 0, 0});
         m_cameraController->SetViewport(gameWindow.GetViewport());
     }
     virtual ~TestScene() {}
 
-    virtual void OnUpdate(Timestep& ts) {}
+    virtual void update(Timestep& ts) {}
 
-    virtual void OnRender(Timestep& ts) {
-        Application& app  = Application::Get();
+    virtual void render(Timestep& ts) {
+        Application& app  = Application::get();
         auto         view = registry().view<RenderTransform, MeshComponent, TextureComponent>();
         m_cameraController->SetViewport(app.m_RenderViewport);
 
@@ -100,7 +100,7 @@ class TestScene : public Blazar::Scenes::Scene {
         }
 
         cmds.emplace_back(RenderCmd::EndPass());
-        Renderer::SubmitList(cmds);
+        Renderer::submit(cmds);
     }
 
     Ref<Resource<Texture2D>> m_texture;
@@ -118,18 +118,18 @@ class Game : public Blazar::Application {
 
 #ifdef BLAZAR_ENABLE_EDITOR
         m_editor = new Editor::Editor();
-        m_editor->Setup();
+        m_editor->setup();
 #endif
 
-        Setup();
+        setup();
     }
 
     ~Game() {}
 
     // Game Lifecycle methods
-    void Setup() { this->m_SceneManager->SetMainScene(new TestScene()); }
-    void OnUpdate() override {}
-    void OnRender() override {}
+    void setup() { this->m_SceneManager->set_main_scene(new TestScene()); }
+    void update() override {}
+    void render() override {}
 };
 
 namespace Blazar {
@@ -137,7 +137,7 @@ namespace Blazar {
 Application* CreateApplication() {
     tracy::SetThreadName("Main Thread");
 
-    auto* rm = ResourceManager::Get();
+    auto* rm = ResourceManager::get();
     rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Data/", "Contents/Data/", true));
     rm->m_vfs->add_mountpoint(new VFS::FileSystem("/Editor/", "Contents/Editor/", true));
     rm->m_vfs->refresh();

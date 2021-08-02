@@ -9,7 +9,7 @@ class IResource {
    public:
     IResource() {}
     virtual ~IResource() {}
-    virtual bool Loaded() = 0;
+    virtual bool loaded() = 0;
 };
 
 /// A loaded resource
@@ -35,7 +35,7 @@ template<class T> class Resource : public IResource {
     void set_data(T* data) { m_data = data; }
 
     /// Returns true if data has been inserted already.
-    virtual bool Loaded() { return m_data != nullptr; }
+    virtual bool loaded() { return m_data != nullptr; }
 
    private:
     T* m_data = nullptr;

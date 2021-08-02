@@ -15,12 +15,12 @@ extern Application* CreateApplication();
 
 #ifdef BLAZAR_CONSOLE_WINDOW
 int main(int argc, char** argv) {
-    timeBeginPeriod(1); //TODO: May be a terrible idea for laptop users. Should abstract?
+    timeBeginPeriod(1);  // TODO: May be a terrible idea for laptop users. Should abstract?
     using namespace Blazar;
 
-    Log::Init();
+    Log::init();
     auto app = CreateApplication();
-    app->Run();
+    app->run();
     delete app;
 
     timeEndPeriod(1);
@@ -31,10 +31,10 @@ int main(int argc, char** argv) {
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow) {
     timeBeginPeriod(1);
     using namespace Blazar;
-    Log::Init();
+    Log::init();
 
     auto app = CreateApplication();
-    app->Run();
+    app->run();
     delete app;
 
     return 0;
@@ -62,7 +62,7 @@ std::string dirnameOf(const std::string& fname) {
 
 int main(int argc, char** argv) {
     using namespace Blazar;
-    Log::Init();
+    Log::init();
 
     // Set current working directory of Game to executable folder
     std::string new_working_directory = dirnameOf(getexepath());
@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
     std::filesystem::current_path(new_working_directory);
 
     auto app = CreateApplication();
-    app->Run();
+    app->run();
     delete app;
 
     return 0;

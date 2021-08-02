@@ -6,8 +6,7 @@ namespace Blazar {
 namespace Components {
 
 struct NameComponent {
-    NameComponent(std::string name) : name(name){
-    }
+    NameComponent(std::string name) : name(name) {}
     std::string name;  ///< The name of this entity
 };
 

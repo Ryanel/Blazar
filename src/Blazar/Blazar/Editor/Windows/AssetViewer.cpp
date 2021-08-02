@@ -56,13 +56,13 @@ void AssetEditorWindow::RenderItem(std::string name, std::string path, bool isDi
     if (!isDirectory) {
         id = m_texfile->data()->imgui_id();
 
-        std::string_view extension = Blazar::Utility::Paths::GetExtension(path);
+        std::string_view extension = Blazar::Utility::Paths::get_extension(path);
         if (extension.size() > 0) {
             if (extension.compare("png") == 0) {
-                auto* rm = ResourceManager::Get();
+                auto* rm = ResourceManager::get();
 
                 if (m_optionEnableThumbnails) {
-                    if (rm->Exists(path)) {
+                    if (rm->exists(path)) {
                         id = Texture2D::Load(path)->data()->imgui_id();
                     } else {
                         if (m_numthumbsCanLoad > 0) {
@@ -90,11 +90,11 @@ void AssetEditorWindow::RenderItem(std::string name, std::string path, bool isDi
     TextCentered(name.c_str(), m_size, ImGui::GetCursorPosX());
 }
 
-void AssetEditorWindow::RenderWindow() {
+void AssetEditorWindow::render() {
     ZoneScoped;
     ImGUI_MainMenu_Toggle_Simple("Windows", "Assets", "", this->show, true);
 
-    auto& app = Application::Get();
+    auto& app = Application::get();
 
     if (!this->show) { return; }
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -207,7 +207,7 @@ void AssetEditorWindow::RenderWindow() {
             ImGui::Checkbox("Enable Thumbnails", &this->m_optionEnableThumbnails);
             ImGui::SliderInt("Thumbnails to load per frame", &this->m_optionThumbsCanLoad, 0, 3);
             CImGUI_Header2("Development");
-            if (ImGui::Button("Clean")) { ResourceManager::Get()->Clean(); }
+            if (ImGui::Button("Clean")) { ResourceManager::get()->clean(); }
         }
         ImGui::End();
     }
@@ -215,7 +215,7 @@ void AssetEditorWindow::RenderWindow() {
 
 void AssetEditorWindow::Refresh() {
     ZoneScoped;
-    auto&  vfs    = ResourceManager::Get()->m_vfs;
+    auto&  vfs    = ResourceManager::get()->m_vfs;
     auto   list   = vfs->filelist();
     size_t levels = m_path_heirarchy.size();
 

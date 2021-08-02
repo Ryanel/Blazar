@@ -9,7 +9,7 @@
 
 namespace Blazar {
 
-class ImGuiLayer;
+class ImGuiSystem;
 class Window;
 class RenderTexture;
 
@@ -26,14 +26,14 @@ class Application {
    public:
     Application();           ///< Creates the application
     virtual ~Application();  ///< Deconstructor
-    void Run();              ///< Main run loop
+    void run();              ///< Main run loop
 
     /// Gets the main window
     inline Window& GetWindow() { return *m_Window; }
 
     /// Returns this application
-    inline static Application& Get() { return *s_Instance; }
-    Scenes::SceneManager*      SceneManager() { return m_SceneManager; }
+    inline static Application& get() { return *s_Instance; }
+    Scenes::SceneManager*      scenemanager() { return m_SceneManager; }
 
    public:
     std::unique_ptr<Window> m_Window;  ///< This Window
@@ -47,18 +47,23 @@ class Application {
     std::string        m_name              = "Blazar";  ///< Name of the Application
 
    public:
-    void virtual OnUpdate() = 0;
-    void virtual OnRender() = 0;
+    void virtual update() = 0;
+    void virtual render() = 0;
 
    protected:
     static Application*   s_Instance;
-    ImGuiLayer*           m_ImGui        = nullptr;
+    ImGuiSystem*          m_ImGui        = nullptr;
     Scenes::SceneManager* m_SceneManager = nullptr;
     Editor::Editor*       m_editor       = nullptr;  ///< Editor instance
 
    private:
     // Threading
-    void                    UpdateThread();
+    void update_thread();
+    void update_thread_signal();
+    void update_thread_wait();
+    void update_renderbuffer();
+    void render_thread();
+
     bool                    m_updateThreadCanWork = false;
     std::condition_variable m_updateThreadSignal;
     std::mutex              m_updateThreadLock;

@@ -38,7 +38,7 @@ std::mutex                Renderer::m_QueueLock;
 std::deque<RenderCommand> Renderer::m_LastRenderQueue;
 #endif
 
-void Renderer::Init(RendererAPI::API toCreate) {
+void Renderer::init(RendererAPI::API toCreate) {
     BLAZAR_CORE_ASSERT(s_RendererAPI == nullptr, "Attempting to add another RendererAPI, not allowed!");
     switch (toCreate) {
         case RendererAPI::API::OpenGL:
@@ -57,29 +57,29 @@ void Renderer::Init(RendererAPI::API toCreate) {
     std::dynamic_pointer_cast<Blazar::OpenGLShader>(m_fullscreenShader)->SetInt("u_Texture", 0);
 }
 
-void Renderer::Submit(RenderCommand& command) {
+void Renderer::submit(RenderCommand& command) {
     ZoneScoped;
     std::lock_guard guard(m_QueueLock);
     m_RenderQueue.emplace_back(command);
 }
-void Renderer::Submit(RenderCommand&& command) {
+void Renderer::submit(RenderCommand&& command) {
     ZoneScoped;
     std::lock_guard guard(m_QueueLock);
     m_RenderQueue.emplace_back(command);
 }
 
-void Renderer::SubmitList(std::vector<RenderCommand>& commands) {
+void Renderer::submit(std::vector<RenderCommand>& commands) {
     ZoneScoped;
     std::lock_guard guard(m_QueueLock);
     m_RenderQueue.insert(m_RenderQueue.end(), commands.begin(), commands.end());
 }
 
-void Renderer::ResetStats() {
+void Renderer::reset_stats() {
     m_stats.passesThisFrame = 0;
     m_stats.drawCalls       = 0;
 }
 
-void Renderer::FlushQueue() {
+void Renderer::process_frame() {
     ZoneScoped;
     bool endProcessing = false;
 
@@ -186,7 +186,7 @@ void Renderer::FlushQueue() {
                 endProcessing = true;
                 break;
             default:
-                LOG_CORE_WARN("Renderer::FlushQueue encountered unhandled item {}", RenderCommand_GetString(item.m_id));
+                LOG_CORE_WARN("Renderer::process_frame encountered unhandled item {}", RenderCommand_GetString(item.m_id));
                 break;
         }
 

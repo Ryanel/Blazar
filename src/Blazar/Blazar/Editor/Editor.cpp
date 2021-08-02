@@ -27,9 +27,9 @@ namespace Blazar {
 namespace Editor {
 Editor::Editor() {}
 
-void Editor::Setup() {
+void Editor::setup() {
     // Add layers after this one here
-    auto& app = Application::Get();
+    auto& app = Application::get();
 
     m_windows.push_back(new GameWindow());
     m_windows.push_back(new LogWindow());
@@ -42,9 +42,9 @@ void Editor::Setup() {
 #endif
 }
 
-void Editor::RenderWindow() {
+void Editor::render() {
     ZoneScoped;
-    auto& app = Application::Get();
+    auto& app = Application::get();
     
     // Main Menu
     if (ImGui::BeginMainMenuBar()) {
@@ -56,7 +56,7 @@ void Editor::RenderWindow() {
     }
 
     ImGui::DockSpaceOverViewport(nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
-    for (auto* x : m_windows) { x->RenderWindow(); }
+    for (auto* x : m_windows) { x->render(); }
 }
 
 }  // namespace Editor

@@ -14,13 +14,15 @@ class Scene {
    public:
     Scene(std::string name);  ///< Scene Constructor
     virtual ~Scene();         ///< Scene Destructor
-    Entity CreateEntity();    ///< Creates an entity within the scene
+
+    /// Creates an entity within the scene
+    Entity entity_create();
 
     /// Updates the scene by ts time.
-    virtual void OnUpdate(Timestep& ts);
+    virtual void update(Timestep& ts);
 
     /// Renders the scene, using ts as the deltatime.
-    virtual void OnRender(Timestep& ts);
+    virtual void render(Timestep& ts);
 
     /// Returns the Scene's Registry of Entities
     entt::registry& registry() { return m_registry; }
@@ -29,8 +31,7 @@ class Scene {
     const entt::registry& registry() const { return m_registry; }
 
     size_t ticks() const;  ///< Returns the number of ticks that have been processed.
-
-    std::string& name() { return m_name; }
+    const std::string& name() const { return m_name; }
 
    protected:
     size_t CalculateTicksThisFrame(Timestep& ts);  ///< Calculates the ticks to do this frame, from accrued time.
@@ -40,7 +41,7 @@ class Scene {
     float          m_time     = 0.0f;
     float          m_tickTime = 0.0f;
     float          m_tickRate = 10.0f;
-    std::string    m_name;
+    std::string    m_name     = "";
     entt::registry m_registry;
 };
 }  // namespace Scenes

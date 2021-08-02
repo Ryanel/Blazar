@@ -4,10 +4,10 @@ namespace Blazar {
 
 /// A 32-bit RGBA Color. 0-1 color space
 struct Color {
-    float r; ///< Red
-    float g; ///< Green
-    float b; ///< Blue
-    float a; ///< ALpha
+    float r;  ///< Red
+    float g;  ///< Green
+    float b;  ///< Blue
+    float a;  ///< ALpha
 
     /// Default constructor (black at full alpha)
     Color() : r(0), g(0), b(0), a(1.0f) {}
