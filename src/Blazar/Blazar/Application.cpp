@@ -42,7 +42,7 @@ Application::Application() {
 #endif
 
     // Set the Render Viewport
-    m_RenderViewport = std::make_shared<Viewport>(0, 0, 1600, 900);
+    m_RenderViewport.reset(new Viewport(0,0,1600,900));
     RenderTextureProperties renderProperties;
     renderProperties.width  = (int)m_RenderViewport->width;
     renderProperties.height = (int)m_RenderViewport->height;
