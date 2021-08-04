@@ -12,7 +12,7 @@ namespace Editor {
 class WorldViewer : public EditorWindow {
    public:
     WorldViewer();
-    void render() override;
+    void render(Editor* editor) override;
 
    private:
     entt::entity             m_selected_entity = entt::null;

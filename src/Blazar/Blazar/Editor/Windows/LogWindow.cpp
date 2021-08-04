@@ -12,6 +12,7 @@
 #include <spdlog/fmt/ostr.h>
 
 #include "Blazar/Application.h"
+#include "Blazar/Editor/Editor.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Tracy.hpp"
 
@@ -19,24 +20,12 @@ namespace Blazar {
 namespace Editor {
 static const char* const spdlog_level_names[] = {"Trace", "Debug", "Info", "Warn", "Error", "Critical", "Off"};
 
-void LogWindow::render() {
+void LogWindow::render(Editor* editor) {
     ZoneScoped;
-    ImGUI_MainMenu_Toggle_Simple("Windows", "Log", "", this->m_Show, true);
-
-    if (!m_Show) { return; }
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     if (ImGui::Begin("Log", &this->m_Show)) {
-        focused = ImGui::IsWindowFocused();
-
-        if (focused || childFocused) {
-            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_TitleBgActive));
-        } else {
-            ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(ImGuiCol_TitleBg));
-        }
-
         if (ImGui::BeginChild("##LogTop", ImVec2(0, 28))) {
-            childFocused = ImGui::IsWindowFocused();
             ImGui::Checkbox("Show options", &this->m_Options);
 
             ImGui::SameLine();
@@ -50,7 +39,6 @@ void LogWindow::render() {
             }
         }
         ImGui::EndChild();
-        ImGui::PopStyleColor();
 
         if (m_Options) {
             ImGui::Checkbox("Scroll Log to Bottom", &this->m_ScrollToBottom);
@@ -91,6 +79,8 @@ void LogWindow::render() {
     ImGui::End();
 
     ImGui::PopStyleVar();
+
+    if (!m_Show) { editor->close_window(this); }
 }
 
 void LogWindow::DisplayEntry(log_entry& entry) {

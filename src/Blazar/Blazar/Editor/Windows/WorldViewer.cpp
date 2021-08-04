@@ -14,75 +14,31 @@
 
 namespace Blazar {
 namespace Editor {
-WorldViewer::WorldViewer() : EditorWindow("World Viewer") { m_texgear = Texture2D::Load("/Editor/Textures/gear.png"); }
-void WorldViewer::render() {
-    ZoneScoped;
-    ImGUI_MainMenu_Toggle_Simple("Windows", "World Viewer", "", this->m_active, true);
 
+WorldViewer::WorldViewer() : EditorWindow("World Viewer", "World", EditorWindowState::EDITOR_DOCKED) {
+    m_texgear = Texture2D::Load("/Editor/Textures/gear.png");
+}
+
+void WorldViewer::render(Editor* editor) {
+    ZoneScoped;
     auto& app = Application::get();
 
-    if (!this->m_active) { return; }
-
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    if (ImGui::Begin("World Viewer", &this->m_active)) {
-        isFocused = ImGui::IsWindowFocused();
-
-        ImGuiCol titleBg = (isFocused || isTitleFocused) ? ImGuiCol_TitleBgActive : ImGuiCol_TitleBg;
-        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImGui::GetStyleColorVec4(titleBg));
-
-        if (ImGui::BeginChild("##WorldViewerTop", ImVec2(0, 30))) {
-            isTitleFocused = ImGui::IsWindowFocused();
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4.0f);
-
-            if (ImGui::ImageButton(m_texgear->data()->imgui_id(), ImVec2(16.0f, 16.0f), ImVec2(0.0f, 1.0f),
-                                   ImVec2(1, 0))) {
-                m_options_open = !m_options_open;
-            }
-            ImGui::SameLine();
-            if (ImGui::Button("Clear Selection")) { m_selected_entity = entt::null; }
-            ImGui::SameLine();
+    if (ImGui::BeginMenuBar()) {
+        if (ImGui::BeginMenu("Edit")) {
+            if (ImGui::MenuItem("Clear Selection")) { m_selected_entity = entt::null; }
+            ImGui::EndMenu();
         }
-        ImGui::EndChild();
-        ImGui::PopStyleColor();
 
-        auto currentScene = app.scenemanager()->current();
-
-        if (currentScene != nullptr) {
-            auto& registry = currentScene->registry();
-            ImGui::Text("Scene Name: %s", currentScene->name().c_str());
-
-            if (ImGui::BeginListBox("##EntityList", ImVec2(ImGui::GetContentRegionAvailWidth(), 0))) {
-                registry.each([&registry, this](entt::entity ent) {
-                    Entity e(&registry, ent);
-
-                    std::string entityName;
-                    if (e.has<Components::NameComponent>()) {
-                        auto name  = e.get<Components::NameComponent>();
-                        entityName = name.name;
-                    } else {
-                        entityName = fmt::format("Entity {}", (int)e.entity());
-                    }
-
-                    bool selected = m_selected_entity == e.entity();
-
-                    if (ImGui::Selectable(entityName.c_str(), &selected)) { m_selected_entity = e.entity(); }
-                });
-
-                ImGui::EndListBox();
-            }
-        } else {
-            ImGui::Text("No scene active");
-        }
+        ImGui::EndMenuBar();
     }
-    ImGui::End();
-    ImGui::PopStyleVar();
+    auto currentScene = app.scenemanager()->current();
 
-    if (m_opt_show_properties_always || m_selected_entity != entt::null) {
-        bool should_stay_open = true;
-        if (ImGui::Begin("Entity Properties", &should_stay_open)) {
-            if (m_selected_entity != entt::null) {
-                Entity      e(&app.scenemanager()->current()->registry(), m_selected_entity);
+    if (currentScene != nullptr) {
+        auto& registry = currentScene->registry();
+        if (ImGui::BeginListBox("##EntityList", ImGui::GetContentRegionAvail())) {
+            registry.each([&registry, this](entt::entity ent) {
+                Entity e(&registry, ent);
+
                 std::string entityName;
                 if (e.has<Components::NameComponent>()) {
                     auto name  = e.get<Components::NameComponent>();
@@ -91,12 +47,15 @@ void WorldViewer::render() {
                     entityName = fmt::format("Entity {}", (int)e.entity());
                 }
 
-                CImGUI_Header1(entityName);
+                bool selected = m_selected_entity == e.entity();
 
-                // Inspector logic
-            }
+                if (ImGui::Selectable(entityName.c_str(), &selected)) { m_selected_entity = e.entity(); }
+            });
+
+            ImGui::EndListBox();
         }
-        ImGui::End();
+    } else {
+        ImGui::Text("No scene active");
     }
 }
 

@@ -19,8 +19,8 @@ IncludeDir["STB"]      = "src/Vendor/stb/"
 IncludeDir["spdlog"]   = "src/Vendor/spdlog/include/"
 IncludeDir["GLFW"]     = "src/Vendor/glfw/include/"
 IncludeDir["GLM"]      = "src/Vendor/glm/"
-IncludeDir["Tracy"]      = "src/Vendor/tracy/"
-IncludeDir["entt"]      = "src/Vendor/entt/src/"
+IncludeDir["Tracy"]    = "src/Vendor/tracy/"
+IncludeDir["entt"]     = "src/Vendor/entt/src/"
 
 include "src/Vendor/GLAD"
 include "src/Vendor/vendor.lua"
@@ -92,7 +92,7 @@ project "Blazar"
             "GLFW_INCLUDE_NONE",
         }
 
-        disablewarnings({"26812", "26495", "26451", "26498", "6201"})
+        disablewarnings({"26812", "26495", "26451", "26498", "6201", "6285", "26437"})
 
     filter "system:linux"
         defines

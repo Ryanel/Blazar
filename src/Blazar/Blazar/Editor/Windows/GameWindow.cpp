@@ -11,13 +11,10 @@
 namespace Blazar {
 namespace Editor {
 
-void GameWindow::render() {
+void GameWindow::render(Editor* editor) {
     ZoneScoped;
 
     auto& app = Application::get();
-    ImGUI_MainMenu_Toggle_Simple("Windows", "Game Window", "", app.m_UseEditorWindow, true);
-
-    if (!this->show) { return; }
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     if (app.m_UseEditorWindow) {

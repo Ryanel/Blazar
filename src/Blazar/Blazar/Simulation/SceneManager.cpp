@@ -30,7 +30,7 @@ void SceneManager::render(Timestep& ts) {
     // ------------------------------------------------------------------------
 #ifdef BLAZAR_ENABLE_EDITOR
     render_cmds.emplace_back(RenderCmd::SetViewport(0, 0, app.GetWindow().GetWidth(), app.GetWindow().GetHeight()));
-    render_cmds.emplace_back(RenderCmd::Clear(0.3f, 0.3f, 0.3f, 1.0f));
+    render_cmds.emplace_back(RenderCmd::Clear(0.1f, 0.1f, 0.1f, 1.0f));
 #endif
 
     // Step 2: Clear the game's main rendertexture

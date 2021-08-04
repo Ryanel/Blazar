@@ -7,9 +7,12 @@ namespace Editor {
 /// The editor FPS widget
 class FPSWidgetWindowLayer : public EditorWindow {
    public:
-    bool show = true;  ///< Show this
-    FPSWidgetWindowLayer() : EditorWindow("FPS Widget") {}
-    void render() override;
+    FPSWidgetWindowLayer();
+    void render(Editor* editor) override;
+
+    int numEntries = 20;
+    int currentEntry = 0;
+    std::vector<float> deltaTimes;
 };
 
 }  // namespace Editor

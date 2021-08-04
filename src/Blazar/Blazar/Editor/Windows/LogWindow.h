@@ -9,8 +9,8 @@ namespace Editor {
 
 class LogWindow : public EditorWindow {
    public:
-    LogWindow() : EditorWindow("Log") { ; }
-    void render() override;
+    LogWindow() : EditorWindow("Log", "Log", EditorWindowState::FREE_FLOATING) { m_useCustomWindow = true; }
+    void render(Editor* editor) override;
 
    private:
     void                      DisplayEntry(log_entry& e);
@@ -19,9 +19,6 @@ class LogWindow : public EditorWindow {
     bool                      m_Options        = false;
     spdlog::level::level_enum m_filterSeverity = spdlog::level::trace;
     int                       m_EntriesToShow  = 200;
-
-    bool focused      = false;
-    bool childFocused = false;
 };
 
 }  // namespace Editor

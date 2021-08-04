@@ -49,8 +49,9 @@ class TestScene : public Blazar::Scenes::Scene {
         m_texture2         = Texture2D::Load("/Data/Textures/dante.png", texprops);
 
         // Entity 1
+        entity_create();
         Entity entity = entity_create();
-        entity.emplace<NameComponent>("Test Entity 1");
+        entity.emplace<NameComponent>("Test Entity A");
         entity.emplace<Transform>(glm::vec3(-0.75f, 0.0f, 0.0f));
         entity.emplace<MeshComponent>(m_quad->vao);
         entity.emplace<TextureComponent>(m_texture->data());
@@ -58,7 +59,7 @@ class TestScene : public Blazar::Scenes::Scene {
 
         // Entity 2
         Entity entity2 = entity_create();
-        entity2.emplace<NameComponent>("Test Entity 2");
+        entity2.emplace<NameComponent>("Test Entity B");
         entity2.emplace<Transform>(glm::vec3(0.75f, 0.0f, 0.0f));
         entity2.emplace<MeshComponent>(m_quad->vao);
         entity2.emplace<TextureComponent>(m_texture2->data());
@@ -72,7 +73,7 @@ class TestScene : public Blazar::Scenes::Scene {
 
         // Camera
         auto& gameWindow = Application::get().GetWindow();
-        m_cameraController.reset(new OrthographicCamera(3.0f, gameWindow.GetAspect()));
+        m_cameraController.reset(new OrthographicCamera(6.0f, gameWindow.GetAspect()));
         m_cameraController->SetPosition({0, 0, 0});
         m_cameraController->SetViewport(gameWindow.GetViewport());
     }

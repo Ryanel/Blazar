@@ -11,20 +11,21 @@ class Texture2D;
 
 namespace Editor {
 
-class AssetEditorWindow : public EditorWindow {
+class FilesystemViewer : public EditorWindow {
    public:
-    AssetEditorWindow();
-    void RenderItem(std::string name, std::string path, bool isDirectory);
-    void render() override;
+    FilesystemViewer();
+    void RenderItem(std::string name, std::string path, bool isDirectory, Editor* editor, bool useList);
+
+    void DrawTable(Editor* editor);
+    void DrawList(Editor* editor);
+    void DrawBreadCrumbs(Editor* editor);
+    void render(Editor* editor) override;
 
     void NavigateUpFolder();
     void Refresh();
 
-    bool show           = true;
-    bool options_open   = false;
-    bool dirty          = true;
-    bool isFocused      = true;
-    bool isChildFocused = false;
+    bool options_open = false;
+    bool dirty        = true;
 
     float m_size    = 96;
     float m_padding = 16;

@@ -9,11 +9,10 @@ namespace Blazar {
 namespace Editor {
 class RenderListWindowLayer : public EditorWindow {
    public:
-    bool show     = true;
     int  selected = -1;
-    RenderListWindowLayer() : EditorWindow("Render Lists") {}
+    RenderListWindowLayer() : EditorWindow("Render Lists", "Render Lists") {m_useCustomWindow = true;}
     void ListItemRenderItem(RenderCommand& item, int index);
-    void render() override;
+    void render(Editor* editor) override;
 };
 
 }  // namespace Editor

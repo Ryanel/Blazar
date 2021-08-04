@@ -23,8 +23,8 @@ Ref<Shader> Shader::Load(std::string path) {
         std::vector<std::byte> vsOutBuffer;
         std::vector<std::byte> fsOutBuffer;
 
-        vsOutBuffer.reserve(512);
-        fsOutBuffer.reserve(512);
+        vsOutBuffer.reserve(4096);
+        fsOutBuffer.reserve(4096);
 
         if (!ResourceManager::get()->vfs_read(path + ".vs", vsOutBuffer)) {
             LOG_CORE_ERROR("Shader: Failed to read fragment shader");
@@ -35,22 +35,16 @@ Ref<Shader> Shader::Load(std::string path) {
         }
 
         std::stringstream vertex;
-        for (size_t i = 0; i < vsOutBuffer.size(); i++)
-        {
-            vertex << (char)vsOutBuffer[i];
-        }
+        for (size_t i = 0; i < vsOutBuffer.size(); i++) { vertex << (char)vsOutBuffer[i]; }
         vertexCode = vertex.str();
 
         std::stringstream frag;
-        for (size_t i = 0; i < fsOutBuffer.size(); i++)
-        {
-            frag << (char)fsOutBuffer[i];
-        }
+        for (size_t i = 0; i < fsOutBuffer.size(); i++) { frag << (char)fsOutBuffer[i]; }
         fragmentCode = frag.str();
 
         // convert stream into string
-        //vertexCode   = vShaderStream.str();
-        //fragmentCode = fShaderStream.str();
+        // vertexCode   = vShaderStream.str();
+        // fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure e) { LOG_CORE_ERROR("Shader: Unable to read file. Reason: {}", e.what()); }
 
     return Shader::FromText(vertexCode, fragmentCode);

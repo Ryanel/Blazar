@@ -17,15 +17,14 @@ void RenderListWindowLayer::ListItemRenderItem(RenderCommand& item, int index) {
     if (ImGui::Selectable(str.c_str(), &isSelected)) { selected = index; }
 }
 
-void RenderListWindowLayer::render() {
+void RenderListWindowLayer::render(Editor* editor) {
     ZoneScoped;
-    ImGUI_MainMenu_Toggle_Simple("[Development]", "Render List", "", this->show, true);
+    //ImGUI_MainMenu_Toggle_Simple("[Development]", "Render List", "", this->show, true);
 
     auto& app = Application::get();
 
-    if (!this->show) { return; }
 
-    if (ImGui::Begin("Render List", &this->show)) {
+    if (ImGui::Begin("Render List")) {
         // Options bar
         if (ImGui::Button("Clear Selection")) { selected = -1; }
         ImGui::SameLine();
@@ -46,7 +45,7 @@ void RenderListWindowLayer::render() {
     }
     ImGui::End();
 
-    if (ImGui::Begin("Properties (Render List)", &this->show)) {
+    if (ImGui::Begin("Properties (Render List)")) {
         if (selected != -1) {
             // Properties
             // We go through this loop again to display the current context, which we must generate through stepping

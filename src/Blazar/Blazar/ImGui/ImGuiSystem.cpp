@@ -8,6 +8,7 @@
 
 #include "Blazar/Application.h"
 #include "Blazar/ImGui/CustomImGui.h"
+#include "Blazar/ImGui/IconsFontAwesome.h"
 #include "Blazar/ImGui/ImGuiSystem.h"
 
 #include "Tracy.hpp"
@@ -26,36 +27,43 @@ void ImGuiSystem::init() {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_IsTouchScreen;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-    imgui_font_normal = io.Fonts->AddFontFromFileTTF("Contents/Editor/Fonts/Roboto-Medium.ttf", 16);
-    imgui_font_big    = io.Fonts->AddFontFromFileTTF("Contents/Editor/Fonts/Roboto-Medium.ttf", 24);
-    imgui_font_bigger = io.Fonts->AddFontFromFileTTF("Contents/Editor/Fonts/Roboto-Medium.ttf", 32);
+    imgui_font_normal = io.Fonts->AddFontFromFileTTF("Contents/Editor/Fonts/CascadiaMono.ttf", 16.0f);
+    ImFontConfig config;
+    config.MergeMode                   = true;
+    config.PixelSnapH                  = true;
+    static const ImWchar icon_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+    imgui_font_normal =
+        io.Fonts->AddFontFromFileTTF("Contents/Editor/Fonts/fa-solid-900.ttf", 16.0f, &config, icon_ranges);
+    imgui_font_big    = io.Fonts->AddFontFromFileTTF("Contents/Editor/Fonts/CascadiaMono.ttf", 24.0f);
+    imgui_font_bigger = io.Fonts->AddFontFromFileTTF("Contents/Editor/Fonts/CascadiaMono.ttf", 32.0f);
+
+    io.Fonts->Build();
 
     ImGuiStyle& style              = ImGui::GetStyle();
     style.WindowBorderSize         = 0.0f;
+    style.ChildBorderSize          = 0.0f;
+    style.ChildRounding            = 4;
     style.WindowRounding           = 4;
     style.WindowPadding.x          = 2;
     style.WindowPadding.y          = 2;
     style.FrameRounding            = 4;
     style.FramePadding.x           = 4;
     style.FramePadding.y           = 4;
-    style.WindowTitleAlign.x       = 0.50f;
+    style.WindowTitleAlign.x       = 0.00f;
     style.CellPadding.x            = 2;
     style.CellPadding.y            = 4;
     style.ItemSpacing.y            = 4;
-    style.ScrollbarSize            = 8;
+    style.ItemSpacing.x            = 4;
+    style.ScrollbarSize            = 12;
     style.TabRounding              = 2;
     style.GrabRounding             = 6;
     style.WindowMenuButtonPosition = ImGuiDir_Right;
 
-    ImVec4* colors                      = ImGui::GetStyle().Colors;
-    colors[ImGuiCol_Border]             = ImVec4(0.22f, 0.22f, 0.22f, 0.50f);
-    colors[ImGuiCol_TitleBgActive]      = ImVec4(0.21f, 0.46f, 0.65f, 1.00f);
-    colors[ImGuiCol_TitleBgCollapsed]   = ImVec4(0.10f, 0.10f, 0.10f, 0.51f);
-    colors[ImGuiCol_MenuBarBg]          = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
-    colors[ImGuiCol_FrameBg]            = ImVec4(0.04f, 0.04f, 0.04f, 0.54f);
-    colors[ImGuiCol_Separator]          = ImVec4(0.16f, 0.16f, 0.16f, 0.50f);
+    ImVec4* colors = ImGui::GetStyle().Colors;
+
+    colors[ImGuiCol_Text]               = ImVec4(0.87f, 0.87f, 0.87f, 1.00f);
     colors[ImGuiCol_Tab]                = ImVec4(0.12f, 0.34f, 0.63f, 0.86f);
     colors[ImGuiCol_TabActive]          = ImVec4(0.08f, 0.42f, 0.86f, 1.00f);
     colors[ImGuiCol_TabUnfocused]       = ImVec4(0.15f, 0.29f, 0.47f, 0.97f);
@@ -64,12 +72,20 @@ void ImGuiSystem::init() {
     colors[ImGuiCol_TableBorderStrong]  = ImVec4(0.26f, 0.26f, 0.29f, 1.00f);
     colors[ImGuiCol_TableBorderLight]   = ImVec4(0.28f, 0.28f, 0.32f, 1.00f);
     colors[ImGuiCol_TableRowBgAlt]      = ImVec4(0.47f, 0.47f, 0.47f, 0.06f);
-    colors[ImGuiCol_WindowBg]           = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
-    colors[ImGuiCol_FrameBg]            = ImVec4(0.39f, 0.39f, 0.39f, 0.27f);
-    colors[ImGuiCol_TitleBg]            = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
-    colors[ImGuiCol_Button]             = ImVec4(0.42f, 0.42f, 0.42f, 0.37f);
+    colors[ImGuiCol_FrameBg]            = ImVec4(0.08f, 0.09f, 0.10f, 0.27f);
     colors[ImGuiCol_ButtonHovered]      = ImVec4(0.26f, 0.59f, 0.98f, 0.71f);
     colors[ImGuiCol_TableRowBg]         = ImVec4(0.09f, 0.09f, 0.09f, 0.49f);
+    colors[ImGuiCol_ChildBg]            = ImVec4(0.09f, 0.10f, 0.12f, 1.00f);
+    colors[ImGuiCol_WindowBg]           = ImVec4(0.12f, 0.13f, 0.14f, 1.00f);
+    colors[ImGuiCol_Border]             = ImVec4(0.19f, 0.19f, 0.19f, 0.50f);
+    colors[ImGuiCol_TitleBgCollapsed]   = ImVec4(0.10f, 0.10f, 0.10f, 0.72f);
+    colors[ImGuiCol_MenuBarBg]          = ImVec4(0.09f, 0.10f, 0.12f, 1.00f);
+    colors[ImGuiCol_ScrollbarBg]        = ImVec4(0.12f, 0.13f, 0.14f, 0.53f);
+    colors[ImGuiCol_ScrollbarGrab]      = ImVec4(0.49f, 0.49f, 0.49f, 1.00f);
+    colors[ImGuiCol_Button]             = ImVec4(0.22f, 0.22f, 0.22f, 0.75f);
+    colors[ImGuiCol_Separator]          = ImVec4(0.19f, 0.19f, 0.19f, 0.50f);
+    colors[ImGuiCol_TitleBg]            = ImVec4(0.22f, 0.22f, 0.22f, 0.54f);
+    colors[ImGuiCol_TitleBgActive]      = ImVec4(0.27f, 0.27f, 0.27f, 0.54f);
 
     Application& app = Application::get();
     io.DisplaySize   = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());

@@ -4,6 +4,7 @@
 
 #ifdef BLAZAR_CFG_DEV_RENDER_COMMAND_INTROSPECTION
 #include "Blazar/Application.h"
+#include "Blazar/Editor/Editor.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/Input/Input.h"
 #include "Blazar/Input/Keymap.h"
@@ -13,30 +14,25 @@
 namespace Blazar {
 namespace Editor {
 
-void InputEditorWindow::render() {
+void InputEditorWindow::render(Editor* editor) {
     ZoneScoped;
-    ImGUI_MainMenu_Toggle_Simple("[Development]", "Inputs", "", this->show, true);
+    bool stayOpen = true;
 
-    if (!this->show) { return; }
-
-    if (ImGui::Begin("Input Viewer", &this->show)) {
-        CImGUI_Header1("Pressed Inputs:");
-        if (ImGui::BeginTable("##InputList", 2)) {
-            ImGui::TableSetupColumn("Input Name");
-            ImGui::TableSetupColumn("Input Keycode");
-            ImGui::TableHeadersRow();
-            for (unsigned int i = BLAZAR_KEY_MIN; i < BLAZAR_KEY_MAX; i++) {
-                if (Input::key(i)) {
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%c", i);
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%d", i);
-                }
+    CImGUI_Header1("Pressed Inputs:");
+    if (ImGui::BeginTable("##InputList", 2)) {
+        ImGui::TableSetupColumn("Input Name");
+        ImGui::TableSetupColumn("Input Keycode");
+        ImGui::TableHeadersRow();
+        for (unsigned int i = BLAZAR_KEY_MIN; i < BLAZAR_KEY_MAX; i++) {
+            if (Input::key(i)) {
+                ImGui::TableNextColumn();
+                ImGui::Text("%c", i);
+                ImGui::TableNextColumn();
+                ImGui::Text("%d", i);
             }
-            ImGui::EndTable();
         }
+        ImGui::EndTable();
     }
-    ImGui::End();
 }
 
 }  // namespace Editor

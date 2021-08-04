@@ -10,11 +10,8 @@ namespace Editor {
 
 class InputEditorWindow : public EditorWindow {
    public:
-    InputEditorWindow() : EditorWindow("Input") {}
-    void render() override;
-
-   private:
-    bool show = false;
+    InputEditorWindow() : EditorWindow("Input", "Input", EditorWindowState::FREE_FLOATING) {}
+    void render(Editor* editor) override;
 };
 
 }  // namespace Editor
