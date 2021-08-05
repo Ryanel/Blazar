@@ -103,11 +103,15 @@ project "IMGUI"
         "./imgui/backends/imgui_impl_opengl3.cpp",
         "./imgui/backends/imgui_impl_opengl3.h",
         "./imgui/backends/imgui_impl_glfw.cpp",
-        "./imgui/backends/imgui_impl_glfw.h"
+        "./imgui/backends/imgui_impl_glfw.h",
+        "./imgui/misc/cpp/*.h",
+        "./imgui/misc/cpp/*.cpp",
+        "./imgui/misc/debuggers/*"
     }
 
     includedirs {
-        "./imgui/",
+        "./imgui/",,
+        "./imgui/misc/cpp/"
         "./GLAD/include/",
         "./glfw/include/"
     }

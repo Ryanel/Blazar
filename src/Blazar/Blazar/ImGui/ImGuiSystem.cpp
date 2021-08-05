@@ -63,7 +63,7 @@ void ImGuiSystem::init() {
 
     ImVec4* colors = ImGui::GetStyle().Colors;
 
-    colors[ImGuiCol_Text]               = ImVec4(0.87f, 0.87f, 0.87f, 1.00f);
+    colors[ImGuiCol_Text]               = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     colors[ImGuiCol_Tab]                = ImVec4(0.12f, 0.34f, 0.63f, 0.86f);
     colors[ImGuiCol_TabActive]          = ImVec4(0.08f, 0.42f, 0.86f, 1.00f);
     colors[ImGuiCol_TabUnfocused]       = ImVec4(0.15f, 0.29f, 0.47f, 0.97f);
@@ -72,7 +72,7 @@ void ImGuiSystem::init() {
     colors[ImGuiCol_TableBorderStrong]  = ImVec4(0.26f, 0.26f, 0.29f, 1.00f);
     colors[ImGuiCol_TableBorderLight]   = ImVec4(0.28f, 0.28f, 0.32f, 1.00f);
     colors[ImGuiCol_TableRowBgAlt]      = ImVec4(0.47f, 0.47f, 0.47f, 0.06f);
-    colors[ImGuiCol_FrameBg]            = ImVec4(0.08f, 0.09f, 0.10f, 0.27f);
+    colors[ImGuiCol_FrameBg]            = ImVec4(0.26f, 0.29f, 0.33f, 0.27f);
     colors[ImGuiCol_ButtonHovered]      = ImVec4(0.26f, 0.59f, 0.98f, 0.71f);
     colors[ImGuiCol_TableRowBg]         = ImVec4(0.09f, 0.09f, 0.09f, 0.49f);
     colors[ImGuiCol_ChildBg]            = ImVec4(0.09f, 0.10f, 0.12f, 1.00f);
