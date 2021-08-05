@@ -5,7 +5,6 @@
 - Audio: Audio Engine
 - Audio: Sound playback
 - Code: Scripting (Lua?)
-- Editor: Global Undo / Redo (Command Pattern)
 - Editor: Structure Viewer
 - Editor: Component Inspection
 - Editor: Shader Viewer
@@ -35,6 +34,7 @@
 ## Things that have been implemented
 
 - Entities: ECS
+- Editor: Global Undo / Redo (Command Pattern)
 - Editor: Window System
 - Resources: Resource Loading
 - Resources: Resource Caching

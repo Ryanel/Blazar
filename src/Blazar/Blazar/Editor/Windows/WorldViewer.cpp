@@ -10,6 +10,7 @@
 #include "Blazar/Input/Keymap.h"
 #include "Blazar/Renderer/Renderer.h"
 #include "Blazar/Simulation/SceneManager.h"
+#include "EntityViewer/EntityViewer.h"
 #include "Tracy.hpp"
 
 namespace Blazar {
@@ -58,8 +59,12 @@ void WorldViewer::render() {
             bool         selected = m_selected_entity == e.entity();
             std::string& name     = e.name();
             if (ImGui::Selectable(name.c_str(), &selected)) {
-                m_editor->perform(
-                    new EntitySelectionCommand(m_editor, shared_from_this(), e.entity(), m_selected_entity));
+                if (selected) {
+                    m_editor->perform(new OpenWindowWithArgument<EntityViewer, Entity>(m_editor, e));
+                } else {
+                    m_editor->perform(
+                        new EntitySelectionCommand(m_editor, shared_from_this(), e.entity(), m_selected_entity));
+                }
             }
         });
 

@@ -23,26 +23,29 @@ class EditorCommand {
 template<typename T> class OpenWindowCommand : public EditorCommand {
    public:
     OpenWindowCommand(Editor* e) : EditorCommand(e) {}
-    virtual void undo() { m_editor->close_window(window); }
-    void         execute() { m_editor->window_add_end<T>(); }
-    std::string  name() { return fmt::format("Open Window {}", window->m_name); }
-    Ref<T>       window;
+    void undo() { m_editor->close_window(window); }
+    void execute() { m_editor->window_add_end<T>(); }
+
+    std::string name() { return fmt::format("Open Window {}", window->m_name); }
+    Ref<T>      window;
 };
 
-template<typename T> class OpenWindowWithPathCommand : public EditorCommand {
+template<typename T, typename U> class OpenWindowWithArgument : public EditorCommand {
    public:
-    OpenWindowWithPathCommand(Editor* e, std::string path) : EditorCommand(e), m_path(path) {}
-    virtual void undo() {
+    OpenWindowWithArgument(Editor* e, U arg1) : EditorCommand(e), m_arg1(arg1) {}
+    void undo() {
         m_editor->close_window(window.get());
         window = nullptr;
     }
-    void        execute() { window = m_editor->window_add_end<T>(m_path); }
+    void execute() { window = m_editor->window_add_end<T>(m_arg1); }
+
     std::string name() {
-        if (window != nullptr) { return fmt::format("Open Window (with path) {} ({})", window->m_title, m_path); }
+        if (window != nullptr) { return fmt::format("Open Window {}", window->m_title); }
         return "Open Window";
     }
-    Ref<T>      window = nullptr;
-    std::string m_path;
+    Ref<T> window = nullptr;
+
+    U m_arg1;
 };
 
 }  // namespace Editor

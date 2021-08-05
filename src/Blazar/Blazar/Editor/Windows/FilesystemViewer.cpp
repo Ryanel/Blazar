@@ -147,7 +147,9 @@ void FilesystemViewer::RenderItem(std::string name, std::string path, bool isDir
             } else {
                 std::string_view extension = Blazar::Utility::Paths::get_extension(path);
                 if (extension.size() > 0) {
-                    if (extension.compare("png") == 0) { m_editor->window_add_end<TextureViewer>(path); }
+                    if (extension.compare("png") == 0) {
+                        m_editor->perform(new OpenWindowWithArgument<TextureViewer, std::string>(m_editor, path));
+                    }
                 }
             }
         }
@@ -162,8 +164,8 @@ void FilesystemViewer::RenderItem(std::string name, std::string path, bool isDir
             } else {
                 std::string_view extension = Blazar::Utility::Paths::get_extension(path);
                 if (extension.size() > 0) {
-                    if (extension.compare("png") == 0) { 
-                        m_editor->perform(new OpenWindowWithPathCommand<TextureViewer>(m_editor, path));
+                    if (extension.compare("png") == 0) {
+                        m_editor->perform(new OpenWindowWithArgument<TextureViewer, std::string>(m_editor, path));
                     }
                 }
             }

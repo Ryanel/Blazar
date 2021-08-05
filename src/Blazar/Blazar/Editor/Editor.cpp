@@ -154,7 +154,7 @@ void Editor::render() {
                         }
                         break;
                     case EditorWindow::State::DOCKED_MINIMIZED:
-                        width = 48.0f;
+                        width = 32.0f;
                         break;
                     default:
                         width = x->m_width;
@@ -173,10 +173,10 @@ void Editor::render() {
 
     // Now, delete any windows that we were suppose to...
     for (auto x : m_toClose) { m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), x), m_windows.end()); }
-
     m_toClose.clear();
 
     if (ImGui::Begin("Editor Command List")) {
+        ImGui::Text("Commands:");
         if (ImGui::BeginListBox("##Commands", ImVec2(-1, -1))) {
             if (ImGui::Selectable("Undo all")) {
                 while (m_editorCommandPtr > 0) { undo(); }
@@ -185,13 +185,12 @@ void Editor::render() {
                 auto* item = this->m_editorCommandList[i];
                 ImGui::PushID(i);
                 if (ImGui::Selectable(item->name().c_str(), i == m_editorCommandPtr - 1)) {
+                    // We clicked on a newer thing. Fast forward
                     if (i + 1 >= m_editorCommandPtr) {
-                        // We clicked on a newer thing. Fast forward
                         for (size_t j = m_editorCommandPtr; j < i + 1; j++) { redo(); }
                     }
-
+                    // We clicked on an older thing. Rewind
                     if (i + 1 < m_editorCommandPtr) {
-                        // We clicked on an older thing. Rewind
                         while (m_editorCommandPtr != (i + 1)) { undo(); }
                     }
                 }
