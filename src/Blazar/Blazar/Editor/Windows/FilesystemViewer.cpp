@@ -13,6 +13,7 @@
 #include "Blazar/Application.h"
 #include "Blazar/Assets/ResourceManager.h"
 #include "Blazar/Editor/Editor.h"
+#include "Blazar/Editor/EditorCommand.h"
 #include "Blazar/ImGui/CustomImGui.h"
 #include "Blazar/ImGui/IconsFontAwesome.h"
 #include "Blazar/Renderer/Primitives/Texture.h"
@@ -37,8 +38,8 @@ void FilesystemViewer::NavigateUpFolder() {
     dirty = true;
 }
 
-FilesystemViewer::FilesystemViewer()
-    : EditorWindow("Editor: Filesystem Viewer", "Filesystem", EditorWindowState::EDITOR_DOCKED) {
+FilesystemViewer::FilesystemViewer(Editor* editor)
+    : EditorWindow(editor, "Editor: Filesystem Viewer", "Filesystem", State::EDITOR_DOCKED) {
     ZoneScoped;
     m_width_min            = 400;
     m_width_expanded       = 600;
@@ -56,7 +57,7 @@ FilesystemViewer::FilesystemViewer()
     m_numthumbsCanLoad = 1;
 }
 
-void FilesystemViewer::render(Editor* editor) {
+void FilesystemViewer::render() {
     ZoneScoped;
     auto& app = Application::get();
 
@@ -77,7 +78,7 @@ void FilesystemViewer::render(Editor* editor) {
     }
 
     // Breadcrumbs
-    DrawBreadCrumbs(editor);
+    DrawBreadCrumbs();
 
     m_numthumbsCanLoad = m_optionThumbsCanLoad;
     if (dirty) {
@@ -85,13 +86,13 @@ void FilesystemViewer::render(Editor* editor) {
         dirty = false;
     }
 
-    bool renderList = m_state != EditorWindowState::DOCKED_EXPANDED;
+    bool renderList = m_state != State::DOCKED_EXPANDED;
 
     if (renderList) {
         ImGui::NewLine();
-        DrawList(editor);
+        DrawList();
     } else {
-        DrawTable(editor);
+        DrawTable();
     }
 
     // Options
@@ -108,7 +109,7 @@ void FilesystemViewer::render(Editor* editor) {
     }
 }
 
-void FilesystemViewer::RenderItem(std::string name, std::string path, bool isDirectory, Editor* editor, bool useList) {
+void FilesystemViewer::RenderItem(std::string name, std::string path, bool isDirectory, bool useList) {
     ImTextureID id;  // Texture to show
 
     // Determine icon to show
@@ -146,7 +147,7 @@ void FilesystemViewer::RenderItem(std::string name, std::string path, bool isDir
             } else {
                 std::string_view extension = Blazar::Utility::Paths::get_extension(path);
                 if (extension.size() > 0) {
-                    if (extension.compare("png") == 0) { editor->window_add_end<TextureViewer>(path); }
+                    if (extension.compare("png") == 0) { m_editor->window_add_end<TextureViewer>(path); }
                 }
             }
         }
@@ -161,14 +162,16 @@ void FilesystemViewer::RenderItem(std::string name, std::string path, bool isDir
             } else {
                 std::string_view extension = Blazar::Utility::Paths::get_extension(path);
                 if (extension.size() > 0) {
-                    if (extension.compare("png") == 0) { editor->window_add_end<TextureViewer>(path); }
+                    if (extension.compare("png") == 0) { 
+                        m_editor->perform(new OpenWindowWithPathCommand<TextureViewer>(m_editor, path));
+                    }
                 }
             }
         }
     }
 }
 
-void FilesystemViewer::DrawTable(Editor* editor) {
+void FilesystemViewer::DrawTable() {
     // Render
     float ColumnSize = ImGui::GetWindowWidth() / (m_size + m_padding);
     int   columns    = (int)ceil(ColumnSize);
@@ -190,11 +193,11 @@ void FilesystemViewer::DrawTable(Editor* editor) {
 
         ImGui::TableNextColumn();
         for (auto& x : m_current_directories) {
-            RenderItem(x.first, x.second, true, editor, false);
+            RenderItem(x.first, x.second, true, false);
             ImGui::TableNextColumn();
         }
         for (auto x : m_current_files) {
-            RenderItem(x.first, x.second, false, editor, false);
+            RenderItem(x.first, x.second, false, false);
             ImGui::TableNextColumn();
         }
         ImGui::EndTable();
@@ -204,15 +207,15 @@ void FilesystemViewer::DrawTable(Editor* editor) {
     ImGui::PopStyleVar();
 }
 
-void FilesystemViewer::DrawList(Editor* editor) {
+void FilesystemViewer::DrawList() {
     if (ImGui::BeginListBox("##Files", ImVec2(-1, -1))) {
-        for (auto& x : m_current_directories) { RenderItem(x.first, x.second, true, editor, true); }
-        for (auto x : m_current_files) { RenderItem(x.first, x.second, false, editor, true); }
+        for (auto& x : m_current_directories) { RenderItem(x.first, x.second, true, true); }
+        for (auto x : m_current_files) { RenderItem(x.first, x.second, false, true); }
         ImGui::EndListBox();
     }
 }
 
-void FilesystemViewer::DrawBreadCrumbs(Editor* editor) {
+void FilesystemViewer::DrawBreadCrumbs() {
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 4.0f);
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 4.0f);
 
@@ -223,7 +226,7 @@ void FilesystemViewer::DrawBreadCrumbs(Editor* editor) {
 
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 4));
 
-    if (m_state == EditorWindowState::DOCKED_EXPANDED) {
+    if (m_state == State::DOCKED_EXPANDED) {
         if (ImGui::ArrowButton("Up Directory", ImGuiDir_Up)) { NavigateUpFolder(); }
         ImGui::SameLine();
     }
@@ -247,7 +250,6 @@ void FilesystemViewer::DrawBreadCrumbs(Editor* editor) {
 
     ImGui::PopStyleVar();
 }
-
 
 void FilesystemViewer::Refresh() {
     ZoneScoped;

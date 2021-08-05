@@ -11,7 +11,7 @@
 namespace Blazar {
 namespace Editor {
 
-void GameWindow::render(Editor* editor) {
+void GameWindow::render() {
     ZoneScoped;
 
     auto& app = Application::get();

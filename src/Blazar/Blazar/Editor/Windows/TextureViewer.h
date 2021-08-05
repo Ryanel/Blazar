@@ -10,11 +10,12 @@ namespace Editor {
 
 class TextureViewer : public EditorWindow {
    public:
-    TextureViewer(std::string image_path)
-        : EditorWindow("Texture Viewer: " + image_path, "Texture Viewer"), m_path(image_path) {
+    TextureViewer(Editor* editor, std::string image_path)
+        : EditorWindow(editor, "Texture Viewer: " + image_path, "Texture Viewer", State::EDITOR_DOCKED),
+          m_path(image_path) {
         m_expandRemainingSpace = true;
     }
-    void render(Editor* editor) override;
+    void render() override;
     void draw_image();
 
     Ref<Resource<Texture2D>> m_tex;

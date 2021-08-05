@@ -7,8 +7,8 @@ namespace Blazar {
 namespace Editor {
 class GameWindow : public EditorWindow {
    public:
-    GameWindow() : EditorWindow("Game", "Game", EditorWindowState::FREE_FLOATING) { m_useCustomWindow = true; }
-    void render(Editor* editor) override;
+    GameWindow(Editor* editor) : EditorWindow(editor, "Game", "Game", State::FREE_FLOATING) { m_useCustomWindow = true; }
+    void render() override;
 
    private:
     bool show = true;

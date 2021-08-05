@@ -14,7 +14,7 @@
 namespace Blazar {
 namespace Editor {
 
-void InputEditorWindow::render(Editor* editor) {
+void InputEditorWindow::render() {
     ZoneScoped;
     bool stayOpen = true;
 

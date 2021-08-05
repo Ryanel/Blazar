@@ -83,7 +83,7 @@ void ImGuiSystem::init() {
     colors[ImGuiCol_ScrollbarBg]        = ImVec4(0.12f, 0.13f, 0.14f, 0.53f);
     colors[ImGuiCol_ScrollbarGrab]      = ImVec4(0.49f, 0.49f, 0.49f, 1.00f);
     colors[ImGuiCol_Button]             = ImVec4(0.22f, 0.22f, 0.22f, 0.75f);
-    colors[ImGuiCol_Separator]          = ImVec4(0.19f, 0.19f, 0.19f, 0.50f);
+    colors[ImGuiCol_Separator]          = ImVec4(0.29f, 0.29f, 0.29f, 0.75f);
     colors[ImGuiCol_TitleBg]            = ImVec4(0.22f, 0.22f, 0.22f, 0.54f);
     colors[ImGuiCol_TitleBgActive]      = ImVec4(0.27f, 0.27f, 0.27f, 0.54f);
 

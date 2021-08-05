@@ -13,13 +13,13 @@ namespace Editor {
 
 class FilesystemViewer : public EditorWindow {
    public:
-    FilesystemViewer();
-    void RenderItem(std::string name, std::string path, bool isDirectory, Editor* editor, bool useList);
+    FilesystemViewer(Editor* editor);
+    void RenderItem(std::string name, std::string path, bool isDirectory, bool useList);
 
-    void DrawTable(Editor* editor);
-    void DrawList(Editor* editor);
-    void DrawBreadCrumbs(Editor* editor);
-    void render(Editor* editor) override;
+    void DrawTable();
+    void DrawList();
+    void DrawBreadCrumbs();
+    void render() override;
 
     void NavigateUpFolder();
     void Refresh();

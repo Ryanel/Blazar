@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 namespace Blazar {
@@ -9,13 +10,13 @@ class Editor;
 /// A Window that runs in the editor
 class EditorWindow {
    public:
-    enum class EditorWindowState : int {
+    enum class State : int {
         FREE_FLOATING    = 0,
         EDITOR_DOCKED    = 1,
         DOCKED_EXPANDED  = 2,
         DOCKED_MINIMIZED = 3,
     };
-    EditorWindowState m_state = EditorWindowState::FREE_FLOATING;  ///< Current state of the window
+    State m_state = State::FREE_FLOATING;  ///< Current state of the window
 
     std::string m_name;                          ///< The name of this Window
     std::string m_title;                         ///< Window title of this window
@@ -27,21 +28,21 @@ class EditorWindow {
     bool        m_expandRemainingSpace = false;
     int         m_width_min            = 256;
     int         m_width_expanded       = 400;
-
-    bool m_allowsExpansion      = true;
-    bool m_editorScrollToWindow = false;
+    bool        m_allowsExpansion      = true;
+    bool        m_editorScrollToWindow = false;
+    Editor*     m_editor               = nullptr;
     /// Constructor
-    EditorWindow(std::string name, std::string title, EditorWindowState state = EditorWindowState::FREE_FLOATING)
-        : m_name(name), m_title(title), m_state(state) {}
+    EditorWindow(Editor* editor, std::string name, std::string title, State state = State::FREE_FLOATING)
+        : m_name(name), m_title(title), m_state(state), m_editor(editor) {}
 
     /// Destructor
     virtual ~EditorWindow() {}
 
     /// Renders the Window
-    virtual void render(Editor* editor) = 0;
-    void         draw_editor_window(Editor* editor);
+    virtual void render() = 0;
+    void         draw_editor_window();
     void         show_close_control();
-    void         unminimize(Editor* editor);
+    void         unminimize();
 };
 
 }  // namespace Editor

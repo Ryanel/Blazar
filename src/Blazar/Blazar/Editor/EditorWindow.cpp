@@ -28,11 +28,11 @@ void ImRotateEnd(float rad, ImVec2 center = ImRotationCenter()) {
     for (int i = rotation_start_index; i < buf.Size; i++) buf[i].pos = ImRotate(buf[i].pos, s, c) - center;
 }
 
-void Blazar::Editor::EditorWindow::draw_editor_window(Editor* editor) {
+void Blazar::Editor::EditorWindow::draw_editor_window() {
     if (m_useCustomWindow) {
-        render(editor);
+        render();
     } else {
-        if (m_state != EditorWindowState::FREE_FLOATING) {
+        if (m_state != State::FREE_FLOATING) {
             ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImGui::GetStyleColorVec4(ImGuiCol_TitleBg));
 
             if (m_editorScrollToWindow) {
@@ -41,7 +41,7 @@ void Blazar::Editor::EditorWindow::draw_editor_window(Editor* editor) {
             }
 
             if (ImGui::BeginChild(m_name.c_str(), ImVec2(m_width, m_height), true, ImGuiWindowFlags_MenuBar)) {
-                if (m_state != EditorWindowState::DOCKED_MINIMIZED) {
+                if (m_state != State::DOCKED_MINIMIZED) {
                     if (ImGui::BeginMenuBar()) {
                         if (ImGui::BeginMenu(m_title.c_str())) {
                             if (ImGui::MenuItem("Exit", "")) { m_windowOpen = false; }
@@ -49,21 +49,17 @@ void Blazar::Editor::EditorWindow::draw_editor_window(Editor* editor) {
                         }
 
                         ImGui::Separator();
-
-                        
                         show_close_control();
-                        
-
                         ImGui::EndMenuBar();
                     }
-                    render(editor);
+                    render();
                 } else {
                     // For minimized windows, draw a transparent button to allow unminimizing
                     ImVec4 trans = ImVec4(0, 0, 0, 0);
                     ImGui::PushStyleColor(ImGuiCol_Button, trans);
                     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, trans);
                     ImGui::PushStyleColor(ImGuiCol_ButtonActive, trans);
-                    if (ImGui::Button("", ImVec2(ImGui::GetContentRegionAvail()))) { unminimize(editor); }
+                    if (ImGui::Button("", ImVec2(ImGui::GetContentRegionAvail()))) { unminimize(); }
                     ImGui::PopStyleColor(3);
 
                     // Draw the text rotated to allow more room
@@ -85,15 +81,17 @@ void Blazar::Editor::EditorWindow::draw_editor_window(Editor* editor) {
             ImGui::EndChild();
             ImGui::PopStyleColor();
         } else {
-            if (ImGui::Begin(m_name.c_str())) { render(editor); }
+            if (ImGui::Begin(m_name.c_str(), &m_windowOpen)) { render(); }
             ImGui::End();
         }
+
+        if (!m_windowOpen) { m_editor->close_window(this); }
     }
 }
 
 void Blazar::Editor::EditorWindow::show_close_control() {
     float x_cursor = ImGui::GetCursorPosX();
-    if (m_state != EditorWindowState::FREE_FLOATING) {
+    if (m_state != State::FREE_FLOATING) {
         int amount = 24 + 32;
 
         if (m_allowsExpansion) { amount += 32; }
@@ -104,15 +102,15 @@ void Blazar::Editor::EditorWindow::show_close_control() {
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, trans);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, trans);
 
-        if (ImGui::Button(ICON_FA_MINUS)) { m_state = EditorWindowState::DOCKED_MINIMIZED; }
+        if (ImGui::Button(ICON_FA_MINUS)) { m_state = State::DOCKED_MINIMIZED; }
         if (m_allowsExpansion) {
-            if (m_state == EditorWindowState::EDITOR_DOCKED) {
+            if (m_state == State::EDITOR_DOCKED) {
                 if (ImGui::Button(ICON_FA_EXPAND_ALT)) {
-                    m_state                = EditorWindowState::DOCKED_EXPANDED;
+                    m_state                = State::DOCKED_EXPANDED;
                     m_editorScrollToWindow = true;
                 }
             } else {
-                if (ImGui::Button(ICON_FA_COMPRESS_ALT)) { m_state = EditorWindowState::EDITOR_DOCKED; }
+                if (ImGui::Button(ICON_FA_COMPRESS_ALT)) { m_state = State::EDITOR_DOCKED; }
             }
         }
         if (ImGui::Button(ICON_FA_TIMES)) { m_windowOpen = false; }
@@ -122,8 +120,8 @@ void Blazar::Editor::EditorWindow::show_close_control() {
     }
 }
 
-void Blazar::Editor::EditorWindow::unminimize(Editor* editor) {
-    m_state = EditorWindowState::EDITOR_DOCKED;
-    editor->window_move_end(this);
+void Blazar::Editor::EditorWindow::unminimize() {
+    m_state = State::EDITOR_DOCKED;
+    m_editor->window_move_end(this);
     m_editorScrollToWindow = true;
 }

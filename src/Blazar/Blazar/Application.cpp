@@ -42,7 +42,7 @@ Application::Application() {
 #endif
 
     // Set the Render Viewport
-    m_RenderViewport.reset(new Viewport(0,0,1600,900));
+    m_RenderViewport.reset(new Viewport(0, 0, 1600, 900));
     RenderTextureProperties renderProperties;
     renderProperties.width  = (int)m_RenderViewport->width;
     renderProperties.height = (int)m_RenderViewport->height;
@@ -94,6 +94,7 @@ void Application::render_thread() {
         m_ImGui->begin_draw();
         m_editor->render();
         m_ImGui->end_draw(m_RenderImGui);
+        Input::new_frame();  // Update the input system
     }
 #endif
 }
@@ -118,8 +119,11 @@ void Application::update_thread() {
 
         m_SceneManager->update(m_deltaTime);  // Execute all update systems in the scene
         m_SceneManager->render(m_deltaTime);  // Execute all render systems in the scene
-        Input::new_frame();                   // Update the input system
-        m_updateThreadCanWork = false;        // Report that work has finished.
+
+        if (!m_RenderImGui) {
+            Input::new_frame();  // Update the input system
+        }
+        m_updateThreadCanWork = false;  // Report that work has finished.
     }
 }
 

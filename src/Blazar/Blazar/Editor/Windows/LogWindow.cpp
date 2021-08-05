@@ -20,7 +20,7 @@ namespace Blazar {
 namespace Editor {
 static const char* const spdlog_level_names[] = {"Trace", "Debug", "Info", "Warn", "Error", "Critical", "Off"};
 
-void LogWindow::render(Editor* editor) {
+void LogWindow::render() {
     ZoneScoped;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -79,11 +79,10 @@ void LogWindow::render(Editor* editor) {
     ImGui::End();
 
     ImGui::PopStyleVar();
-
-    if (!m_Show) { editor->close_window(this); }
 }
 
 void LogWindow::DisplayEntry(log_entry& entry) {
+    // Select a primary color
     switch (entry.details.level) {
         case spdlog::level::err:
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(255, 0, 0)));
@@ -103,22 +102,25 @@ void LogWindow::DisplayEntry(log_entry& entry) {
             break;
     }
 
-    ImGui::TableNextRow();
+    ImGui::TableNextRow();  // Start row
 
     ImGui::TableNextColumn();  // Source
-    ImGui::Text("%s", entry.details.logger_name.data());
+    if (entry.details.logger_name.compare("Blazar") == 0) {
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(ImColor(180, 32, 255)));
+        ImGui::Text("%s", entry.details.logger_name.data());
+        ImGui::PopStyleColor();
+    } else {
+        ImGui::Text("%s", entry.details.logger_name.data());
+    }
 
     ImGui::TableNextColumn();  // Severity
-
     ImGui::Text(spdlog_level_names[entry.details.level]);
-
     ImGui::TableNextColumn();  // Time
     ImGui::Text("%s", entry.time_fmt.c_str());
-
     ImGui::TableNextColumn();  // Message
     ImGui::Text("%s", entry.msg.c_str());
 
-    ImGui::PopStyleColor(1);
+    ImGui::PopStyleColor();  // Message Color
 }
 
 }  // namespace Editor

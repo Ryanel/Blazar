@@ -7,8 +7,8 @@ namespace Editor {
 /// The editor FPS widget
 class FPSWidgetWindowLayer : public EditorWindow {
    public:
-    FPSWidgetWindowLayer();
-    void render(Editor* editor) override;
+    FPSWidgetWindowLayer(Editor* editor);
+    void render() override;
 
     int numEntries = 20;
     int currentEntry = 0;

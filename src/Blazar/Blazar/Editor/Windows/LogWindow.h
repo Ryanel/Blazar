@@ -9,8 +9,8 @@ namespace Editor {
 
 class LogWindow : public EditorWindow {
    public:
-    LogWindow() : EditorWindow("Log", "Log", EditorWindowState::FREE_FLOATING) { m_useCustomWindow = true; }
-    void render(Editor* editor) override;
+    LogWindow(Editor* editor) : EditorWindow(editor, "Log", "Log", State::FREE_FLOATING) { m_useCustomWindow = true; }
+    void render() override;
 
    private:
     void                      DisplayEntry(log_entry& e);

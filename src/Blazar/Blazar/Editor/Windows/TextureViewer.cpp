@@ -15,32 +15,28 @@
 namespace Blazar {
 namespace Editor {
 
-void TextureViewer::render(Editor* editor) {
+void TextureViewer::render() {
     ZoneScoped;
 
     if (loaded_resource == false) { m_tex = Texture2D::Load(m_path); }
     std::string windowName = "Texture Viewer: " + m_path;
     m_name                 = windowName;
     draw_image();
-
-    if (!m_windowOpen) { editor->close_window(this); }
 }
 
 void TextureViewer::draw_image() {
-    auto contentSize = ImGui::GetContentRegionAvail();
+    // Calculate texture size
+    auto   contentSize = ImGui::GetContentRegionAvail();
+    ImVec2 tsz(m_tex->data()->GetWidth(), m_tex->data()->GetHeight());
+    float  s = std::min(contentSize.x / tsz.x, contentSize.y / tsz.y);
+    ImVec2 sz(tsz.x * s, tsz.y * s);
 
-    float tex_width  = m_tex->data()->GetWidth();
-    float tex_height = m_tex->data()->GetHeight();
+    // Center vertically
+    float pic_y = ((contentSize.y - sz.y) / 2) + ImGui::GetCursorPosY();
+    ImGui::SetCursorPosY(pic_y);
 
-    float width_scale  = contentSize.x / tex_width;
-    float height_scale = contentSize.y / tex_height;
-
-    float scalar = std::min(width_scale, height_scale);
-
-    float resultant_width  = tex_width * scalar;
-    float resultant_height = tex_height * scalar;
-
-    ImGui::Image(m_tex->data()->imgui_id(), ImVec2(resultant_width, resultant_height), ImVec2(0, 1), ImVec2(1, 0));
+    // Draw
+    ImGui::Image(m_tex->data()->imgui_id(), sz, ImVec2(0, 1), ImVec2(1, 0));
 }
 
 }  // namespace Editor

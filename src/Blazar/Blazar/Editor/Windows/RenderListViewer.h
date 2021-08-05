@@ -7,12 +7,12 @@
 
 namespace Blazar {
 namespace Editor {
-class RenderListWindowLayer : public EditorWindow {
+class RenderListViewer : public EditorWindow {
    public:
     int  selected = -1;
-    RenderListWindowLayer() : EditorWindow("Render Lists", "Render Lists") {m_useCustomWindow = true;}
+    RenderListViewer(Editor* editor) : EditorWindow(editor, "Render Lists", "Render Lists") {}
     void ListItemRenderItem(RenderCommand& item, int index);
-    void render(Editor* editor) override;
+    void render() override;
 };
 
 }  // namespace Editor

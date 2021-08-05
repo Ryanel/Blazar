@@ -9,8 +9,8 @@
 namespace Blazar {
 namespace Editor {
 
-FPSWidgetWindowLayer::FPSWidgetWindowLayer()
-    : EditorWindow("FPS Widget", "FPS Widget", EditorWindowState::FREE_FLOATING) {
+FPSWidgetWindowLayer::FPSWidgetWindowLayer(Editor* editor)
+    : EditorWindow(editor, "FPS Widget", "FPS Widget", State::FREE_FLOATING) {
     m_useCustomWindow = true;
 
     deltaTimes.reserve(numEntries);
@@ -20,7 +20,7 @@ FPSWidgetWindowLayer::FPSWidgetWindowLayer()
     }
 }
 
-void FPSWidgetWindowLayer::render(Editor* editor) {
+void FPSWidgetWindowLayer::render() {
     ZoneScoped;
     auto& app   = Blazar::Application::get();
     float delta = app.m_deltaTime;

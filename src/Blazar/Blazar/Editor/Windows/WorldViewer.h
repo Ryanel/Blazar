@@ -9,18 +9,16 @@
 namespace Blazar {
 namespace Editor {
 
-class WorldViewer : public EditorWindow {
+class WorldViewer : public EditorWindow, public std::enable_shared_from_this<WorldViewer> {
    public:
-    WorldViewer();
-    void render(Editor* editor) override;
+    WorldViewer(Editor* editor);
+    void render() override;
+
+    entt::entity m_selected_entity = entt::null;
 
    private:
-    entt::entity             m_selected_entity = entt::null;
-    bool                     isFocused;
-    bool                     isTitleFocused;
-    bool                     m_options_open;
-    bool                     m_opt_show_properties_always = true;
-    Ref<Resource<Texture2D>> m_texgear;
+    bool isFocused;
+    bool isTitleFocused;
 };
 
 }  // namespace Editor
