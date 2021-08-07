@@ -12,3 +12,13 @@ void ImGUI_MainMenu_Toggle_Simple(const char* cat, const char* name, const char*
 
 void CImGUI_Header1(std::string str);
 void CImGUI_Header2(std::string str);
+void CImGUI_Header2(std::string str, ImVec4 color);
+
+enum class EditorUICustomColor {
+	Primary,
+	Secondary,
+	Hilight,
+	Alternate
+};
+
+ImVec4 EditorUIColor(EditorUICustomColor color);

@@ -8,7 +8,7 @@ namespace Editor {
 class Editor;
 
 /// A Window that runs in the editor
-class EditorWindow {
+class EditorWindow : public std::enable_shared_from_this<EditorWindow> {
    public:
     enum class State : int {
         FREE_FLOATING    = 0,
@@ -40,6 +40,7 @@ class EditorWindow {
 
     /// Renders the Window
     virtual void render() = 0;
+    virtual void on_close();
     void         draw_editor_window();
     void         show_close_control();
     void         unminimize();

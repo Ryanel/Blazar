@@ -49,10 +49,8 @@ FilesystemViewer::FilesystemViewer(Editor* editor)
     m_path_heirarchy.push_back("Data");
     m_path_heirarchy.push_back("Textures");
 
-    m_texfolder  = Texture2D::Load("/Editor/Textures/folder.png");
-    m_texfile    = Texture2D::Load("/Editor/Textures/file.png");
-    m_texrefresh = Texture2D::Load("/Editor/Textures/refresh.png");
-    m_texgear    = Texture2D::Load("/Editor/Textures/gear.png");
+    m_texfolder = Texture2D::Load("/Editor/Textures/folder.png");
+    m_texfile   = Texture2D::Load("/Editor/Textures/file.png");
 
     m_numthumbsCanLoad = 1;
 }
@@ -140,6 +138,7 @@ void FilesystemViewer::RenderItem(std::string name, std::string path, bool isDir
 
         // Draw icon
         ImGui::PushID(path.c_str());
+
         if (ImGui::ImageButton(id, ImVec2(this->m_size, this->m_size), ImVec2(0, 1), ImVec2(1, 0))) {
             if (isDirectory) {
                 m_path_heirarchy.push_back(std::string(name));
@@ -169,6 +168,12 @@ void FilesystemViewer::RenderItem(std::string name, std::string path, bool isDir
                     }
                 }
             }
+        }
+
+        if (ImGui::BeginDragDropSource()) {
+            ImGui::SetDragDropPayload("path", path.c_str(), path.size() + 1);
+            ImGui::Text(path.c_str());
+            ImGui::EndDragDropSource();
         }
     }
 }

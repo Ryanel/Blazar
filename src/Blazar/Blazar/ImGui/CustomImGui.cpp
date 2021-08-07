@@ -21,15 +21,35 @@ void ImGUI_MainMenu_Toggle_Simple(const char* cat, const char* name, const char*
     }
 }
 
-void CImGUI_Header1(std::string str) { 
+void CImGUI_Header1(std::string str) {
     ImGui::PushFont(imgui_font_bigger);
-    ImGui::TextColored(ImVec4(0.7f, 0.80f, 1.00f, 1.0f), "%s", str.c_str());
+    ImGui::TextColored(EditorUIColor(EditorUICustomColor::Primary), "%s", str.c_str());
     ImGui::PopFont();
 }
 
-
 void CImGUI_Header2(std::string str) {
     ImGui::PushFont(imgui_font_big);
-    ImGui::TextColored(ImVec4(0.7f, 0.80f, 1.00f, 1.0f), "%s", str.c_str());
+    ImGui::TextColored(EditorUIColor(EditorUICustomColor::Secondary), "%s", str.c_str());
     ImGui::PopFont();
+}
+
+void CImGUI_Header2(std::string str, ImVec4 customColor) {
+    ImGui::PushFont(imgui_font_big);
+    ImGui::TextColored(customColor, "%s", str.c_str());
+    ImGui::PopFont();
+}
+
+ImVec4 EditorUIColor(EditorUICustomColor color) {
+    switch (color) {
+        case EditorUICustomColor::Primary:
+            return ImColor(77, 179, 255);
+        case EditorUICustomColor::Secondary:
+            return ImColor(255, 0, 77);
+        case EditorUICustomColor::Hilight:
+            return ImColor(255, 255, 255);
+        case EditorUICustomColor::Alternate:
+            return ImColor(255, 128, 230);
+        default:
+            return ImVec4(1, 1, 1, 1);
+    }
 }

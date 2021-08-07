@@ -36,8 +36,6 @@ class FilesystemViewer : public EditorWindow {
 
     Ref<Resource<Texture2D>> m_texfolder;
     Ref<Resource<Texture2D>> m_texfile;
-    Ref<Resource<Texture2D>> m_texrefresh;
-    Ref<Resource<Texture2D>> m_texgear;
 
     bool m_optionEnableThumbnails = true;
     int  m_numthumbsCanLoad       = 1;

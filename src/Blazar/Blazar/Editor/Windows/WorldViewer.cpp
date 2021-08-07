@@ -37,8 +37,9 @@ void WorldViewer::render() {
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("Edit")) {
             if (ImGui::MenuItem("Clear Selection")) {
-                m_editor->perform(
-                    new EntitySelectionCommand(m_editor, shared_from_this(), entt::null, m_selected_entity));
+                m_editor->perform(new EntitySelectionCommand(m_editor,
+                                                             std::dynamic_pointer_cast<WorldViewer>(shared_from_this()),
+                                                             entt::null, m_selected_entity));
             }
             ImGui::EndMenu();
         }
@@ -63,7 +64,8 @@ void WorldViewer::render() {
                     m_editor->perform(new OpenWindowWithArgument<EntityViewer, Entity>(m_editor, e));
                 } else {
                     m_editor->perform(
-                        new EntitySelectionCommand(m_editor, shared_from_this(), e.entity(), m_selected_entity));
+                        new EntitySelectionCommand(m_editor, std::dynamic_pointer_cast<WorldViewer>(shared_from_this()),
+                                                   e.entity(), m_selected_entity));
                 }
             }
         });

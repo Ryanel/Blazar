@@ -42,6 +42,7 @@ Ref<Resource<Texture2D>> Texture2D::Load(const std::string& path, TexturePropert
     switch (Renderer::api()) {
         case RendererAPI::API::OpenGL:
             tex_ptr = OpenGLTexture2D::FromData(data, props);
+            tex_ptr->path = path;
             break;
         case RendererAPI::API::None:
             BLAZAR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");

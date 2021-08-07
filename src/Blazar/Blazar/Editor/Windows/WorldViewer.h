@@ -9,7 +9,7 @@
 namespace Blazar {
 namespace Editor {
 
-class WorldViewer : public EditorWindow, public std::enable_shared_from_this<WorldViewer> {
+class WorldViewer : public EditorWindow {
    public:
     WorldViewer(Editor* editor);
     void render() override;

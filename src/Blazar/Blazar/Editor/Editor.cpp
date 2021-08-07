@@ -25,86 +25,26 @@
 
 namespace Blazar {
 namespace Editor {
-Editor::Editor() {}
 
+Editor::Editor() {}
 Editor::~Editor() { m_windows.clear(); }
 
 void Editor::setup() {
     // Add layers after this one here
     auto& app = Application::get();
-
-    window_add_end<FPSWidgetWindowLayer>();
-    window_add_end<GameWindow>();
-    window_add_end<LogWindow>();
-    window_add_end<WorldViewer>();
-    window_add_end<FilesystemViewer>();
-}
-
-void Editor::close_window(EditorWindow* w) { m_toClose.push_back(find_ref_from_list(w, m_windows)); }
-void Editor::window_move_end(EditorWindow* window) { window->m_editorOrder = editor_get_highest_order() + 1; }
-
-void Editor::undo() {
-    if (m_editorCommandPtr == 0) { return; }
-
-    m_editorCommandPtr--;
-    m_editorCommandList[m_editorCommandPtr]->undo();
-}
-
-void Editor::redo() {
-    if (m_editorCommandPtr < m_editorCommandList.size()) {
-        m_editorCommandList[m_editorCommandPtr]->execute();
-        m_editorCommandPtr++;
-    }
-}
-
-void Editor::perform(EditorCommand* c) {
-    // Are we at the end of the list?
-    if (m_editorCommandPtr != m_editorCommandList.size()) {
-        // Now, we must delete any commands after this one.
-        m_editorCommandList.erase(m_editorCommandList.begin() + m_editorCommandPtr, m_editorCommandList.end());
-    }
-    m_editorCommandList.push_back(c);
-    m_editorCommandPtr++;
-    c->execute();
+    window_add<FPSWidgetWindowLayer>();
+    window_add<GameWindow>();
+    window_add<LogWindow>();
+    window_add<WorldViewer>();
+    window_add<FilesystemViewer>();
 }
 
 void Editor::render() {
     ZoneScoped;
+
+    main_menu();
+
     auto& app = Application::get();
-
-    // Handle key inputs
-    if (Input::key(BLAZAR_KEY_LEFT_CONTROL)) {
-        if (Input::key_down(BLAZAR_KEY_Z)) { undo(); }
-        if (Input::key_down(BLAZAR_KEY_Y)) { redo(); }
-    }
-
-    // Main Menu
-    if (ImGui::BeginMainMenuBar()) {
-        if (ImGui::BeginMenu(app.m_name.c_str())) {
-            if (ImGui::MenuItem("Exit")) { app.m_Running = false; }
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Edit")) {
-            if (ImGui::MenuItem("Undo", "CTRL+Z")) { undo(); }
-            if (ImGui::MenuItem("Redo", "CTRL+Y")) { redo(); }
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Data")) { ImGui::EndMenu(); }
-        if (ImGui::BeginMenu("View")) {
-            if (ImGui::MenuItem("Logs")) { menu_spawn_unique<LogWindow>(); }
-            if (ImGui::MenuItem("Game")) { menu_spawn_unique<GameWindow>(); }
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Tools")) {
-            if (ImGui::MenuItem("Input Viewer")) { menu_spawn_unique<InputEditorWindow>(); }
-            if (ImGui::MenuItem("Render List Viewer")) { menu_spawn_unique<RenderListViewer>(); }
-            ImGui::EndMenu();
-        }
-        ImGui::EndMainMenuBar();
-    }
 
     int  menu_height = 24;
     auto vp          = app.GetWindow().GetViewport();
@@ -121,8 +61,8 @@ void Editor::render() {
                 ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
 
     // Now, add any windows that we were suppose to...
-    for (auto x : m_toAdd) { m_windows.push_back(x); }
-    m_toAdd.clear();
+    for (auto x : m_windows_to_open) { m_windows.push_back(x); }
+    m_windows_to_open.clear();
 
     int last_draw_sort = this->editor_get_highest_order();
 
@@ -172,8 +112,9 @@ void Editor::render() {
     ImGui::End();
 
     // Now, delete any windows that we were suppose to...
-    for (auto x : m_toClose) { m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), x), m_windows.end()); }
-    m_toClose.clear();
+    for (auto x : m_windows_toClose) {
+        m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), x), m_windows.end());
+    }
 
     if (ImGui::Begin("Editor Command List")) {
         ImGui::Text("Commands:");
@@ -196,11 +137,73 @@ void Editor::render() {
                 }
                 ImGui::PopID();
             }
+            ImGui::EndListBox();
         }
-        ImGui::EndListBox();
     }
     ImGui::End();
 }
+
+void Editor::main_menu() {
+    auto& app = Application::get();
+    // Handle key inputs
+    if (Input::key(BLAZAR_KEY_LEFT_CONTROL)) {
+        if (Input::key_down(BLAZAR_KEY_Z)) { undo(); }
+        if (Input::key_down(BLAZAR_KEY_Y)) { redo(); }
+    }
+
+    // Main Menu
+    if (ImGui::BeginMainMenuBar()) {
+        if (ImGui::BeginMenu(app.m_name.c_str())) {
+            if (ImGui::MenuItem("Exit")) { app.m_Running = false; }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Edit")) {
+            if (ImGui::MenuItem("Undo", "CTRL+Z")) { undo(); }
+            if (ImGui::MenuItem("Redo", "CTRL+Y")) { redo(); }
+            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Data")) { ImGui::EndMenu(); }
+        if (ImGui::BeginMenu("View")) {
+            if (ImGui::MenuItem("Logs")) { menu_spawn_unique<LogWindow>(); }
+            if (ImGui::MenuItem("Game")) { menu_spawn_unique<GameWindow>(); }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Tools")) {
+            if (ImGui::MenuItem("Input Viewer")) { menu_spawn_unique<InputEditorWindow>(); }
+            if (ImGui::MenuItem("Render List Viewer")) { menu_spawn_unique<RenderListViewer>(); }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+}
+void Editor::undo() {
+    if (m_editorCommandPtr == 0) { return; }
+
+    m_editorCommandPtr--;
+    m_editorCommandList[m_editorCommandPtr]->undo();
+}
+void Editor::redo() {
+    if (m_editorCommandPtr < m_editorCommandList.size()) {
+        m_editorCommandList[m_editorCommandPtr]->execute();
+        m_editorCommandPtr++;
+    }
+}
+void Editor::perform(EditorCommand* c) {
+    // Are we at the end of the list?
+    if (m_editorCommandPtr != m_editorCommandList.size()) {
+        // Now, we must delete any commands after this one.
+        m_editorCommandList.erase(m_editorCommandList.begin() + m_editorCommandPtr, m_editorCommandList.end());
+    }
+    m_editorCommandList.push_back(c);
+    m_editorCommandPtr++;
+    c->execute();
+}
+
+void Editor::window_close(Ref<EditorWindow> window) { m_windows_toClose.push_back(window); }
+void Editor::window_move_end(Ref<EditorWindow> window) { window->m_editorOrder = editor_get_highest_order() + 1; }
 
 }  // namespace Editor
 }  // namespace Blazar

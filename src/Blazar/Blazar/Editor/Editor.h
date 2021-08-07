@@ -13,42 +13,41 @@ class EditorCommand;
 /// The Game's Integrated Editor.
 class Editor {
    public:
-    Editor();  ///< Constructor
-    ~Editor();
-    void render();  ///< Called when ImGUIRender is rendering
+    // Lifecycle Methods
+    // ------------------------------------------------------------
+    Editor();       ///< Constructor
+    ~Editor();      ///< Destructor
     void setup();   ///< Sets up the editor for usage.
+    void render();  ///< Called when ImGUIRender is rendering
+    void main_menu();
 
-    void close_window(EditorWindow* window);
-
-    template<class T, typename... Args> Ref<T> window_add_end(Args... args) {
+    // Window Operations
+    // ------------------------------------------------------------
+    template<class T, typename... Args> Ref<T> window_add(Args... args) {
         Ref<T> window = std::make_shared<T>(this, args...);
-        m_toAdd.push_back(window);
+        m_windows_to_open.push_back(window);
         window->m_editorOrder          = editor_get_highest_order() + 1;
         window->m_editorScrollToWindow = true;
         return window;
     }
 
-    void window_move_end(EditorWindow* window);
+    template<class T, typename... Args> Ref<T> window_add(Ref<T> window) {
+        m_windows_to_open.push_back(window);
+        window->m_editorOrder          = editor_get_highest_order() + 1;
+        window->m_editorScrollToWindow = true;
+        return window;
+    }
 
+    void window_close(Ref<EditorWindow> window);
+    void window_move_end(Ref<EditorWindow> window);
+
+    // Command interface
+    // ------------------------------------------------------------
     void undo();
     void redo();
     void perform(EditorCommand* c);
 
    private:
-    std::vector<Ref<EditorWindow>> m_windows;  ///< List of all open Windows
-    std::vector<Ref<EditorWindow>> m_toClose;  ///< List of all windows to close at the end of the frame
-    std::vector<Ref<EditorWindow>> m_toAdd;    ///< List of all windows to add at the beginning of the frame
-    std::deque<EditorCommand*>     m_editorCommandList;
-    size_t                         m_editorCommandPtr = 0;
-
-    Ref<EditorWindow> find_ref_from_list(EditorWindow* needle, std::vector<Ref<EditorWindow>> haystack) {
-        for (auto x : haystack) {
-            if (x.get() == needle) { return x; }
-        }
-
-        return nullptr;
-    }
-
     template<typename T, typename... Args> void menu_spawn_unique(Args... args) {
         for (auto x : m_windows) {
             if (dynamic_cast<T*>(x.get())) { return; }
@@ -64,8 +63,17 @@ class Editor {
 
         return order;
     }
+
+   private:
     int m_windowPadding      = 16;
-    int m_innerWindowPadding = 4;
+    int m_innerWindowPadding = 16;
+
+    std::vector<Ref<EditorWindow>> m_windows;            ///< List of all windows.
+    std::vector<Ref<EditorWindow>> m_windows_open;       ///< List of all open Windows
+    std::vector<Ref<EditorWindow>> m_windows_toClose;    ///< List of all windows to close at the end of the frame
+    std::vector<Ref<EditorWindow>> m_windows_to_open;    ///< List of all windows to add at the beginning of the frame
+    std::deque<EditorCommand*>     m_editorCommandList;  ///< List of commands
+    size_t                         m_editorCommandPtr = 0;  ///< Command Pointer
 };
 
 }  // namespace Editor

@@ -27,9 +27,8 @@
 
 #include "Blazar/Component/MeshComponent.h"
 #include "Blazar/Component/NameComponent.h"
-#include "Blazar/Component/RenderTransform.h"
 #include "Blazar/Component/TextureComponent.h"
-#include "Components/Transform.h"
+#include "Blazar/Component/Transform.h"
 
 #include "Blazar/Entry.h"
 
@@ -55,7 +54,6 @@ class TestScene : public Blazar::Scenes::Scene {
         entity.emplace<Transform>(glm::vec3(-0.75f, 0.0f, 0.0f));
         entity.emplace<MeshComponent>(m_quad->vao);
         entity.emplace<TextureComponent>(m_texture->data());
-        entity.emplace<RenderTransform>(glm::vec3(-0.75f, 0.0f, 0.0f));
 
         // Entity 2
         Entity entity2 = entity_create();
@@ -63,7 +61,6 @@ class TestScene : public Blazar::Scenes::Scene {
         entity2.emplace<Transform>(glm::vec3(0.75f, 0.0f, 0.0f));
         entity2.emplace<MeshComponent>(m_quad->vao);
         entity2.emplace<TextureComponent>(m_texture2->data());
-        entity2.emplace<RenderTransform>(glm::vec3(0.75f, 0.0f, 0.0f));
 
         // Bind the shader
         m_shader = Shader::Load("/Data/Shaders/Simple");
@@ -83,7 +80,7 @@ class TestScene : public Blazar::Scenes::Scene {
 
     virtual void render(Timestep& ts) {
         Application& app  = Application::get();
-        auto         view = registry().view<RenderTransform, MeshComponent, TextureComponent>();
+        auto         view = registry().view<Transform, MeshComponent, TextureComponent>();
         m_cameraController->SetViewport(app.m_RenderViewport);
 
         std::vector<RenderCommand> cmds;

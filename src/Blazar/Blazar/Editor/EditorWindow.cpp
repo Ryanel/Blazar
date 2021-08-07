@@ -28,7 +28,10 @@ void ImRotateEnd(float rad, ImVec2 center = ImRotationCenter()) {
     for (int i = rotation_start_index; i < buf.Size; i++) buf[i].pos = ImRotate(buf[i].pos, s, c) - center;
 }
 
-void Blazar::Editor::EditorWindow::draw_editor_window() {
+namespace Blazar {
+namespace Editor {
+
+void EditorWindow::draw_editor_window() {
     if (m_useCustomWindow) {
         render();
     } else {
@@ -85,11 +88,11 @@ void Blazar::Editor::EditorWindow::draw_editor_window() {
             ImGui::End();
         }
 
-        if (!m_windowOpen) { m_editor->close_window(this); }
+        if (!m_windowOpen) { this->on_close(); }
     }
 }
 
-void Blazar::Editor::EditorWindow::show_close_control() {
+void EditorWindow::show_close_control() {
     float x_cursor = ImGui::GetCursorPosX();
     if (m_state != State::FREE_FLOATING) {
         int amount = 24 + 32;
@@ -120,8 +123,13 @@ void Blazar::Editor::EditorWindow::show_close_control() {
     }
 }
 
-void Blazar::Editor::EditorWindow::unminimize() {
+void EditorWindow::on_close() { m_editor->window_close(shared_from_this()); }
+
+void EditorWindow::unminimize() {
     m_state = State::EDITOR_DOCKED;
-    m_editor->window_move_end(this);
+    m_editor->window_move_end(shared_from_this());
     m_editorScrollToWindow = true;
 }
+
+}  // namespace Editor
+}  // namespace Blazar

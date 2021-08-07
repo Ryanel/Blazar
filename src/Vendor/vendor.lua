@@ -110,8 +110,8 @@ project "IMGUI"
     }
 
     includedirs {
-        "./imgui/",,
-        "./imgui/misc/cpp/"
+        "./imgui/",
+        "./imgui/misc/cpp/",
         "./GLAD/include/",
         "./glfw/include/"
     }
