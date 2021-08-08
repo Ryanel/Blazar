@@ -8,11 +8,14 @@ namespace Blazar {
 namespace Components {
 
 /// Reference to a mesh
-struct MeshComponent : IComponent {
+struct MeshComponent {
     Ref<VertexArray> mesh;
-
     MeshComponent(Ref<VertexArray> mesh) : mesh(mesh) {}
-    COMPONENT_DEFINE_BODY();
+
+    REFLECTION_REFLECT(MeshComponent);
+    REFLECTION_DESCRIPTION("Holds a reference to a mesh");
+    REFLECTION_MEMBER("mesh");
+    REFLECTION_END();
 };
 
 }  // namespace Components

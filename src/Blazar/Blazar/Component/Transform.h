@@ -6,7 +6,7 @@
 namespace Blazar {
 namespace Components {
 
-struct Transform : public IComponent {
+struct Transform {
     glm::vec3 position;
 
     Transform() = default;
@@ -22,12 +22,15 @@ struct Transform : public IComponent {
         return *this;
     }
 
-    void inspect() override { 
-
+    void inspect() { 
         ImGui::InputFloat3("Position", &position.x);
     }
 
-    COMPONENT_DEFINE_BODY();
+    REFLECTION_REFLECT(Transform);
+    REFLECTION_DESCRIPTION("Contains a 3D position in space");
+    REFLECTION_MEMBER("position");
+    REFLECTION_METHOD("inspect");
+    REFLECTION_END();
 };
 
 }  // namespace Components

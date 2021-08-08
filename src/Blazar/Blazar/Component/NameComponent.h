@@ -8,15 +8,16 @@
 namespace Blazar {
 namespace Components {
 
-struct NameComponent : IComponent{
-    std::string name;  ///< The name of this entity
-
+struct NameComponent {
+    std::string name;
     NameComponent(std::string name) : name(name) {}
-    void inspect() {
-        ImGui::InputText("Name", &name);
-    }
+    void inspect() { ImGui::InputText("Name", &name); }
 
-    COMPONENT_DEFINE_BODY();
+    REFLECTION_REFLECT(NameComponent);
+    REFLECTION_DESCRIPTION("Holds the name of an entity");
+    REFLECTION_METHOD("inspect");
+    REFLECTION_MEMBER("name");
+    REFLECTION_END();
 };
 
 }  // namespace Components

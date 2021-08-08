@@ -13,10 +13,11 @@
 #include "Blazar/Simulation/SceneManager.h"
 #include "Blazar/Time/Timer.h"
 #include "Blazar/Window.h"
-
 #include "Tracy.hpp"
 
 #include <thread>
+
+void init_reflected_types();
 
 namespace Blazar {
 Application* Application::s_Instance;
@@ -24,6 +25,8 @@ Application* Application::s_Instance;
 Application::Application() {
     LOG_CORE_TRACE("Creating Application");
     s_Instance = this;
+
+    init_reflected_types();
 
     // Create the Window
     m_Window.reset(Window::Create());

@@ -15,7 +15,6 @@ class EntityViewer : public EditorWindow {
    public:
     EntityViewer(Editor* editor, Entity e);
     void render() override;
-    void render_component(std::string name, Components::IComponent* component);
     virtual void on_close();
    private:
     Entity m_entity;

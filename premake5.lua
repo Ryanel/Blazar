@@ -50,6 +50,7 @@ project "Blazar"
     {
         "src/%{prj.name}/**.h",
         "src/%{prj.name}/**.cpp",
+        "build/reflection_types.cpp"
     }
 
     includedirs {

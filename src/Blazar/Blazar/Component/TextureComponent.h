@@ -7,22 +7,18 @@
 
 namespace Blazar {
 namespace Components {
-struct TextureComponent : public IComponent {
+struct TextureComponent {
     Texture2D* tex;
-
     TextureComponent(Texture2D* tex) : tex(tex) {}
-
     TextureComponent(TextureComponent&& other) noexcept {
         this->tex = other.tex;
         other.tex = nullptr;
     }
-
     TextureComponent& operator=(TextureComponent&& other) noexcept {
         this->tex = other.tex;
         other.tex = nullptr;
         return *this;
     }
-
     void inspect() {
         ImGui::InputText("Texture", &this->tex->path, ImGuiInputTextFlags_ReadOnly);
 
@@ -42,7 +38,11 @@ struct TextureComponent : public IComponent {
         }
     }
 
-    COMPONENT_DEFINE_BODY();
+    REFLECTION_REFLECT(TextureComponent);
+    REFLECTION_DESCRIPTION("Holds a reference to a texture");
+    REFLECTION_MEMBER("tex");
+    REFLECTION_METHOD("inspect");
+    REFLECTION_END();
 };
 }  // namespace Components
 }  // namespace Blazar

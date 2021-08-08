@@ -47,20 +47,22 @@ class TestScene : public Blazar::Scenes::Scene {
         m_texture          = Texture2D::Load("/Data/Textures/SampleTrans.png", texprops);
         m_texture2         = Texture2D::Load("/Data/Textures/dante.png", texprops);
 
+        Entity entityA = entity_create();
+        entityA.emplace<NameComponent>("Test Entity A");
+
         // Entity 1
-        entity_create();
-        Entity entity = entity_create();
-        entity.emplace<NameComponent>("Test Entity A");
-        entity.emplace<Transform>(glm::vec3(-0.75f, 0.0f, 0.0f));
-        entity.emplace<MeshComponent>(m_quad->vao);
-        entity.emplace<TextureComponent>(m_texture->data());
+        Entity entityB = entity_create();
+        entityB.emplace<NameComponent>("Test Entity B");
+        entityB.emplace<Transform>(glm::vec3(-0.75f, 0.0f, 0.0f));
+        entityB.emplace<MeshComponent>(m_quad->vao);
+        entityB.emplace<TextureComponent>(m_texture->data());
 
         // Entity 2
-        Entity entity2 = entity_create();
-        entity2.emplace<NameComponent>("Test Entity B");
-        entity2.emplace<Transform>(glm::vec3(0.75f, 0.0f, 0.0f));
-        entity2.emplace<MeshComponent>(m_quad->vao);
-        entity2.emplace<TextureComponent>(m_texture2->data());
+        Entity entityC = entity_create();
+        entityC.emplace<NameComponent>("Test Entity C");
+        entityC.emplace<Transform>(glm::vec3(0.75f, 0.0f, 0.0f));
+        entityC.emplace<MeshComponent>(m_quad->vao);
+        entityC.emplace<TextureComponent>(m_texture2->data());
 
         // Bind the shader
         m_shader = Shader::Load("/Data/Shaders/Simple");

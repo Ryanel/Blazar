@@ -30,59 +30,62 @@ EntityViewer::EntityViewer(Editor* editor, Entity entity)
 }
 
 void EntityViewer::render() {
+    using namespace entt;
     ZoneScoped;
-    auto& app = Application::get();
-
+    auto& app        = Application::get();
+    m_footprint_size = 0;
     CImGUI_Header1(fmt::format("{} {{", m_entity.name().c_str()));
 
     // Draw all the components
     ImGui::Indent();
     ImGui::Text(ICON_FA_EDIT " Components");
     ImGui::Indent();
-    m_footprint_size = 0;
 
-    if (m_entity.has<Components::NameComponent>()) {
-        render_component("Name", &m_entity.get<Components::NameComponent>());
-    }
-    if (m_entity.has<Components::Transform>()) {
-        render_component("Transform", &m_entity.get<Components::Transform>());
-    }
-    if (m_entity.has<Components::MeshComponent>()) {
-        render_component("Mesh", &m_entity.get<Components::MeshComponent>());
-    }
-    if (m_entity.has<Components::TextureComponent>()) {
-        render_component("Texture", &m_entity.get<Components::TextureComponent>());
-    }
+    auto& registry = *m_entity.registry();
+
+    registry.visit(m_entity.entity(), [&](const entt::type_info component_info) {
+        const auto component_type = entt::resolve(component_info);
+        auto       friendly_name  = component_type.prop("friendly_name"_hs).value().cast<const char*>();
+        bool       inspector      = false;
+
+        m_footprint_size += component_type.size_of();
+
+        ImGui::TextColored(EditorUIColor(EditorUICustomColor::Primary), "Component ");
+        ImGui::SameLine();
+        ImGui::TextColored(EditorUIColor(EditorUICustomColor::Secondary), "%s", friendly_name);
+
+        if (ImGui::IsItemHovered()) {
+            auto description = component_type.prop("description"_hs);
+
+            if (description) {
+                ImGui::BeginTooltip();
+                ImGui::Text("%s", description.value().cast<const char*>());
+                ImGui::EndTooltip();
+            }
+        }
+
+        auto any = component_type.func("get"_hs).invoke({}, std::ref(registry), m_entity.entity());
+
+        if (any) {
+            if (auto inspect = component_type.func("inspect"_hs); inspect) {
+                inspect.invoke(any);
+                inspector = true;
+            }
+        }
+
+        if (!inspector) { ImGui::Text("No inspector!"); }
+    });
 
     ImGui::Unindent();
-    ImGui::Spacing();
 
     ImGui::Text(ICON_FA_CHART_PIE " Size");
     ImGui::Indent();
-
     ImGui::Text("Total Size: ");
     ImGui::Unindent();
     ImGui::SameLine();
     ImGui::TextColored(EditorUIColor(EditorUICustomColor::Alternate), "%d bytes", m_footprint_size);
-
     ImGui::Unindent();
-
     CImGUI_Header1("}");
-}
-
-void EntityViewer::render_component(std::string name, IComponent* component) {
-    size_t size = component->size_of();
-    // Render name
-    ImGui::TextColored(EditorUIColor(EditorUICustomColor::Primary), "Component ");
-    ImGui::SameLine();
-    ImGui::TextColored(EditorUIColor(EditorUICustomColor::Secondary), name.c_str());
-    ImGui::SameLine();
-    ImGui::TextColored(EditorUIColor(EditorUICustomColor::Alternate), "(%d bytes)", size);
-
-    component->inspect();
-    ImGui::Separator();
-
-    m_footprint_size += size;
 }
 
 void EntityViewer::on_close() {

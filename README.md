@@ -33,12 +33,15 @@ Currently, Blazar supports Windows and Linux.
 
 ### Requirements:
 * Premake
+* C++17 compiler
 * Visual Studio 2019
 
-### Instructions
-1. Run setup_project.bat, which will automatically create a build/ directory, install conan libraries, and create a .sln file
-2. Open .sln file.
-3. Compile. Compile will fail first time. Try again without cleaning.
+### Instructions (Windows only for now)
+1. Run generate_project.bat to create a vs project
+2. Run scripts/reflection_update.py in the Blazar folder to generate reflection information
+3. Run generate_project.bat again to make sure 
+4. Open .sln file.
+5. Compile!
 
 ## Notes
 Inspired by The [Hazel](https://github.com/TheCherno/Hazel) Game Engine
