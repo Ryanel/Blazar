@@ -17,9 +17,7 @@ void SceneManager::update(Timestep& ts) {
     // Note: This happens on the update thread (not the render/main thread)
 
     // Forward the update to the scene, if it exists
-    if (this->m_currentScene != nullptr) {
-        this->m_currentScene->update(ts);
-    }
+    if (this->m_currentScene != nullptr) { this->m_currentScene->update(ts); }
 }
 void SceneManager::render(Timestep& ts) {
     // Note: This happens on the update thread (not the render/main thread)
@@ -44,9 +42,7 @@ void SceneManager::render(Timestep& ts) {
 
     // Step 3: Render the scene in this rendertexture
     // ------------------------------------------------------------------------
-    if (this->m_currentScene != nullptr) {
-        this->m_currentScene->render(ts);
-    }
+    if (this->m_currentScene != nullptr) { this->m_currentScene->render(ts); }
 
     // Step 4: If we're not in the editor, render to a quad on screen.
     // ------------------------------------------------------------------------

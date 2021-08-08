@@ -1,30 +1,28 @@
 -- premake5.lua
 
--- Conan
-editorintegration "On"
-editAndContinue "Off"
+-- Setup the build configuration
+build_directory = 'build'
+outputdir="%{cfg.buildcfg}-%{cfg.system}"
+
+editorintegration "On"     -- Integrate with VS
+editAndContinue "Off"      -- Causes weird errors
+
 workspace "Blazar"
     architecture "x64"
     configurations { "Debug", "Release", "Distribution" }
-    location "build"
+    location (build_directory)
     flags { 'MultiProcessorCompile' }
-    defines("_ITERATOR_DEBUG_LEVEL=0")
 
-outputdir="%{cfg.buildcfg}-%{cfg.system}"
+    filter "system:windows"
+        defines("_ITERATOR_DEBUG_LEVEL=0") -- Prevent excessive stl container stuff
+    
+output_dir="%{cfg.buildcfg}-%{cfg.system}"
 
 IncludeDir= {}
-IncludeDir["GLAD"]     = "src/Vendor/GLAD/include/"
-IncludeDir["IMGUI"]    = "src/Vendor/imgui/"
-IncludeDir["STB"]      = "src/Vendor/stb/"
-IncludeDir["spdlog"]   = "src/Vendor/spdlog/include/"
-IncludeDir["GLFW"]     = "src/Vendor/glfw/include/"
-IncludeDir["GLM"]      = "src/Vendor/glm/"
-IncludeDir["Tracy"]    = "src/Vendor/tracy/"
-IncludeDir["entt"]     = "src/Vendor/entt/src/"
+library_includes={}
+library_links={}
 
-include "src/Vendor/GLAD"
 include "src/Vendor/vendor.lua"
-include "src/Vendor/stb/premake5.lua"
 
 project "Blazar"
     location "build/Blazar/"
@@ -38,31 +36,15 @@ project "Blazar"
     pchheader "bzpch.h"
     pchsource "src/Blazar/bzpch.cpp"
 
-    links {
-        "GLAD",
-        "IMGUI",
-        "STB",
-        "GLFW",
-        "Tracy"
-    }
+    links(library_links)
+    includedirs("src/%{prj.name}/")
+    includedirs(library_includes)
 
     files
     {
         "src/%{prj.name}/**.h",
         "src/%{prj.name}/**.cpp",
         "build/reflection_types.cpp"
-    }
-
-    includedirs {
-        "src/%{prj.name}/",
-        "%{IncludeDir.GLAD}",
-        "%{IncludeDir.IMGUI}",
-        "%{IncludeDir.STB}",
-        "%{IncludeDir.spdlog}",
-        "%{IncludeDir.GLFW}",
-        "%{IncludeDir.GLM}",
-        "%{IncludeDir.Tracy}",
-        "%{IncludeDir.entt}"
     }
 
     filter "configurations:Debug"
@@ -126,27 +108,14 @@ project "Game"
     includedirs
     {
         "src/%{prj.name}/",
-        "src/Blazar/",
-        "%{IncludeDir.spdlog}",
-        "%{IncludeDir.IMGUI}",
-        "%{IncludeDir.GLAD}",
-        "%{IncludeDir.GLM}",
-        "%{IncludeDir.STB}",
-        "%{IncludeDir.Tracy}",
-        "%{IncludeDir.entt}"
+        "src/Blazar/"
     }
 
-    links
-    {
-        "Blazar",
-        "IMGUI",
-        "GLFW",
-        "GLAD",
-        "STB",
-        "Tracy"
-    }
+    includedirs(library_includes)
 
-    
+
+    links(library_links)
+    links("Blazar")
 
     filter "configurations:Debug"
         defines ({"BLAZAR_DEBUG", "BLAZAR_CONSOLE_WINDOW"})

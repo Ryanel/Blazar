@@ -1,5 +1,7 @@
 outputdir="%{cfg.buildcfg}-%{cfg.system}"
 
+IncludeDir["GLAD"] = "src/Vendor/GLAD/include/"
+
 group("Vendor")
 project "GLAD"
     kind "StaticLib"
@@ -10,14 +12,12 @@ project "GLAD"
     
     files
     {
-        "include/glad/glad.h",
-        "include/KHR/khrplatform.h",
-        "src/glad.c"
+        "glad/include/glad/glad.h",
+        "glad/include/KHR/khrplatform.h",
+        "glad/src/glad.c"
     }
 
-    includedirs {
-        "include"
-    }
+    includedirs("glad/include")
 
     filter "system:windows"
         systemversion "latest"

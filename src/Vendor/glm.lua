@@ -1,33 +1,25 @@
-outputdir="%{cfg.buildcfg}-%{cfg.system}"
-
 group("Vendor")
-project "STB"
+
+-- GLM
+IncludeDir["GLM"]      = "src/Vendor/glm/"
+project "GLM"
     kind "StaticLib"
-    language "C"
+    language "C++"
 
     targetdir ("%{prj.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir("%{prj.location}/Intermediate/" .. outputdir .. "/%{prj.name}")
     
-    files
-    {
-        "stb_image.cpp",
-        "stb_image.h"
-    }
-
-    includedirs {
-        "./"
-    }
-
+    files("./glm/glm/*.h")
+    includedirs("./glm/")
+        
     filter "system:windows"
         systemversion "latest"
-
     filter "configurations:Debug"
-        symbols "On"
         runtime "Debug"
-
+        symbols "on"
     filter "configurations:Release"
-        optimize "On"
         runtime "Release"
+        optimize "on"
 
 
 group("")
