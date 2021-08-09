@@ -4,6 +4,7 @@
 
 - Audio: Audio Engine
 - Audio: Sound playback
+- Build: Cooking pipeline
 - Code: Scripting (Lua?)
 - Editor: Structure Viewer
 - Editor: Component Inspection
@@ -22,10 +23,12 @@
 - Graphics: Model Loading
 - Graphics: Material Systems
 - Graphics: UI Toolkit
+- Log: Rewrite custom log system
 - Physics: Bounding boxes
 - Physics: Raycasts
 - Scenes: Allow for multiple scenes at once
 - Scenes: Designated Rendertargets?
+- Serialization: Redesign Asset System to take in .meta definitions via JSON.
 - VFS: Hot reloading of resources
 - VFS: Zip file loading
 - VFS: Ability to write files
